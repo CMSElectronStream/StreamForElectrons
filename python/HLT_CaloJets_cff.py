@@ -119,7 +119,7 @@ hltHfreco = cms.EDProducer( "HcalHitReconstructor",
    longEnergyParams = cms.vdouble( 43.5, 45.7, 48.32, 51.36, 54.82, 58.7, 63.0, 67.72, 72.86, 78.42, 84.4, 90.8, 97.62 ),
    long_optimumSlope = cms.vdouble( -99999.0, 0.0164905, 0.0238698, 0.0321383, 0.041296, 0.0513428, 0.0622789, 0.0741041, 0.0868186, 0.100422, 0.135313, 0.136289, 0.0589927 ),
    isS8S1 = cms.bool( False ),
-   calAcceptSeverityLevel = cms.int32( 9 )
+   HcalAcceptSeverityLevel = cms.int32( 9 )
     ),
   saturationParameters = cms.PSet(  maxADCvalue = cms.int32( 127 ) ),
   tsFromDB = cms.bool( True ),
@@ -188,8 +188,6 @@ hltHfreco = cms.EDProducer( "HcalHitReconstructor",
   hscpParameters = cms.PSet(  )
 )
 
-
-
 hltTowerMakerForAll = cms.EDProducer( "CaloTowersCreator",
  EBSumThreshold = cms.double( 0.2 ),
  MomHBDepth = cms.double( 0.2 ),
@@ -249,7 +247,7 @@ hltTowerMakerForAll = cms.EDProducer( "CaloTowersCreator",
  UseHcalRecoveredHits = cms.bool( False ),
  HOThresholdMinus2 = cms.double( 3.5 ),
  HOThreshold0 = cms.double( 3.5 ),
- ecalInputs = cms.VInputTag( 'hltEcalRecHitAll:EcalRecHitsEB','hltEcalRecHitAll:EcalRecHitsEE' ),
+ ecalInputs = cms.VInputTag( 'hltEcalRegionalEgammaRecHit:EcalRecHitsEB','hltEcalRegionalEgammaRecHit:EcalRecHitsEE' ),
  UseRejectedRecoveredHcalHits = cms.bool( False ),
  MomEBDepth = cms.double( 0.3 ),
  HBWeight = cms.double( 1.0 ),
@@ -298,7 +296,7 @@ hltKT6CaloJets = cms.EDProducer( "FastjetJetProducer",
 )
 
 ## sequence without HO		
-HLTDoLocalHcalWithHOSequence = cms.Sequence( hltHcalDigis + hltHbhereco + hltHfreco + hltHoreco + hltKT6CaloJets)
+HLTDoLocalHcalWithHOSequence = cms.Sequence( hltHcalDigis + hltHbhereco + hltHfreco + hltHoreco + hltTowerMakerForAll+ hltKT6CaloJets)
 
 
 

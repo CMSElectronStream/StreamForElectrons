@@ -51,7 +51,7 @@ CaloTowerConstituentsMapBuilder = cms.ESProducer( "CaloTowerConstituentsMapBuild
 )
 CaloTowerGeometryFromDBEP = cms.ESProducer( "CaloTowerGeometryFromDBEP",
   applyAlignment = cms.bool( False ),
-  hcalTopologyConstants = cms.PSet(
+  hcalTopologyConstants = cms.PSet( 
     maxDepthHE = cms.int32( 3 ),
     maxDepthHB = cms.int32( 2 ),
     mode = cms.string( "HcalTopologyMode::LHC" )
@@ -77,13 +77,12 @@ EcalElectronicsMappingBuilder = cms.ESProducer( "EcalElectronicsMappingBuilder" 
 EcalEndcapGeometryFromDBEP = cms.ESProducer( "EcalEndcapGeometryFromDBEP",
   applyAlignment = cms.bool( True )
 )
-
 EcalLaserCorrectionService = cms.ESProducer( "EcalLaserCorrectionService" )
 EcalPreshowerGeometryFromDBEP = cms.ESProducer( "EcalPreshowerGeometryFromDBEP",
   applyAlignment = cms.bool( True )
 )
 EcalUnpackerWorkerESProducer = cms.ESProducer( "EcalUnpackerWorkerESProducer",
-  CalibRHAlgo = cms.PSet(
+  CalibRHAlgo = cms.PSet( 
     flagsMapDBReco = cms.vint32( 0, 0, 0, 0, 4, -1, -1, -1, 4, 4, 7, 7, 7, 8, 9 ),
     Type = cms.string( "EcalRecHitWorkerSimple" ),
     killDeadChannels = cms.bool( True ),
@@ -96,28 +95,26 @@ EcalUnpackerWorkerESProducer = cms.ESProducer( "EcalUnpackerWorkerESProducer",
   ),
   ComponentName = cms.string( "" ),
   UncalibRHAlgo = cms.PSet(  Type = cms.string( "EcalUncalibRecHitWorkerWeights" ) ),
-  DCCDataUnpacker = cms.PSet(
-    orderedDCCIdList = cms.vint32( 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 
-39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54 ),
+  DCCDataUnpacker = cms.PSet( 
+    orderedDCCIdList = cms.vint32( 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54 ),
     tccUnpacking = cms.bool( False ),
     srpUnpacking = cms.bool( False ),
     syncCheck = cms.bool( False ),
     feIdCheck = cms.bool( True ),
     headerUnpacking = cms.bool( True ),
-    orderedFedList = cms.vint32( 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 616, 617, 618, 619, 620, 621, 622, 623, 624, 625, 626, 627, 628, 629, 
-630, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649, 650, 651, 652, 653, 654 ),
+    orderedFedList = cms.vint32( 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 616, 617, 618, 619, 620, 621, 622, 623, 624, 625, 626, 627, 628, 629, 630, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649, 650, 651, 652, 653, 654 ),
     feUnpacking = cms.bool( True ),
     forceKeepFRData = cms.bool( False ),
     memUnpacking = cms.bool( True )
   ),
-  ElectronicsMapper = cms.PSet(
+  ElectronicsMapper = cms.PSet( 
     numbXtalTSamples = cms.uint32( 10 ),
     numbTriggerTSamples = cms.uint32( 1 )
   )
 )
 HcalGeometryFromDBEP = cms.ESProducer( "HcalGeometryFromDBEP",
   applyAlignment = cms.bool( False ),
-  hcalTopologyConstants = cms.PSet(
+  hcalTopologyConstants = cms.PSet( 
     maxDepthHE = cms.int32( 3 ),
     maxDepthHB = cms.int32( 2 ),
     mode = cms.string( "HcalTopologyMode::LHC" )
@@ -126,7 +123,7 @@ HcalGeometryFromDBEP = cms.ESProducer( "HcalGeometryFromDBEP",
 HcalTopologyIdealEP = cms.ESProducer( "HcalTopologyIdealEP",
   Exclude = cms.untracked.string( "" ),
   appendToDataLabel = cms.string( "" ),
-  hcalTopologyConstants = cms.PSet(
+  hcalTopologyConstants = cms.PSet( 
     maxDepthHE = cms.int32( 3 ),
     maxDepthHB = cms.int32( 2 ),
     mode = cms.string( "HcalTopologyMode::LHC" )
@@ -140,7 +137,14 @@ MaterialPropagator = cms.ESProducer( "PropagatorWithMaterialESProducer",
   MaxDPhi = cms.double( 1.6 ),
   useRungeKutta = cms.bool( False )
 )
-
+MaterialPropagatorForHI = cms.ESProducer( "PropagatorWithMaterialESProducer",
+  PropagationDirection = cms.string( "alongMomentum" ),
+  ComponentName = cms.string( "PropagatorWithMaterialForHI" ),
+  Mass = cms.double( 0.139 ),
+  ptMin = cms.double( -1.0 ),
+  MaxDPhi = cms.double( 1.6 ),
+  useRungeKutta = cms.bool( False )
+)
 OppositeMaterialPropagator = cms.ESProducer( "PropagatorWithMaterialESProducer",
   PropagationDirection = cms.string( "oppositeToMomentum" ),
   ComponentName = cms.string( "PropagatorWithMaterialOpposite" ),
@@ -164,7 +168,7 @@ RPCGeometryESModule = cms.ESProducer( "RPCGeometryESModule",
 SiStripGainESProducer = cms.ESProducer( "SiStripGainESProducer",
   printDebug = cms.untracked.bool( False ),
   appendToDataLabel = cms.string( "" ),
-  APVGain = cms.VPSet(
+  APVGain = cms.VPSet( 
     cms.PSet(  Record = cms.string( "SiStripApvGainRcd" ),
       NormalizationFactor = cms.untracked.double( 1.0 ),
       Label = cms.untracked.string( "" )
@@ -176,14 +180,13 @@ SiStripGainESProducer = cms.ESProducer( "SiStripGainESProducer",
   ),
   AutomaticNormalization = cms.bool( False )
 )
-
 SiStripQualityESProducer = cms.ESProducer( "SiStripQualityESProducer",
   appendToDataLabel = cms.string( "" ),
   PrintDebugOutput = cms.bool( False ),
   ThresholdForReducedGranularity = cms.double( 0.3 ),
   UseEmptyRunInfo = cms.bool( False ),
   ReduceGranularity = cms.bool( False ),
-  ListOfRecordToMerge = cms.VPSet(
+  ListOfRecordToMerge = cms.VPSet( 
     cms.PSet(  record = cms.string( "SiStripDetVOffRcd" ),
       tag = cms.string( "" )
     ),
@@ -234,7 +237,6 @@ SlaveField40 = cms.ESProducer( "ParametrizedMagneticFieldProducer",
   parameters = cms.PSet(  BValue = cms.string( "4_0T" ) ),
   label = cms.untracked.string( "slave_40" )
 )
-
 SteppingHelixPropagatorAny = cms.ESProducer( "SteppingHelixPropagatorESProducer",
   NoErrorPropagation = cms.bool( False ),
   endcapShiftInZPos = cms.double( 0.0 ),
@@ -255,7 +257,6 @@ SteppingHelixPropagatorAny = cms.ESProducer( "SteppingHelixPropagatorESProducer"
   useMagVolumes = cms.bool( True ),
   ComponentName = cms.string( "SteppingHelixPropagatorAny" )
 )
-
 hltESPStripCPEfromTrackAngle = cms.ESProducer( "StripCPEESProducer",
   TanDiffusionAngle = cms.double( 0.01 ),
   UncertaintyScaling = cms.double( 1.42 ),
@@ -266,23 +267,21 @@ hltESPStripCPEfromTrackAngle = cms.ESProducer( "StripCPEESProducer",
   ComponentType = cms.string( "StripCPEfromTrackAngle" ),
   NoiseThreshold = cms.double( 2.3 )
 )
-
 TrackerDigiGeometryESModule = cms.ESProducer( "TrackerDigiGeometryESModule",
   appendToDataLabel = cms.string( "" ),
   fromDDD = cms.bool( False ),
-  trackerGeometryConstants = cms.PSet(
-            ROCS_X = cms.int32( 0 ),
-            ROCS_Y = cms.int32( 0 ),
-            upgradeGeometry = cms.bool( False ),
-            BIG_PIX_PER_ROC_Y = cms.int32( 2 ),
-            BIG_PIX_PER_ROC_X = cms.int32( 1 ),
-            ROWS_PER_ROC = cms.int32( 80 ),
-            COLS_PER_ROC = cms.int32( 52 )
-          ),
+  trackerGeometryConstants = cms.PSet( 
+    ROCS_X = cms.int32( 0 ),
+    ROCS_Y = cms.int32( 0 ),
+    upgradeGeometry = cms.bool( False ),
+    BIG_PIX_PER_ROC_Y = cms.int32( 2 ),
+    BIG_PIX_PER_ROC_X = cms.int32( 1 ),
+    ROWS_PER_ROC = cms.int32( 80 ),
+    COLS_PER_ROC = cms.int32( 52 )
+  ),
   applyAlignment = cms.bool( True ),
   alignmentsLabel = cms.string( "" )
 )
-                                                      
 TrackerGeometricDetESModule = cms.ESProducer( "TrackerGeometricDetESModule",
   appendToDataLabel = cms.string( "" ),
   fromDDD = cms.bool( False ),
@@ -3582,7 +3581,6 @@ siStripBackPlaneCorrectionDepESProducer = cms.ESProducer( "SiStripBackPlaneCorre
     label = cms.untracked.string( "peak" )
   )
 )
-
 siStripLorentzAngleDepESProducer = cms.ESProducer( "SiStripLorentzAngleDepESProducer",
   LatencyRecord = cms.PSet( 
     record = cms.string( "SiStripLatencyRcd" ),
@@ -3598,7 +3596,6 @@ siStripLorentzAngleDepESProducer = cms.ESProducer( "SiStripLorentzAngleDepESProd
   )
 )
 sistripconn = cms.ESProducer( "SiStripConnectivity" )
-
 trackerTopologyConstants = cms.ESProducer( "TrackerTopologyEP",
   pxb_layerMask = cms.uint32( 15 ),
   tib_str_int_extStartBit = cms.uint32( 10 ),

@@ -197,7 +197,7 @@ hltEleAnyCleanMergedTracks = cms.EDProducer( "SimpleTrackListMerger",
 hltEleAnyPixelMatchElectronsL1Seeded = cms.EDProducer( "EgammaHLTPixelMatchElectronProducers",
     BSProducer = cms.InputTag( "hltOnlineBeamSpot" ),
     UseGsfTracks = cms.bool( False ),
-    TrackProducer = cms.InputTag( "hltEleAnyWPCleanMergedTracks" ),
+    TrackProducer = cms.InputTag( "hltEleAnyCleanMergedTracks" ),
     GsfTrackProducer = cms.InputTag( "" )
 )
 
