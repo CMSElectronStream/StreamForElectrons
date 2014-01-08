@@ -55,14 +55,14 @@ process.hltL1sL1SingleEG20ORL1SingleEG22 = cms.EDFilter( "HLTLevel1GTSeed",
         L1TechTriggerSeeding = cms.bool( False ))
 
 
-### Load the Ele25WP80 Sequence
-process.load("HLTrigger.Configuration.HLT_Ele25_WP80_cff")
-
-
 ### PATH executed:
 process.HLTriggerFirstPath = cms.Path( process.hltGetConditions + process.hltGetRaw + process.hltBoolFalse )
 
 ### Complete Trigger path sequence for Ele25 WP80
+
+### Load the Ele25WP80 Sequence
+process.load("HLTrigger.Configuration.HLT_Ele25_WP80_cff")
+
 process.HLT_Ele25_WP80_v13 = cms.Path( process.HLTBeginSequence +
                                        process.hltL1sL1SingleEG20ORL1SingleEG22 +
                                        process.HLTEle25WP80Sequence+
@@ -76,19 +76,51 @@ process.HLT_LogMonitor_v4 = cms.Path( process.hltGtDigis +
 				      process.hltPreLogMonitor + 
 		                      process.HLTEndSequence )
 
+### final HLT trigger path
 process.HLTriggerFinalPath = cms.Path( process.hltGtDigis + 
 	                               process.hltScalersRawToDigi + 
 				       process.hltFEDSelector + 
 		                       process.hltTriggerSummaryAOD + 
 				       process.hltTriggerSummaryRAW )
 
+### endpath
+process.hltPreOutput = cms.EDFilter( "HLTPrescaler",
+    L1GtReadoutRecordTag = cms.InputTag( "hltGtDigis" ),
+    offset = cms.uint32( 0 ))
+
+process.hltOutput = cms.OutputModule( "PoolOutputModule",
+    fileName = cms.untracked.string( "outputHLT.root" ),
+    fastCloning = cms.untracked.bool( False ),
+    dataset = cms.untracked.PSet(
+        filterName = cms.untracked.string( "" ),
+        dataTier = cms.untracked.string( "RAW" )
+    ),
+    SelectEvents = cms.untracked.PSet(  SelectEvents = ( cms.vstring(#'HLT_Ele25_WP70_v13',
+				    'HLT_Ele25_WP80_v13',
+				    #'HLT_Ele25_WP90_v13',
+				    #'HLT_Ele25_WP70_PFMET_MT50_v9',
+				    #'HLT_Ele25_WP80_PFMET_MT50_v9',
+				    #'HLT_Ele25_WP90_PFMET_MT50_v9',
+				    #'HLT_DoubleEle10_WP95_v1',
+				    #'HLT_Ele15_Ele_10_WP95_v1',
+				    #'HLT_DoubleEle15_WP95_v1',
+				    #'HLT_DoubleEle10_WP90_v1',
+				    #'HLT_Ele15_Ele_10_WP90_v1',
+				    #'HLT_DoubleEle15_WP90_v1'
+					) ) ),
+    outputCommands = cms.untracked.vstring('keep *')
+)
+
+process.OutputPath = cms.EndPath( process.hltPreOutput + process.hltOutput)
+
+
 ## inpute file and collection kept
 process.source = cms.Source( "PoolSource",
     fileNames = cms.untracked.vstring('file:/media/DATA/CMSSWRoot/DATA2012/SingleElectron_Run2012B_RAW/B865DABE-BDA2-E111-854F-BCAEC53296F7.root'),
     secondaryFileNames = cms.untracked.vstring(),
-    inputCommands = cms.untracked.vstring('keep *')
-)
+    inputCommands = cms.untracked.vstring('keep *'))
 
+		
 # Enable HF Noise filters in GRun menu
 if 'hltHfreco' in process.__dict__:
     process.hltHfreco.setNoiseFlags = cms.bool( True )
@@ -136,10 +168,10 @@ if 'hltDQML1SeedLogicScalers' in process.__dict__:
     process.hltDQML1SeedLogicScalers.processname              = 'HLT8E33v2'
 
 # limit the number of events to be processed
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32( 100 ))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10))
 
 # enable the TrigReport and TimeReport
-process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool( True ))
+#process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool( True ))
 
 # override the GlobalTag, connection string and pfnPrefix
 if 'GlobalTag' in process.__dict__:
