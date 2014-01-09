@@ -21,87 +21,103 @@ from HLTrigger.Configuration.HLT_ElectronTrackSequence_cff import *
 from HLTrigger.Configuration.HLT_ElectronFilters_cff import *
 
 ## fix threshold for et cut
-hltEGEtFilter.etcutEB = cms.double(25)
-hltEGEtFilter.etcutEE = cms.double(25)
-hltEGEtFilter.ncandcut = cms.int32(1)
+hltEG25WP80EtFilter = hltEGEtFilter.clone()
+hltEG25WP80EtFilter.etcutEB = cms.double(25)
+hltEG25WP80EtFilter.etcutEE = cms.double(25)
+hltEG25WP80EtFilter.ncandcut = cms.int32(1)
 
 ## cluster shape filter
-hltEleClusterShapeFilter.thrRegularEE = cms.double( 0.03 )
-hltEleClusterShapeFilter.thrRegularEB = cms.double( 0.01 )
-hltEleClusterShapeFilter.ncandcut = cms.int32(1)
+hltEle25WP80ClusterShapeFilter = hltEleClusterShapeFilter.clone()
+hltEle25WP80ClusterShapeFilter.thrRegularEE = cms.double( 0.03 )
+hltEle25WP80ClusterShapeFilter.thrRegularEB = cms.double( 0.01 )
+hltEle25WP80ClusterShapeFilter.ncandcut = cms.int32(1)
+hltEle25WP80ClusterShapeFilter.candTag = cms.InputTag("hltEG25WP80EtFilter")
 
 ## ecal iso filter
-hltEleEcalIsoFilter.thrOverEEE = cms.double( 0.1 )
-hltEleEcalIsoFilter.thrOverEEB = cms.double( 0.15 )
-hltEleEcalIsoFilter.ncandcut = cms.int32(1)
+hltEle25WP80EcalIsoFilter = hltEleEcalIsoFilter.clone()
+hltEle25WP80EcalIsoFilter.thrOverEEE = cms.double( 0.1 )
+hltEle25WP80EcalIsoFilter.thrOverEEB = cms.double( 0.15 )
+hltEle25WP80EcalIsoFilter.ncandcut = cms.int32(1)
+hltEle25WP80EcalIsoFilter.candTag = cms.InputTag("hltEle25WP80ClusterShapeFilter")
 
 ### filter for HoverE
-hltEleHEFilter.thrOverEEE = cms.double( 0.05 )
-hltEleHEFilter.thrOverEEB = cms.double( 0.1 )
-hltEleHEFilter.ncandcut = cms.int32(1)
+hltEle25WP80HEFilter = hltEleHEFilter.clone()
+hltEle25WP80HEFilter.thrOverEEE = cms.double( 0.05 )
+hltEle25WP80HEFilter.thrOverEEB = cms.double( 0.1 )
+hltEle25WP80HEFilter.ncandcut = cms.int32(1)
+hltEle25WP80HEFilter.candTag = cms.InputTag("hltEle25WP80EcalIsoFilter")
 
 ### filter on HCal isolation for electron ID
-hltEleHcalIsoFilter.thrOverEEE = cms.double( 0.1 )
-hltEleHcalIsoFilter.thrOverEEB = cms.double( 0.1 )
-hltEleHcalIsoFilter.ncandcut = cms.int32(1)
+hltEle25WP80HcalIsoFilter = hltEleHcalIsoFilter.clone()
+hltEle25WP80HcalIsoFilter.thrOverEEE = cms.double( 0.1 )
+hltEle25WP80HcalIsoFilter.thrOverEEB = cms.double( 0.1 )
+hltEle25WP80HcalIsoFilter.ncandcut = cms.int32(1)
+hltEle25WP80HcalIsoFilter.candTag = cms.InputTag("hltEle25WP80HEFilter")
 
 ### filter the tracks looking at the electron candidates
-hltElePixelMatchFilter.npixelmatchcut = cms.double(1.0)
+hltEle25WP80PixelMatchFilter = hltElePixelMatchFilter.clone()
+hltEle25WP80PixelMatchFilter.npixelmatchcut = cms.double(1.0)
+hltEle25WP80PixelMatchFilter.ncandcut = cms.int32(1)
+hltEle25WP80PixelMatchFilter.candTag = cms.InputTag("hltEle25WP80HcalIsoFilter")
 
-## matching with the right collection of electron
-hltElePixelMatchFilter.ncandcut = cms.int32(1)
-
-hltEleOneOEMinusOneOPFilter.barrelcut = cms.double( 0.05 )
-hltEleOneOEMinusOneOPFilter.endcapcut = cms.double( 0.05 )
-hltEleOneOEMinusOneOPFilter.ncandcut = cms.int32(1)
+###
+hltEle25WP80OneOEMinusOneOPFilter = hltEleOneOEMinusOneOPFilter.clone()
+hltEle25WP80OneOEMinusOneOPFilter.barrelcut = cms.double( 0.05 )
+hltEle25WP80OneOEMinusOneOPFilter.endcapcut = cms.double( 0.05 )
+hltEle25WP80OneOEMinusOneOPFilter.ncandcut = cms.int32(1)
+hltEle25WP80OneOEMinusOneOPFilter.candTag = cms.InputTag("hltEle25WP80PixelMatchFilter")
 
 ## Deta filter
-hltEleDetaFilter.thrRegularEE = cms.double( 0.007 )
-hltEleDetaFilter.thrRegularEB = cms.double( 0.007 )
-hltEleDetaFilter.ncandcut = cms.int32(1)
+hltEle25WP80DetaFilter = hltEleDetaFilter.clone()
+hltEle25WP80DetaFilter.thrRegularEE = cms.double( 0.007 )
+hltEle25WP80DetaFilter.thrRegularEB = cms.double( 0.007 )
+hltEle25WP80DetaFilter.ncandcut = cms.int32(1)
+hltEle25WP80DetaFilter.candTag = cms.InputTag("hltEle25WP80OneOEMinusOneOPFilter")
 
 ## Dphi filter
-hltEleDphiFilter.thrRegularEE = cms.double( 0.03 )
-hltEleDphiFilter.thrRegularEE = cms.double( 0.06 )
-hltEleDphiFilter.ncandcut = cms.int32(1)
+hltEle25WP80DphiFilter = hltEleDphiFilter.clone()
+hltEle25WP80DphiFilter.thrRegularEE = cms.double( 0.03 )
+hltEle25WP80DphiFilter.thrRegularEB = cms.double( 0.06 )
+hltEle25WP80DphiFilter.ncandcut = cms.int32(1)
+hltEle25WP80DphiFilter.candTag = cms.InputTag("hltEle25WP80DetaFilter")
 
 ## track iso filter
-hltEleTrackIsoFilter.thrOverPtEE = cms.double( 0.05 )
-hltEleTrackIsoFilter.thrOverPtEB = cms.double( 0.05 )
-hltEleTrackIsoFilter.ncandcut = cms.int32(1)
-
+hltEle25WP80TrackIsoFilter = hltEleTrackIsoFilter.clone()
+hltEle25WP80TrackIsoFilter.thrOverPtEE = cms.double( 0.05 )
+hltEle25WP80TrackIsoFilter.thrOverPtEB = cms.double( 0.05 )
+hltEle25WP80TrackIsoFilter.ncandcut = cms.int32(1)
+hltEle25WP80TrackIsoFilter.candTag = cms.InputTag("hltEle25WP80DphiFilter")
 ### Final Sequence
 HLTEle25WP80Sequence = cms.Sequence( hltPreEle+
 	                             HLTDoRegionalEgammaEcalSequence+
                                      HLTL1SeededEcalClustersSequence+
                                      hltL1SeededRecoEcalCandidate+ 
                                      hltEGRegionalL1SingleEG20ORL1SingleEG22+ 
-                                     hltEGEtFilter +
+                                     hltEG25WP80EtFilter +
                                      hltL1SeededHLTClusterShape +
-                                     hltEleClusterShapeFilter+
+                                     hltEle25WP80ClusterShapeFilter+
                                      HLTDoLocalHcalWithHOSequence+					     
                                      hltL1SeededPhotonEcalIso+
-                                     hltEleEcalIsoFilter+
+                                     hltEle25WP80EcalIsoFilter+
                                      hltL1SeededPhotonHcalForHE +
-                                     hltEleHEFilter+ 
+                                     hltEle25WP80HEFilter+ 
                                      hltL1SeededPhotonHcalIso +
-                                     hltEleHcalIsoFilter + 
+                                     hltEle25WP80HcalIsoFilter + 
                                      HLTDoLocalPixelSequence +
                                      HLTDoLocalStripSequence +
                                      hltL1SeededStartUpElectronPixelSeeds+ 
-                                     hltElePixelMatchFilter+
+                                     hltEle25WP80PixelMatchFilter+
                                      hltCkfL1SeededTrackCandidates+
                                      hltCtfL1SeededWithMaterialTracks+
                                      hltEleAnyBarrelTracks+
                                      hltCtfL1SeededWithMaterialCleanTracks+
                                      hltEleAnyCleanMergedTracks+
                                      hltEleAnyPixelMatchElectronsL1Seeded +
-				     hltElePixelMatchFilter+
-                                     hltEleOneOEMinusOneOPFilter+
+                                     hltEle25WP80OneOEMinusOneOPFilter+
                                      hltEleAnyL1SeededDetaDphi+
-                                     hltEleDetaFilter+ 
-                                     hltEleDphiFilter+
+                                     hltEle25WP80DetaFilter+ 
+                                     hltEle25WP80DphiFilter+
                                      HLTL1SeededEgammaRegionalRecoTrackerSequence +
                                      hltEleAnyL1SeededElectronTrackIso +
-                                     hltEleTrackIsoFilter
-	)
+                                     hltEle25WP80TrackIsoFilter)
+

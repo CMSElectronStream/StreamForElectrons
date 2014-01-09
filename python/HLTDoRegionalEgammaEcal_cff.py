@@ -1,5 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
+
 hltESPESUnpackerWorker = cms.ESProducer( "ESUnpackerWorkerESProducer",
       RHAlgo = cms.PSet(
        ESRecoAlgo = cms.int32( 0 ),
@@ -73,3 +74,39 @@ HLTDoRegionalEgammaEcalSequence = cms.Sequence( hltESRawToRecHitFacility +
                                                 hltEcalRegionalEgammaFEDs +
                                                 hltEcalRegionalEgammaRecHit +
                                                 hltESRegionalEgammaRecHit )
+
+hltEcalRegionalRestFEDs = cms.EDProducer( "EcalRawToRecHitRoI",
+  JetJobPSet = cms.VPSet(),
+  sourceTag_es = cms.InputTag( "NotNeededoESfalse" ),
+  doES = cms.bool( False ),
+  type = cms.string( "all" ),
+  sourceTag = cms.InputTag( "hltEcalRawToRecHitFacility" ),
+  EmJobPSet = cms.VPSet(),
+  CandJobPSet = cms.VPSet(),
+  MuonJobPSet = cms.PSet(  ),
+  esInstance = cms.untracked.string( "es" ),
+  MuJobPSet = cms.PSet(  ))
+
+hltEcalRecHitAll = hltEcalRegionalEgammaRecHit.clone()
+hltEcalRecHitAll.souceTag = cms.InputTag("hltEcalRegionalRestFEDs")
+
+hltEcalRegionalESRestFEDs = cms.EDProducer( "EcalRawToRecHitRoI",
+    JetJobPSet = cms.VPSet(),
+    sourceTag_es = cms.InputTag( "hltESRawToRecHitFacility" ),
+    doES = cms.bool( True ),
+    type = cms.string( "all" ),
+    sourceTag = cms.InputTag( "hltEcalRawToRecHitFacility" ),
+    EmJobPSet = cms.VPSet(),
+    CandJobPSet = cms.VPSet(),
+    MuonJobPSet = cms.PSet(),
+    esInstance = cms.untracked.string( "es" ),
+    MuJobPSet = cms.PSet())
+
+hltESRecHitAll = cms.EDProducer( "EcalRawToRecHitProducer",
+    splitOutput = cms.bool( False ),
+    rechitCollection = cms.string( "EcalRecHitsES" ),
+    EErechitCollection = cms.string( "" ),
+    EBrechitCollection = cms.string( "" ),
+    sourceTag = cms.InputTag( 'hltEcalRegionalESRestFEDs','es' ),
+    cleaningConfig = cms.PSet(  ),
+    lazyGetterTag = cms.InputTag( "hltESRawToRecHitFacility" ))

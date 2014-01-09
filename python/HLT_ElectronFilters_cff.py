@@ -51,7 +51,6 @@ hltEleClusterShapeFilter = cms.EDFilter( "HLTEgammaGenericFilter",
     candTag = cms.InputTag( "hltEGEtFilter" ),
     thrOverE2EE = cms.double( -1.0 ))
 
-     
 ### Iso Filter electron collection from L1Seeded Candidate from clustering, SeededPhotonEcalIso, Cluster Shape     
 hltEleEcalIsoFilter = cms.EDFilter( "HLTEgammaGenericFilter",
     doIsolated = cms.bool( True ),
@@ -192,4 +191,46 @@ hltEleTrackIsoFilter = cms.EDFilter( "HLTElectronGenericFilter",
     thrTimesPtEE = cms.double( -1.0 ),
     thrOverPtEE = cms.double(-1.0),
     thrOverPtEB = cms.double(-1.0)
+)
+
+### start with double electron filter
+hltEGRegionalL1DoubleEG178 = cms.EDFilter( "HLTEgammaL1MatchFilterRegional",
+    saveTags = cms.bool( False ),
+    endcap_end = cms.double( 2.65 ),
+    region_eta_size_ecap = cms.double( 1.0 ),
+    barrel_end = cms.double( 1.4791 ),
+    l1IsolatedTag = cms.InputTag( 'hltL1extraParticles','Isolated' ),
+    candIsolatedTag = cms.InputTag( "hltL1SeededRecoEcalCandidate" ),
+    region_phi_size = cms.double( 1.044 ),
+    region_eta_size = cms.double( 0.522 ),
+    L1SeedFilterTag = cms.InputTag( "hltL1sL1DoubleEG137" ),
+    ncandcut = cms.int32( 1 ),
+    doIsolated = cms.bool( False ),
+    candNonIsolatedTag = cms.InputTag( "" ),
+    l1NonIsolatedTag = cms.InputTag( 'hltL1extraParticles','NonIsolated' )
+)
+
+hltEGFilterDoubleEG = cms.EDFilter( "HLTEgammaEtFilter",
+    saveTags = cms.bool( False ),
+    L1NonIsoCand = cms.InputTag(""),
+    relaxed = cms.untracked.bool( False ),
+    L1IsoCand = cms.InputTag( "hltL1SeededRecoEcalCandidate" ),
+    inputTag = cms.InputTag( "" ),
+    etcutEB = cms.double( 0. ),
+    ncandcut = cms.int32( 1 ),
+    etcutEE = cms.double( 0. )
+)
+
+hltEle17Ele8TrackIsoDZ = cms.EDFilter( "HLT2ElectronElectronDZ",
+    saveTags = cms.bool( True ),
+    originTag1 = cms.InputTag( "hltEG178WP90RhoPixelMatchFilterv2" ),
+    originTag2 = cms.InputTag( "hltEG178WP90RhoPixelMatchFilterv2" ),
+    MinN = cms.int32( 1 ),
+    triggerType1 = cms.int32( 82 ),
+    triggerType2 = cms.int32( 82 ),
+    MinDR = cms.double( -1.0 ),
+    MaxDZ = cms.double( 0.2 ),
+    inputTag1 = cms.InputTag( "hltEG178WP90TrackRhoIsoFilterv2" ),
+    checkSC = cms.bool( True ),
+    inputTag2 = cms.InputTag( "hltEG178WP90TrackRhoIsoFilterv2" )
 )

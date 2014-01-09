@@ -1,5 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 
+from HLTrigger.Configuration.HLTDoRegionalEgammaEcal_cff import *
+ 
 hltHcalDigis = cms.EDProducer( "HcalRawToDigi",
     UnpackZDC = cms.untracked.bool( True ),
     FilterDataQuality = cms.bool( True ),
@@ -254,6 +256,7 @@ hltTowerMakerForAll = cms.EDProducer( "CaloTowersCreator",
  HOGrid = cms.vdouble(  ),                                             
  EBGrid = cms.vdouble(  ))
 
+		
 hltKT6CaloJets = cms.EDProducer( "FastjetJetProducer",
     Active_Area_Repeats = cms.int32( 1 ),
     doAreaFastjet = cms.bool( False ),
@@ -298,5 +301,82 @@ hltKT6CaloJets = cms.EDProducer( "FastjetJetProducer",
 ## sequence without HO		
 HLTDoLocalHcalWithHOSequence = cms.Sequence( hltHcalDigis + hltHbhereco + hltHfreco + hltHoreco + hltTowerMakerForAll+ hltKT6CaloJets)
 
+from HLTrigger.Configuration.HLTDoRegionalEgammaEcal_cff import *		
+		
+### anti-kt calo jets for PF
+
+hltTowerMakerForPF = hltTowerMakerForAll.clone()
+hltTowerMakerForPF.HBThreshold  = cms.double( 0.4 )
+hltTowerMakerForPF.HOWeight     = cms.double( 1.0 )
+hltTowerMakerForPF.HESThreshold = cms.double( 0.4 )
+hltTowerMakerForPF.HF2Threshold = cms.double( 1.8 )
+hltTowerMakerForPF.HcalAcceptSeverityLevel = cms.uint32( 11 )
+hltTowerMakerForPF.HOThresholdPlus1 = cms.double( 1.1 )
+hltTowerMakerForPF.HOThresholdPlus2 = cms.double( 1.1 )
+hltTowerMakerForPF.HF1Threshold = cms.double( 1.2 )
+hltTowerMakerForPF.HOThresholdMinus1 = cms.double( 1.1 )
+hltTowerMakerForPF.HEDThreshold = cms.double( 0.4 )
+hltTowerMakerForPF.UseHcalRecoveredHits = cms.bool( True )
+hltTowerMakerForPF.HOThresholdMinus2 = cms.double( 1.1 )
+hltTowerMakerForPF.HOThreshold0 = cms.double( 1.1 )
+hltTowerMakerForPF.ecalInputs   = cms.VInputTag( 'hltEcalRecHitAll:EcalRecHitsEB','hltEcalRecHitAll:EcalRecHitsEE' )
 
 
+HLTDoCaloSequencePF = cms.Sequence( hltEcalRawToRecHitFacility + 
+	                            hltEcalRegionalRestFEDs+
+	                            hltEcalRecHitAll +
+	                            HLTDoLocalHcalWithHOSequence + 
+				    hltTowerMakerForPF )
+
+hltAntiKT5CaloJetsPF = cms.EDProducer( "FastjetJetProducer",
+    Active_Area_Repeats = cms.int32( 5 ),
+    doAreaFastjet = cms.bool( False ),
+    voronoiRfact = cms.double( -9.0 ),
+    maxBadHcalCells = cms.uint32( 9999999 ),
+    doAreaDiskApprox = cms.bool( False ),
+    maxRecoveredEcalCells = cms.uint32( 9999999 ),
+    jetType = cms.string( "CaloJet" ),
+    minSeed = cms.uint32( 0 ),
+    Ghost_EtaMax = cms.double( 6.0 ),
+    doRhoFastjet = cms.bool( False ),
+    jetAlgorithm = cms.string( "AntiKt" ),
+    nSigmaPU = cms.double( 1.0 ),
+    GhostArea = cms.double( 0.01 ),
+    Rho_EtaMax = cms.double( 4.4 ),
+    maxBadEcalCells = cms.uint32( 9999999 ),
+    useDeterministicSeed = cms.bool( True ),
+    doPVCorrection = cms.bool( False ),
+    maxRecoveredHcalCells = cms.uint32( 9999999 ),
+    rParam = cms.double( 0.5 ),
+    maxProblematicHcalCells = cms.uint32( 9999999 ),
+    doOutputJets = cms.bool( True ),
+    src = cms.InputTag( "hltTowerMakerForPF" ),
+    inputEtMin = cms.double( 0.3 ),
+    srcPVs = cms.InputTag( "NotUsed" ),
+    jetPtMin = cms.double( 1.0 ),
+    radiusPU = cms.double( 0.5 ),
+    maxProblematicEcalCells = cms.uint32( 9999999 ),
+    doPUOffsetCorr = cms.bool( False ),
+    inputEMin = cms.double( 0.0 ),
+    puPtMin = cms.double( 10.0 ),
+    subtractorName = cms.string( "" ),
+    MinVtxNdof = cms.int32( 5 ),
+    MaxVtxZ = cms.double( 15.0 ),
+    UseOnlyVertexTracks = cms.bool( False ),
+    UseOnlyOnePV = cms.bool( False ),
+    DzTrVtxMax = cms.double( 0.0 ),
+    sumRecHits = cms.bool( False ),
+    DxyTrVtxMax = cms.double( 0.0 )
+)
+
+HLTRecoJetSequenceAK5UncorrectedPF = cms.Sequence( HLTDoCaloSequencePF + hltAntiKT5CaloJetsPF )
+
+hltAntiKT5CaloJetsPFEt5 = cms.EDFilter( "EtMinCaloJetSelector",
+    filter = cms.bool( False ),
+    src = cms.InputTag( "hltAntiKT5CaloJetsPF" ),
+    etMin = cms.double( 5.0 ))
+
+HLTRecoJetSequencePrePF = cms.Sequence( HLTRecoJetSequenceAK5UncorrectedPF + hltAntiKT5CaloJetsPFEt5 )
+
+		
+		  
