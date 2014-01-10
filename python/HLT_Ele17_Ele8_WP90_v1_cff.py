@@ -96,6 +96,7 @@ hltEG178WP90TrackRhoIsoFilter.candTag = cms.InputTag("hltEG178WP90RhoDphiFilter"
 hltDoubleEG8EtFilterUnseeded = hltEGFilterDoubleEG.clone()
 hltDoubleEG8EtFilterUnseeded.L1IsoCand = cms.InputTag("hltRecoEcalSuperClusterActivityCandidate")
 hltDoubleEG8EtFilterUnseeded.inputTag = cms.InputTag("hltEcalActivitySuperClusterWrapper")
+hltDoubleEG8EtFilterUnseeded.ncandcut = cms.int32( 2 )
 hltDoubleEG8EtFilterUnseeded.etcutEB = cms.double( 8.0 )
 hltDoubleEG8EtFilterUnseeded.etcutEE = cms.double( 8.0 )
 

@@ -128,7 +128,21 @@ process.HLT_Ele17_Ele8_WP90_v1 = cms.Path( process.HLTBeginSequence +
 	                                   process.hltL1sL1DoubleEG137 +
                                            process.HLT_Ele17_Ele8_WP90_v1 +
 					   process.HLTEndSequence)  
-						   
+
+process.load("HLTrigger.Configuration.HLT_Ele17_Ele12_WP90_v1_cff")
+process.HLT_Ele17_Ele_12_WP90_v1 = cms.Path(process.HLTBeginSequence +
+ 	                                    process.hltL1sL1DoubleEG137 +
+                                            process.HLT_Ele17_Ele12_WP90_v1 +
+	 				    process.HLTEndSequence)  
+
+
+process.load("HLTrigger.Configuration.HLT_DoubleEle17_WP90_v1_cff")
+process.HLT_DoubleEle17_WP90_v1 = cms.Path(process.HLTBeginSequence +
+ 	                                   process.hltL1sL1DoubleEG137 +
+                                           process.HLT_DoubleEle17_WP90_v1 +
+	 				   process.HLTEndSequence)  
+
+
 ### latest path in common to all trigger path
 process.load("HLTrigger.Configuration.HLT_LastSequences_cff")
  
@@ -136,6 +150,7 @@ process.HLT_LogMonitor_v4 = cms.Path( process.hltGtDigis +
 	                              process.hltLogMonitorFilter + 
 				      process.hltPreLogMonitor + 
 		                      process.HLTEndSequence )
+
 
 ### final HLT trigger path
 process.HLTriggerFinalPath = cms.Path( process.hltGtDigis + 
@@ -163,8 +178,8 @@ process.hltOutput = cms.OutputModule( "PoolOutputModule",
 				    'HLT_Ele25_WP80_PFMET_MT50_v9',
 				    'HLT_Ele25_WP90_PFMET_MT50_v9',
 				    'HLT_Ele17_Ele8_WP90_v1',
-				    #'HLT_Ele17_Ele_10_WP90_v1',
-				    #'HLT_DoubleEle17_WP90_v1'
+				    'HLT_Ele17_Ele_12_WP90_v1',
+				    'HLT_DoubleEle17_WP90_v1'
 					) ) ),
     outputCommands = cms.untracked.vstring('keep *')
 )
