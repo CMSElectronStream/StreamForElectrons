@@ -110,7 +110,7 @@ HLTEle25WP70Sequence = cms.Sequence( hltPreEle+
                                      hltEle25WP70PixelMatchFilter+
                                      hltCkfL1SeededTrackCandidates+
                                      hltCtfL1SeededWithMaterialTracks+
-                                     hltEleAnyBarrelTracks+
+                                     hltEleAnyWPBarrelTracks+
                                      hltCtfL1SeededWithMaterialCleanTracks+
                                      hltEleAnyCleanMergedTracks+
                                      hltEleAnyPixelMatchElectronsL1Seeded +

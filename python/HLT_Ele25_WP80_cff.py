@@ -102,14 +102,14 @@ HLTEle25WP80Sequence = cms.Sequence( hltPreEle+
                                      hltL1SeededPhotonHcalForHE +
                                      hltEle25WP80HEFilter+ 
                                      hltL1SeededPhotonHcalIso +
-                                     hltEle25WP80HcalIsoFilter + 
+                                     hltEle25WP80HcalIsoFilter+ 
                                      HLTDoLocalPixelSequence +
                                      HLTDoLocalStripSequence +
                                      hltL1SeededStartUpElectronPixelSeeds+ 
                                      hltEle25WP80PixelMatchFilter+
                                      hltCkfL1SeededTrackCandidates+
                                      hltCtfL1SeededWithMaterialTracks+
-                                     hltEleAnyBarrelTracks+
+                                     hltEleAnyWPBarrelTracks+
                                      hltCtfL1SeededWithMaterialCleanTracks+
                                      hltEleAnyCleanMergedTracks+
                                      hltEleAnyPixelMatchElectronsL1Seeded +

@@ -102,7 +102,7 @@ hltCtfL1SeededWithMaterialTracks = cms.EDProducer( "TrackProducer",
     Propagator = cms.string( "PropagatorWithMaterial" )
 )
 
-hltEleAnyBarrelTracks = cms.EDProducer( "AnalyticalTrackSelector",
+hltEleAnyWPBarrelTracks = cms.EDProducer( "AnalyticalTrackSelector",
     max_d0 = cms.double( 100.0 ),
     minNumber3DLayers = cms.uint32( 0 ),
     max_lostHitFraction = cms.double( 1.0 ),

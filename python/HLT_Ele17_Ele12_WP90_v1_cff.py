@@ -202,7 +202,7 @@ HLT_Ele17_Ele12_WP90_v1 = cms.Sequence( HLTDoRegionalEgammaEcalSequence +
 				       hltEG1712WP90RhoPixelMatchFilter +
                                        hltCkfL1SeededTrackCandidates+
                                        hltCtfL1SeededWithMaterialTracks+
-                                       hltEleAnyBarrelTracks+
+                                       hltEleAnyWPBarrelTracks+
                                        hltCtfL1SeededWithMaterialCleanTracks+
                                        hltEleAnyCleanMergedTracks+
                                        hltEleAnyPixelMatchElectronsL1Seeded +

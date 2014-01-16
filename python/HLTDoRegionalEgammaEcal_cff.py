@@ -1,6 +1,5 @@
 import FWCore.ParameterSet.Config as cms
 
-
 hltESPESUnpackerWorker = cms.ESProducer( "ESUnpackerWorkerESProducer",
       RHAlgo = cms.PSet(
        ESRecoAlgo = cms.int32( 0 ),
