@@ -133,7 +133,8 @@ hltEleOneOEMinusOneOPFilter = cms.EDFilter( "HLTElectronOneOEMinusOneOPFilterReg
     electronIsolatedProducer = cms.InputTag( "hltEleAnyPixelMatchElectronsL1Seeded" ),
     ncandcut = cms.int32( 1 ),
     candTag = cms.InputTag( "hltElePixelMatchFilter" ),
-    endcapcut = cms.double(-1.0)
+    endcapcut = cms.double(-1.0),
+    useGsfElectron = cms.bool(False)
 )
 
 ### Deta Filter
@@ -192,6 +193,7 @@ hltEleTrackIsoFilter = cms.EDFilter( "HLTElectronGenericFilter",
     thrOverPtEE = cms.double(-1.0),
     thrOverPtEB = cms.double(-1.0)
 )
+
 
 ### start with double electron filter
 hltEGRegionalL1DoubleEG178 = cms.EDFilter( "HLTEgammaL1MatchFilterRegional",

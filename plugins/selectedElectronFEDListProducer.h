@@ -1,5 +1,5 @@
 #ifndef HLTTigger_Egamma_selectedElectronFEDListProducer_h
-#define HLTTigger_Egamma_selectedElectronFEDListProducer_h
+#define HLTTigger_Egamma_selectedFEDListProducer_h
 
 #include <iostream>
 #include <sstream>
@@ -26,6 +26,8 @@
 #include "DataFormats/RecoCandidate/interface/RecoEcalCandidateFwd.h"
 #include "DataFormats/EgammaCandidates/interface/Electron.h"
 #include "DataFormats/EgammaCandidates/interface/ElectronFwd.h"
+#include "DataFormats/EgammaCandidates/interface/GsfElectron.h"
+#include "DataFormats/EgammaCandidates/interface/GsfElectronFwd.h"
 #include "DataFormats/FEDRawData/interface/FEDNumbering.h"
 #include "DataFormats/EgammaReco/interface/PreshowerCluster.h"
 #include "DataFormats/EgammaReco/interface/PreshowerClusterFwd.h"
@@ -86,13 +88,15 @@ class selectedElectronFEDListProducer : public edm::EDProducer {
    
  protected:
 
-  virtual void beginJob(const edm::EventSetup &) ;
+  virtual void beginJob() ;
   virtual void endJob() ;
   virtual void produce(edm::Event&, const edm::EventSetup&);
 
  private:
   
   std::vector<edm::InputTag> electronCollections_ ;
+  std::vector<int> isGsfElectronCollection_ ;
+
   edm::FileInPath ESLookupTable_ ; 
   edm::InputTag rawDataLabel_ ;
 
@@ -101,6 +105,9 @@ class selectedElectronFEDListProducer : public edm::EDProducer {
   bool dumpEcalFedList_ ;
   bool dumpTrackSiStripFedList_ ;
   bool dumpTrackSiPixelFedList_ ;
+  bool dumpAllEcalFed_ ;
+  bool dumpAllTrackerFed_;
+
   std::string outputLabelModule_ ;
 
   // fed id for pre-shower

@@ -14,6 +14,16 @@ hltEle25WP80PFMT50PFMTFilter = cms.EDFilter( "HLTElectronPFMTFilter",
     minMht = cms.double( 0.0 ),
     inputEleTag = cms.InputTag( "hltEle25WP80TrackIsoFilter" ),
     upperMTCut = cms.double( 9999.0 ))
-
-HLTEle25WP80PFMETMT50Sequence = cms.Sequence(HLTPFL1FastL2L3ReconstructionSequence + hltPFMETProducerSequence +
+    
+hltGsfEle25WP80PFMT50PFMTFilter = hltEle25WP80PFMT50PFMTFilter.clone()
+hltGsfEle25WP80PFMT50PFMTFilter.inputEleTag = cms.InputTag( "hltGsfEle25WP80TrackIsoFilter" )
+        
+	
+HLTEle25WP80PFMETMT50Sequence = cms.Sequence(HLTPFL1FastL2L3ReconstructionSequence + 
+	                                     hltPFMETProducerSequence +
 	                                     hltEle25WP80PFMT50PFMTFilter)
+
+HLTGsfEle25WP80PFMETMT50Sequence = cms.Sequence(HLTPFL1FastL2L3ReconstructionSequence + 
+	                                        hltPFMETProducerSequence +
+	                                        hltGsfEle25WP80PFMT50PFMTFilter)
+

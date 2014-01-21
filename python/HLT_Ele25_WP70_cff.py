@@ -122,3 +122,71 @@ HLTEle25WP70Sequence = cms.Sequence( hltPreEle+
                                      hltEleAnyL1SeededElectronTrackIso +
                                      hltEle25WP70TrackIsoFilter)
 
+
+#############################
+### using gsf electrons  ####
+#############################
+
+from HLTrigger.Configuration.HLT_GsfElectronTrackSequence_cff import *
+
+hltGsfEle25WP70OneOEMinusOneOPFilter = hltEleOneOEMinusOneOPFilter.clone()
+hltGsfEle25WP70OneOEMinusOneOPFilter.barrelcut = cms.double( 0.05 )
+hltGsfEle25WP70OneOEMinusOneOPFilter.endcapcut = cms.double( 0.05 )
+hltGsfEle25WP70OneOEMinusOneOPFilter.ncandcut = cms.int32(1)
+hltGsfEle25WP70OneOEMinusOneOPFilter.candTag = cms.InputTag("hltEle25WP70PixelMatchFilter")
+hltGsfEle25WP70OneOEMinusOneOPFilter.electronIsolatedProducer = cms.InputTag("hltL1SeededGsfElectrons")
+hltGsfEle25WP70OneOEMinusOneOPFilter.useGsfElectron = cms.bool(True)
+
+## Deta filter
+hltGsfEle25WP70DetaFilter = hltEleDetaFilter.clone()
+hltGsfEle25WP70DetaFilter.thrRegularEE = cms.double( 0.006 )
+hltGsfEle25WP70DetaFilter.thrRegularEB = cms.double( 0.004 )
+hltGsfEle25WP70DetaFilter.ncandcut = cms.int32(1)
+hltGsfEle25WP70DetaFilter.candTag = cms.InputTag("hltGsfEle25WP70OneOEMinusOneOPFilter")
+hltGsfEle25WP70DetaFilter.L1IsoCand = cms.InputTag("hltEle25WP70PixelMatchFilter")
+hltGsfEle25WP70DetaFilter.isoTag = cms.InputTag( 'hltL1SeededGsfTrackVars','Deta' )
+
+## Dphi filter
+hltGsfEle25WP70DphiFilter = hltEleDphiFilter.clone()
+hltGsfEle25WP70DphiFilter.thrRegularEE = cms.double( 0.03 )
+hltGsfEle25WP70DphiFilter.thrRegularEB = cms.double( 0.04 )
+hltGsfEle25WP70DphiFilter.ncandcut = cms.int32(1)
+hltGsfEle25WP70DphiFilter.candTag = cms.InputTag("hltGsfEle25WP70DetaFilter")
+hltGsfEle25WP70DphiFilter.L1IsoCand = cms.InputTag("hltEle25WP70PixelMatchFilter")
+hltGsfEle25WP70DphiFilter.isoTag = cms.InputTag( 'hltL1SeededGsfTrackVars','Dphi' )
+
+## track iso filter
+hltGsfEle25WP70TrackIsoFilter = hltEleTrackIsoFilter.clone()
+hltGsfEle25WP70TrackIsoFilter.thrOverPtEE = cms.double( 0.05 )
+hltGsfEle25WP70TrackIsoFilter.thrOverPtEB = cms.double( 0.05 )
+hltGsfEle25WP70TrackIsoFilter.ncandcut = cms.int32(1)
+hltGsfEle25WP70TrackIsoFilter.candTag = cms.InputTag("hltGsfEle25WP70DphiFilter")
+hltGsfEle25WP70TrackIsoFilter.L1IsoCand = cms.InputTag("hltEle25WP70PixelMatchFilter")
+hltGsfEle25WP70TrackIsoFilter.isoTag = cms.InputTag("hltGsfEleAnyL1SeededElectronTrackIso")
+
+HLTGsfEle25WP70Sequence = cms.Sequence(	hltPreEle+
+	                                HLTDoRegionalEgammaEcalSequence+
+                                        HLTL1SeededEcalClustersSequence+
+                                        hltL1SeededRecoEcalCandidate+ 
+                                        hltEGRegionalL1SingleEG20ORL1SingleEG22+ 
+                                        hltEG25WP70EtFilter +
+                                        hltL1SeededHLTClusterShape +
+                                        hltEle25WP70ClusterShapeFilter+
+                                        HLTDoLocalHcalWithHOSequence+					     
+                                        hltL1SeededPhotonEcalIso+
+                                        hltEle25WP70EcalIsoFilter+
+                                        hltL1SeededPhotonHcalForHE +
+                                        hltEle25WP70HEFilter+ 
+                                        hltL1SeededPhotonHcalIso +
+                                        hltEle25WP70HcalIsoFilter+ 
+                                        HLTDoLocalPixelSequence +
+                                        HLTDoLocalStripSequence +
+                                        hltL1SeededStartUpElectronPixelSeeds+ 
+				        hltEle25WP70PixelMatchFilter+
+                                        HLTL1SeededGsfElectronSequence+
+                                        hltGsfEle25WP70OneOEMinusOneOPFilter+
+                                        hltGsfEle25WP70DetaFilter+
+                                        hltGsfEle25WP70DphiFilter+
+                                        HLTL1SeededEgammaRegionalRecoTrackerSequence +
+                                        hltGsfEleAnyL1SeededElectronTrackIso+
+                                        hltGsfEle25WP70TrackIsoFilter)

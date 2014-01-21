@@ -7,16 +7,24 @@ hltPreOutput = cms.EDFilter( "HLTPrescaler",
   offset = cms.uint32( 0 ))
 
 ## select the trigger path to use to fire the output collection
-StremSelectedEvents =  cms.vstring(#'HLT_Ele25_WP70_v13',
+StremSelectedEvents =  cms.vstring('HLT_Ele25_WP70_v13',
 				   'HLT_Ele25_WP80_v13',
-#				    'HLT_Ele25_WP90_v13',
-#				    'HLT_Ele25_WP70_PFMET_MT50_v9',
-#				    'HLT_Ele25_WP80_PFMET_MT50_v9',
-#				    'HLT_Ele25_WP90_PFMET_MT50_v9',
-#				    'HLT_Ele17_Ele8_WP90_v1',
-#				    'HLT_Ele17_Ele_12_WP90_v1',
-#				    'HLT_DoubleEle17_WP90_v1'
+  			           'HLT_Ele25_WP90_v13',
+				   'HLT_Ele25_WP70_PFMET_MT50_v9',
+				   'HLT_Ele25_WP80_PFMET_MT50_v9',
+				   'HLT_Ele25_WP90_PFMET_MT50_v9',
+				   'HLT_Ele17_Ele8_WP90_v1',
+				   'HLT_Ele17_Ele_12_WP90_v1',
+				   'HLT_DoubleEle17_WP90_v1'
 			            ) 
+				    
+StremSelectedEventsGsf = cms.vstring('HLT_GsfEle25_WP70_v13',
+ 	 			     'HLT_GsfEle25_WP80_v13',
+  			             'HLT_GsfEle25_WP90_v13',
+				     'HLT_GsfEle25_WP70_PFMET_MT50_v9',
+				     'HLT_GsfEle25_WP80_PFMET_MT50_v9',
+				     'HLT_GsfEle25_WP90_PFMET_MT50_v9',
+)
 
 hltOutputStreamElectron = cms.OutputModule( "PoolOutputModule",
     fileName = cms.untracked.string( "outputHLT.root" ),
@@ -25,7 +33,8 @@ hltOutputStreamElectron = cms.OutputModule( "PoolOutputModule",
         filterName = cms.untracked.string( "" ),
         dataTier = cms.untracked.string( "RAW" )
     ),
-    SelectEvents = cms.untracked.PSet(  SelectEvents = ( StremSelectedEvents )),
+    SelectEvents = cms.untracked.PSet(  SelectEvents = ( #StremSelectedEvents 
+			                                 StremSelectedEventsGsf)),
     outputCommands = cms.untracked.vstring('keep *')
 )
 
@@ -49,13 +58,15 @@ hltOutputStreamElectron.outputCommands = ['drop * ',
  
 
 HLTselectedElectronFEDList = cms.EDProducer("selectedElectronFEDListProducer",
-	electronCollections = cms.VInputTag(#'hltEle25WP70TrackIsoFilter',
-			                    'hltEle25WP80TrackIsoFilter'),
-	ESLookupTable = cms.untracked.FileInPath('EventFilter/ESDigiToRaw/data/ES_lookup_table.dat'),
-	dumpEcalFedList = cms.bool(True),
+	electronCollections = cms.VInputTag('hltGsfEle25WP80TrackIsoFilter'),
+	isGsfElectronCollection = cms.vint32(True), 
+	ESLookupTable       = cms.untracked.FileInPath('EventFilter/ESDigiToRaw/data/ES_lookup_table.dat'),
+	outputLabelModule   = cms.string("StremElectronRawFedData"),
+	rawDataLabel        = cms.InputTag("rawDataCollector"),
+	dumpEcalFedList         = cms.bool(True),
 	dumpTrackSiStripFedList = cms.bool(True),
 	dumpTrackSiPixelFedList = cms.bool(True),
-	outputLabelModule = cms.string("StremElectronRawFedData"),
-	debug = cms.bool(False),
-	rawDataLabel = cms.InputTag("rawDataCollector")
+	dumpAllEcalFed  = cms.bool(False),
+	dumpAllTrackerFed = cms.bool(False),
+	debug = cms.bool(True)
 )

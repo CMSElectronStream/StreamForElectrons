@@ -412,3 +412,4 @@ hltActivityEleAnyL1SeededDetaDphi = cms.EDProducer( "EgammaHLTElectronDetaDphiPr
     recoEcalCandidateProducer = cms.InputTag( "" ),
     useTrackProjectionToEcal = cms.bool( False )
 )
+
