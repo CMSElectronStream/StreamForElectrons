@@ -27,15 +27,15 @@ To install:
     cp StreamForElectrons/plugins/EgammaHLTGsfTrackVarProducer.cc RecoEgamma/EgammaHLTProducers/src/
     cp StreamForElectrons/plugins/selectedElectronFEDListProducer.h  HLTrigger/Egamma/interface/
     cp StreamForElectrons/plugins/selectedElectronFEDListProducer.cc HLTrigger/Egamma/src/
-    scramv1 b 
+    scramv1 b -j 8
 
 test:
 
- cd HLTrigger/Configuration/test ;
+    cd HLTrigger/Configuration/test ;
 
  1) python to be executed via cmsRun is streamEle_cfg.py:
 
-    The following part are loaded:
+    # The following part are loaded:
 
     process.source = cms.Source( "PoolSource",
        fileNames = cms.untracked.vstring('file:/media/DATA/CMSSWRoot/DATA2012/SingleElectron_Run2012B_RAW/B865DABE-BDA2-E111-854F-BCAEC53296F7.root'),
@@ -50,7 +50,7 @@ test:
     process.load("HLTrigger.Configuration.SourceHLT_cff") -> add to the process the HLT ESSource
 
     process.load("HLTrigger.Configuration.ESProducerHLT_cff") -> add to the process the HLT ESProdcer (geometry, track reco etc ..)
- 
+
     process.load("HLTrigger.Configuration.ServiceHLT_cff") -> add some service tool, like PrescaleService -> define the prescale, for the moment
                                                               I have put there just the path that I have developed
 
@@ -62,26 +62,25 @@ test:
 
     ## final path in common with all the HLT paths in the HLT Full code
 
-    process.HLT_LogMonitor_v4 = cms.Path( process.hltGtDigis + 
-	                              process.hltLogMonitorFilter + 
-				      process.hltPreLogMonitor + 
-		                      process.HLTEndSequence )
-
+    process.HLT_LogMonitor_v4 = cms.Path( process.hltGtDigis +
+	                              process.hltLogMonitorFilter +
+             				      process.hltPreLogMonitor +
+		                          process.HLTEndSequence )
 
    ### final HLT trigger path
-   process.HLTriggerFinalPath = cms.Path( process.hltGtDigis + 
-	                                  process.hltScalersRawToDigi + 
-		   		          process.hltFEDSelector + 
-		                          process.hltTriggerSummaryAOD + 
+   process.HLTriggerFinalPath = cms.Path( process.hltGtDigis +
+	                                  process.hltScalersRawToDigi +
+		   		          process.hltFEDSelector +
+		                          process.hltTriggerSummaryAOD +
 				          process.hltTriggerSummaryRAW )
 
-     
+
 
  2) Single Electron Paths --> use the CFTrack --> you can load the sequences in the process by:
 
     process.load("HLTrigger.Configuration.HLT_Ele25_WP80_cff")
 
-    then define the path:
+   then define the path:
 
     process.HLT_Ele25_WP80_v13 = cms.Path( process.HLTBeginSequence +  # unpacker
                                            process.hltL1sL1SingleEG20ORL1SingleEG22 + #L1 seed
@@ -96,7 +95,7 @@ test:
 
     process.load("HLTrigger.Configuration.HLT_Ele25_WP80_cff")
 
-    then define the path:
+   then define the path:
 
     process.HLT_GsfEle25_WP80_v13 = cms.Path( process.HLTBeginSequence +
                                               process.hltL1sL1SingleEG20ORL1SingleEG22 +
@@ -123,12 +122,12 @@ test:
 
     process.ElectronStreamOutputPath = cms.EndPath( process.hltPreOutput + 
 	                                            process.HLTselectedElectronFEDList + ## this calls the FED subset producer 
-		  				    process.hltOutputStreamElectron) ## this defines the output content and the trigger path
+		  				                        process.hltOutputStreamElectron) ## this defines the output content and the trigger path
 
                                        
     StremSelectedEventsGsf = cms.vstring('HLT_GsfEle25_WP70_v13', ## pay attention to comment the path that are not running, otherwise error
  	 			     'HLT_GsfEle25_WP80_v13',
-  			             'HLT_GsfEle25_WP90_v13',
+                     'HLT_GsfEle25_WP90_v13',
 				     'HLT_GsfEle25_WP70_PFMET_MT50_v9',
 				     'HLT_GsfEle25_WP80_PFMET_MT50_v9',
 				     'HLT_GsfEle25_WP90_PFMET_MT50_v9',)
@@ -150,7 +149,7 @@ test:
                                           'keep *_edmTriggerResults_*_*',
                                           'keep *_hltL1GtObjectMap_*_*',
                                           'keep triggerTriggerEvent_*_*_*',
-					  'keep *_HLTselectedElectronFEDList_*StremElectronRawFedData*_*']
+					                      'keep *_HLTselectedElectronFEDList_*StremElectronRawFedData*_*']
 
     ## output producer
     HLTselectedElectronFEDList = cms.EDProducer("selectedElectronFEDListProducer",
@@ -165,3 +164,7 @@ test:
 	dumpAllEcalFed  = cms.bool(False),
 	dumpAllTrackerFed = cms.bool(False),
 	debug = cms.bool(True))
+
+
+
+
