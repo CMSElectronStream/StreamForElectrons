@@ -67,7 +67,7 @@ test:
              				      process.hltPreLogMonitor +
 		                          process.HLTEndSequence )
 
-   ### final HLT trigger path
+   ## final HLT trigger path
    process.HLTriggerFinalPath = cms.Path( process.hltGtDigis +
 	                                  process.hltScalersRawToDigi +
 		   		          process.hltFEDSelector +
