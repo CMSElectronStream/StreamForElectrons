@@ -8,82 +8,82 @@ process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring('file:../../HLTrigger/Configuration/test/streamElectronRAW_tmp.root')   #  -> streamed raw
     #fileNames = cms.untracked.vstring('file:pickevents.root')  #  -> raw
   )
-process.BeamHaloSummary = cms.EDProducer("BeamHaloSummaryProducer",
-    l_HcalPhiWedgeConfidence = cms.double(0.7),
-    t_EcalSuperClusterSize = cms.int32(3),
-    l_EcalSuperClusterEnergy = cms.double(10.0),
-    l_EcalPhiWedgeConfidence = cms.double(0.7),
-    t_EcalPhiWedgeEnergy = cms.double(20.0),
-    t_EcalPhiWedgeConfidence = cms.double(0.9),
-    l_HcalPhiWedgeEnergy = cms.double(20.0),
-    t_EcalShowerShapesRoundness = cms.double(0.23),
-    l_HcalPhiWedgeConstituents = cms.int32(6),
-    EcalHaloDataLabel = cms.InputTag("EcalHaloData"),
-    l_EcalShowerShapesRoundness = cms.double(0.41),
-    l_EcalSuperClusterSize = cms.int32(3),
-    t_HcalPhiWedgeEnergy = cms.double(25.0),
-    t_HcalPhiWedgeConfidence = cms.double(0.9),
-    t_EcalShowerShapesAngle = cms.double(0.51),
-    t_EcalPhiWedgeConstituents = cms.int32(8),
-    l_EcalPhiWedgeEnergy = cms.double(10.0),
-    GlobalHaloDataLabel = cms.InputTag("GlobalHaloData"),
-    l_HcalPhiWedgeToF = cms.double(-100.0),
-    t_HcalPhiWedgeToF = cms.double(-100.0),
-    t_HcalPhiWedgeConstituents = cms.int32(8),
-    HcalHaloDataLabel = cms.InputTag("HcalHaloData"),
-    t_EcalPhiWedgeToF = cms.double(-200.0),
-    l_EcalPhiWedgeConstituents = cms.int32(6),
-    t_EcalSuperClusterEnergy = cms.double(10.0),
-    l_EcalPhiWedgeToF = cms.double(-200.0),
-    l_EcalShowerShapesAngle = cms.double(0.51),
-    CSCHaloDataLabel = cms.InputTag("CSCHaloData")
-)
+#process.BeamHaloSummary = cms.EDProducer("BeamHaloSummaryProducer",
+    #l_HcalPhiWedgeConfidence = cms.double(0.7),
+    #t_EcalSuperClusterSize = cms.int32(3),
+    #l_EcalSuperClusterEnergy = cms.double(10.0),
+    #l_EcalPhiWedgeConfidence = cms.double(0.7),
+    #t_EcalPhiWedgeEnergy = cms.double(20.0),
+    #t_EcalPhiWedgeConfidence = cms.double(0.9),
+    #l_HcalPhiWedgeEnergy = cms.double(20.0),
+    #t_EcalShowerShapesRoundness = cms.double(0.23),
+    #l_HcalPhiWedgeConstituents = cms.int32(6),
+    #EcalHaloDataLabel = cms.InputTag("EcalHaloData"),
+    #l_EcalShowerShapesRoundness = cms.double(0.41),
+    #l_EcalSuperClusterSize = cms.int32(3),
+    #t_HcalPhiWedgeEnergy = cms.double(25.0),
+    #t_HcalPhiWedgeConfidence = cms.double(0.9),
+    #t_EcalShowerShapesAngle = cms.double(0.51),
+    #t_EcalPhiWedgeConstituents = cms.int32(8),
+    #l_EcalPhiWedgeEnergy = cms.double(10.0),
+    #GlobalHaloDataLabel = cms.InputTag("GlobalHaloData"),
+    #l_HcalPhiWedgeToF = cms.double(-100.0),
+    #t_HcalPhiWedgeToF = cms.double(-100.0),
+    #t_HcalPhiWedgeConstituents = cms.int32(8),
+    #HcalHaloDataLabel = cms.InputTag("HcalHaloData"),
+    #t_EcalPhiWedgeToF = cms.double(-200.0),
+    #l_EcalPhiWedgeConstituents = cms.int32(6),
+    #t_EcalSuperClusterEnergy = cms.double(10.0),
+    #l_EcalPhiWedgeToF = cms.double(-200.0),
+    #l_EcalShowerShapesAngle = cms.double(0.51),
+    #CSCHaloDataLabel = cms.InputTag("CSCHaloData")
+#)
 
 
-process.CSCHaloData = cms.EDProducer("CSCHaloDataProducer",
-    ExpectedBX = cms.int32(3),
-    RecHitTime0 = cms.double(0.0),
-    MinOuterMomentumTheta = cms.double(0.1),
-    SALabel = cms.InputTag("standAloneMuons"),
-    MatchingDPhiThreshold = cms.double(0.18),
-    MaxOuterMomentumTheta = cms.double(3.0),
-    DphiParam = cms.double(1.0),
-    RecHitTimeWindow = cms.double(25.0),
-    ServiceParameters = cms.PSet(
-        Propagators = cms.untracked.vstring('SteppingHelixPropagatorAny', 
-            'PropagatorWithMaterial', 
-            'PropagatorWithMaterialOpposite'),
-        RPCLayers = cms.bool(True)
-    ),
-    DetaParam = cms.double(0.1),
-    InnerRMinParam = cms.double(0.0),
-    MaxFreeInverseBeta = cms.double(0.0),
-    MaxDtMuonSegment = cms.double(-10.0),
-    MuonLabel = cms.InputTag("muons"),
-    MatchParameters = cms.PSet(
-        DTsegments = cms.InputTag("dt4DSegments"),
-        CSCsegments = cms.InputTag("cscSegments"),
-        DTradius = cms.double(0.01),
-        TightMatchDT = cms.bool(False),
-        TightMatchCSC = cms.bool(True)
-    ),
-    MaxSegmentPhiDiff = cms.double(0.35),
-    CSCSegmentLabel = cms.InputTag("cscSegments"),
-    InnerRMaxParam = cms.double(99999.0),
-    MaxSegmentRDiff = cms.double(10.0),
-    L1MuGMTReadoutLabel = cms.InputTag("gtDigis"),
-    MaxSegmentTheta = cms.double(0.7),
-    HLTResultLabel = cms.InputTag("TriggerResults","","HLT"),
-    HLTBitLabel = cms.VInputTag(cms.InputTag("HLT_CSCBeamHalo"), cms.InputTag("HLT_CSCBeamHaloOverlapRing1"), cms.InputTag("HLT_CSCBeamHaloOverlapRing2"), cms.InputTag("HLT_CSCBeamHaloRing2or3")),
-    NormChi2Param = cms.double(8.0),
-    ALCTDigiLabel = cms.InputTag("muonCSCDigis","MuonCSCALCTDigi"),
-    OuterRMaxParam = cms.double(99999.0),
-    MatchingDEtaThreshold = cms.double(0.4),
-    OuterRMinParam = cms.double(0.0),
-    MatchingDWireThreshold = cms.int32(5),
-    CosmicMuonLabel = cms.InputTag("muonsFromCosmics"),
-    CSCRecHitLabel = cms.InputTag("csc2DRecHits")
-)
+#process.CSCHaloData = cms.EDProducer("CSCHaloDataProducer",
+    #ExpectedBX = cms.int32(3),
+    #RecHitTime0 = cms.double(0.0),
+    #MinOuterMomentumTheta = cms.double(0.1),
+    #SALabel = cms.InputTag("standAloneMuons"),
+    #MatchingDPhiThreshold = cms.double(0.18),
+    #MaxOuterMomentumTheta = cms.double(3.0),
+    #DphiParam = cms.double(1.0),
+    #RecHitTimeWindow = cms.double(25.0),
+    #ServiceParameters = cms.PSet(
+        #Propagators = cms.untracked.vstring('SteppingHelixPropagatorAny', 
+            #'PropagatorWithMaterial', 
+            #'PropagatorWithMaterialOpposite'),
+        #RPCLayers = cms.bool(True)
+    #),
+    #DetaParam = cms.double(0.1),
+    #InnerRMinParam = cms.double(0.0),
+    #MaxFreeInverseBeta = cms.double(0.0),
+    #MaxDtMuonSegment = cms.double(-10.0),
+    #MuonLabel = cms.InputTag("muons"),
+    #MatchParameters = cms.PSet(
+        #DTsegments = cms.InputTag("dt4DSegments"),
+        #CSCsegments = cms.InputTag("cscSegments"),
+        #DTradius = cms.double(0.01),
+        #TightMatchDT = cms.bool(False),
+        #TightMatchCSC = cms.bool(True)
+    #),
+    #MaxSegmentPhiDiff = cms.double(0.35),
+    #CSCSegmentLabel = cms.InputTag("cscSegments"),
+    #InnerRMaxParam = cms.double(99999.0),
+    #MaxSegmentRDiff = cms.double(10.0),
+    #L1MuGMTReadoutLabel = cms.InputTag("gtDigis"),
+    #MaxSegmentTheta = cms.double(0.7),
+    #HLTResultLabel = cms.InputTag("TriggerResults","","HLT"),
+    #HLTBitLabel = cms.VInputTag(cms.InputTag("HLT_CSCBeamHalo"), cms.InputTag("HLT_CSCBeamHaloOverlapRing1"), cms.InputTag("HLT_CSCBeamHaloOverlapRing2"), cms.InputTag("HLT_CSCBeamHaloRing2or3")),
+    #NormChi2Param = cms.double(8.0),
+    #ALCTDigiLabel = cms.InputTag("muonCSCDigis","MuonCSCALCTDigi"),
+    #OuterRMaxParam = cms.double(99999.0),
+    #MatchingDEtaThreshold = cms.double(0.4),
+    #OuterRMinParam = cms.double(0.0),
+    #MatchingDWireThreshold = cms.int32(5),
+    #CosmicMuonLabel = cms.InputTag("muonsFromCosmics"),
+    #CSCRecHitLabel = cms.InputTag("csc2DRecHits")
+#)
 
 
 process.CastorTowerReco = cms.EDProducer("CastorTowerProducer",
@@ -4106,9 +4106,9 @@ process.combinedSecondaryVertexV1PositiveBJetTags = cms.EDProducer("JetTagProduc
 )
 
 
-process.conditionsInEdm = cms.EDProducer("ConditionDumperInEdm",
-    gtEvmDigisLabel = cms.InputTag("gtEvmDigis")
-)
+#process.conditionsInEdm = cms.EDProducer("ConditionDumperInEdm",
+    #gtEvmDigisLabel = cms.InputTag("gtEvmDigis")
+#)
 
 
 process.conv2Clusters = cms.EDProducer("TrackClusterRemover",
@@ -13990,21 +13990,21 @@ process.gsfGeneralInOutOutInConversionTrackMerger = cms.EDProducer("ConversionTr
 )
 
 
-process.gtDigis = cms.EDProducer("L1GlobalTriggerRawToDigi",
-    DaqGtFedId = cms.untracked.int32(813),
-    DaqGtInputTag = cms.InputTag("HLTselectedElectronFEDList:StremElectronRawFedData"),
-    UnpackBxInEvent = cms.int32(-1),
-    ActiveBoardsMask = cms.uint32(65535)
-)
+#process.gtDigis = cms.EDProducer("L1GlobalTriggerRawToDigi",
+    #DaqGtFedId = cms.untracked.int32(813),
+    #DaqGtInputTag = cms.InputTag("HLTselectedElectronFEDList:StremElectronRawFedData"),
+    #UnpackBxInEvent = cms.int32(-1),
+    #ActiveBoardsMask = cms.uint32(65535)
+#)
 
 
-process.gtEvmDigis = cms.EDProducer("L1GlobalTriggerEvmRawToDigi",
-    EvmGtFedId = cms.untracked.int32(812),
-    EvmGtInputTag = cms.InputTag("HLTselectedElectronFEDList:StremElectronRawFedData"),
-    UnpackBxInEvent = cms.int32(-1),
-    ActiveBoardsMask = cms.uint32(65535),
-    BstLengthBytes = cms.int32(-1)
-)
+#process.gtEvmDigis = cms.EDProducer("L1GlobalTriggerEvmRawToDigi",
+    #EvmGtFedId = cms.untracked.int32(812),
+    #EvmGtInputTag = cms.InputTag("HLTselectedElectronFEDList:StremElectronRawFedData"),
+    #UnpackBxInEvent = cms.int32(-1),
+    #ActiveBoardsMask = cms.uint32(65535),
+    #BstLengthBytes = cms.int32(-1)
+#)
 
 
 process.hbheprereco = cms.EDProducer("HcalHitReconstructor",
@@ -18776,9 +18776,9 @@ process.kt6TrackJets = cms.EDProducer("FastjetJetProducer",
 )
 
 
-process.l1GtRecord = cms.EDProducer("L1GlobalTriggerRecordProducer",
-    L1GtReadoutRecordTag = cms.InputTag("gtDigis")
-)
+#process.l1GtRecord = cms.EDProducer("L1GlobalTriggerRecordProducer",
+    #L1GtReadoutRecordTag = cms.InputTag("gtDigis")
+#)
 
 
 process.l1GtTriggerMenuLite = cms.EDProducer("L1GtTriggerMenuLiteProducer")
@@ -18789,24 +18789,24 @@ process.l1L1GtObjectMap = cms.EDProducer("ConvertObjectMapRecord",
 )
 
 
-process.l1extraParticles = cms.EDProducer("L1ExtraParticlesProd",
-    centralBxOnly = cms.bool(False),
-    tauJetSource = cms.InputTag("gctDigis","tauJets"),
-    etTotalSource = cms.InputTag("gctDigis"),
-    nonIsolatedEmSource = cms.InputTag("gctDigis","nonIsoEm"),
-    htMissSource = cms.InputTag("gctDigis"),
-    etMissSource = cms.InputTag("gctDigis"),
-    produceMuonParticles = cms.bool(True),
-    hfRingEtSumsSource = cms.InputTag("gctDigis"),
-    forwardJetSource = cms.InputTag("gctDigis","forJets"),
-    ignoreHtMiss = cms.bool(False),
-    centralJetSource = cms.InputTag("gctDigis","cenJets"),
-    produceCaloParticles = cms.bool(True),
-    muonSource = cms.InputTag("gtDigis"),
-    isolatedEmSource = cms.InputTag("gctDigis","isoEm"),
-    etHadSource = cms.InputTag("gctDigis"),
-    hfRingBitCountsSource = cms.InputTag("gctDigis")
-)
+#process.l1extraParticles = cms.EDProducer("L1ExtraParticlesProd",
+    #centralBxOnly = cms.bool(False),
+    #tauJetSource = cms.InputTag("gctDigis","tauJets"),
+    #etTotalSource = cms.InputTag("gctDigis"),
+    #nonIsolatedEmSource = cms.InputTag("gctDigis","nonIsoEm"),
+    #htMissSource = cms.InputTag("gctDigis"),
+    #etMissSource = cms.InputTag("gctDigis"),
+    #produceMuonParticles = cms.bool(True),
+    #hfRingEtSumsSource = cms.InputTag("gctDigis"),
+    #forwardJetSource = cms.InputTag("gctDigis","forJets"),
+    #ignoreHtMiss = cms.bool(False),
+    #centralJetSource = cms.InputTag("gctDigis","cenJets"),
+    #produceCaloParticles = cms.bool(True),
+    #muonSource = cms.InputTag("gtDigis"),
+    #isolatedEmSource = cms.InputTag("gctDigis","isoEm"),
+    #etHadSource = cms.InputTag("gctDigis"),
+    #hfRingBitCountsSource = cms.InputTag("gctDigis")
+#)
 
 
 process.logErrorHarvester = cms.EDProducer("LogErrorHarvester")
@@ -29101,7 +29101,7 @@ process.btagging = cms.Sequence(process.impactParameterTagInfos+process.trackCou
 process.hcalLocalRecoSequenceNZS = cms.Sequence(process.hbherecoMB+process.hfrecoMB+process.horecoMB)
 
 
-process.RawToDigi = cms.Sequence(process.csctfDigis+process.dttfDigis+process.gctDigis+process.gtDigis+process.gtEvmDigis+process.siPixelDigis+process.siStripDigis+process.ecalDigis+process.ecalPreshowerDigis+process.hcalDigis+process.muonCSCDigis+process.muonDTDigis+process.muonRPCDigis+process.castorDigis+process.scalersRawToDigi)
+process.RawToDigi = cms.Sequence(process.csctfDigis+process.dttfDigis+process.gctDigis+process.siPixelDigis+process.siStripDigis+process.ecalDigis+process.ecalPreshowerDigis+process.hcalDigis+process.muonCSCDigis+process.muonDTDigis+process.muonRPCDigis+process.castorDigis+process.scalersRawToDigi)
 
 
 process.iterativeCone5JTA = cms.Sequence(process.iterativeCone5JetTracksAssociatorAtVertex+process.iterativeCone5JetTracksAssociatorAtCaloFace+process.iterativeCone5JetExtender)
@@ -29242,7 +29242,7 @@ process.ak5JTAExplicit = cms.Sequence(process.ak5JetTracksAssociatorExplicit)
 process.uncleanedOnlyElectrons = cms.Sequence(process.uncleanedOnlyGsfElectronCores+process.uncleanedOnlyGsfElectrons)
 
 
-process.RawToDigi_noTk = cms.Sequence(process.csctfDigis+process.dttfDigis+process.gctDigis+process.gtDigis+process.gtEvmDigis+process.ecalDigis+process.ecalPreshowerDigis+process.hcalDigis+process.muonCSCDigis+process.muonDTDigis+process.muonRPCDigis+process.castorDigis+process.scalersRawToDigi)
+process.RawToDigi_noTk = cms.Sequence(process.csctfDigis+process.dttfDigis+process.gctDigis+process.ecalDigis+process.ecalPreshowerDigis+process.hcalDigis+process.muonCSCDigis+process.muonDTDigis+process.muonRPCDigis+process.castorDigis+process.scalersRawToDigi)
 
 
 process.seldigis = cms.Sequence(process.selectDigi)
@@ -29257,10 +29257,10 @@ process.muoncosmicreco1legSTA = cms.Sequence(process.CosmicMuonSeed+process.cosm
 process.recoJetAssociationsExplicit = cms.Sequence(process.ak5JTAExplicit)
 
 
-process.L1Reco = cms.Sequence(process.l1extraParticles+process.l1GtTriggerMenuLite+process.conditionsInEdm+process.l1L1GtObjectMap)
+process.L1Reco = cms.Sequence(process.l1GtTriggerMenuLite+process.l1L1GtObjectMap)
 
 
-process.L1Reco_L1Extra_L1GtRecord = cms.Sequence(process.l1extraParticles+process.l1GtRecord)
+#process.L1Reco_L1Extra_L1GtRecord = cms.Sequence(process.l1GtRecord)
 
 
 process.gsfElectronSequence = cms.Sequence(process.ecalDrivenGsfElectronCores+process.ecalDrivenGsfElectrons+process.gsfElectronCores+process.gsfElectrons)
@@ -29383,7 +29383,7 @@ process.standAloneMuonSeeds = cms.Sequence(process.ancientMuonSeed)
 process.recoJetAssociations = cms.Sequence(process.ic5JetTracksAssociatorAtVertex+process.iterativeCone5JTA+process.kt4JTA+process.ak5JTA)
 
 
-process.RawToDigi_woGCT = cms.Sequence(process.csctfDigis+process.dttfDigis+process.gtDigis+process.gtEvmDigis+process.siPixelDigis+process.siStripDigis+process.ecalDigis+process.ecalPreshowerDigis+process.hcalDigis+process.muonCSCDigis+process.muonDTDigis+process.muonRPCDigis+process.castorDigis+process.scalersRawToDigi)
+process.RawToDigi_woGCT = cms.Sequence(process.csctfDigis+process.dttfDigis+process.siPixelDigis+process.siStripDigis+process.ecalDigis+process.ecalPreshowerDigis+process.hcalDigis+process.muonCSCDigis+process.muonDTDigis+process.muonRPCDigis+process.castorDigis+process.scalersRawToDigi)
 
 
 process.recoPFMET = cms.Sequence(process.pfMet)
@@ -29425,7 +29425,7 @@ process.Conv2Step = cms.Sequence(process.conv2Clusters+process.photonConvTrajSee
 process.muoncosmicreco2legsSTA = cms.Sequence(process.CosmicMuonSeed+process.cosmicMuons)
 
 
-process.L1Reco_L1Extra = cms.Sequence(process.l1extraParticles)
+#process.L1Reco_L1Extra = cms.Sequence(process.l1extraParticles)
 
 
 process.doAlldEdXEstimators = cms.Sequence(process.dedxTruncated40+process.dedxHarmonic2+process.dedxDiscrimASmi)
@@ -29494,7 +29494,7 @@ process.InitialStep = cms.Sequence(process.initialStepSeeds+process.initialStepT
 process.reducedEcalRecHitsSequence = cms.Sequence(process.interestingEcalDetIdEB+process.interestingEcalDetIdEBU+process.interestingEcalDetIdEE+process.interestingTrackEcalDetIds+process.reducedEcalRecHitsEB+process.reducedEcalRecHitsEE+process.seldigis+process.reducedEcalRecHitsES)
 
 
-process.BeamHaloId = cms.Sequence(process.CSCHaloData+process.EcalHaloData+process.HcalHaloData+process.GlobalHaloData+process.BeamHaloSummary)
+process.BeamHaloId = cms.Sequence(process.EcalHaloData+process.HcalHaloData+process.GlobalHaloData)
 
 
 process.photonIDSequence = cms.Sequence(process.PhotonIDProd)
