@@ -168,3 +168,43 @@ test:
 
 
 
+
+    ## New output producer for regiona FED dumper in the tracker
+    HLTselectedElectronFEDList = cms.EDProducer("selectedElectronFEDListProducerv2",
+	electronCollections = cms.VInputTag('hltGsfEle25WP80TrackIsoFilter'),
+	isGsfElectronCollection = cms.vint32(True), 
+	beamSpot            = cms.InputTag("hltOnlineBeamSpot"),
+	ESLookupTable       = cms.untracked.FileInPath('EventFilter/ESDigiToRaw/data/ES_lookup_table.dat'),
+	dRStripRegion       = cms.double(0.5),
+	dPhiPixelRegion     = cms.double(0.5),
+	dEtaPixelRegion     = cms.double(0.5),
+	maxZPixelRegion     = cms.double(24.),
+	outputLabelModule   = cms.string("StremElectronRawFedData"),
+	rawDataLabel        = cms.InputTag("rawDataCollector"),
+	dumpEcalFedList         = cms.bool(True),
+	dumpTrackSiStripFedList = cms.bool(True),
+	dumpTrackSiPixelFedList = cms.bool(True),
+	dumpAllEcalFed  = cms.bool(False),
+	dumpAllTrackerFed = cms.bool(False),
+	debug = cms.bool(False))
+
+     electronCollections -> list of all the electron collection produced by the trigger paths you have chosen to be stored
+     isGsfElectronCollection -> list of bool to indicate if each electron collection is Gsf or standard reco electron
+     beamSpot -> beam spot tag, fundamental for pixel fed dump
+     ESLookupTable -> look up table for fed mapping in the pre-shower
+     dRStripRegion -> dump al the FED in the strips related to all the channel within a dR wrt the electron track
+     dPhiPixelRegion -> dump al the FED in the pixel related to all the channel within a dPhi window wrt the electron track position
+     dEtaPixelRegion -> dump al the FED in the pixel related to all the channel within a dEta window wrt the electron track position    
+     maxZPixelRegion -> dump al the FED in the pixel related to all the channel within a maxZ wrt to the beam spot
+     outputLabelModule -> Label of the output module collection
+     rawDataLabel -> name for the raw in the output
+
+     dumpEcalFedList -> bool to dump the ecal fed related to the SC + pre-shower in case of electron in EE
+     dumpTrackSiStripFedList -> bool to dump the fed on the strip inside the cone region of the electron track
+     dumpTrackSiPixelFedList -> bool to dump the fed on the pixel inside the eta-phi window wrt to the electron track position
+ 
+     dumpAllEcalFed -> if true dump all the ecal fed
+     dumpAllTrackerFed -> if true dump all the tracker fed in both strip and pixel detector
+     debug -> if true debug mode -> print a lot of info
+
+
