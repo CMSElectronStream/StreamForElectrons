@@ -57,10 +57,15 @@ hltOutputStreamElectron.outputCommands = ['drop * ',
 					  ]
  
 
-HLTselectedElectronFEDList = cms.EDProducer("selectedElectronFEDListProducer",
+HLTselectedElectronFEDList = cms.EDProducer("selectedElectronFEDListProducerv2",
 	electronCollections = cms.VInputTag('hltGsfEle25WP80TrackIsoFilter'),
 	isGsfElectronCollection = cms.vint32(True), 
+	beamSpot            = cms.InputTag("hltOnlineBeamSpot"),
 	ESLookupTable       = cms.untracked.FileInPath('EventFilter/ESDigiToRaw/data/ES_lookup_table.dat'),
+	dRStripRegion       = cms.double(0.5),
+	dPhiPixelRegion     = cms.double(0.5),
+	dEtaPixelRegion     = cms.double(0.5),
+	maxZPixelRegion     = cms.double(24.),
 	outputLabelModule   = cms.string("StremElectronRawFedData"),
 	rawDataLabel        = cms.InputTag("rawDataCollector"),
 	dumpEcalFedList         = cms.bool(True),
@@ -68,5 +73,5 @@ HLTselectedElectronFEDList = cms.EDProducer("selectedElectronFEDListProducer",
 	dumpTrackSiPixelFedList = cms.bool(True),
 	dumpAllEcalFed  = cms.bool(False),
 	dumpAllTrackerFed = cms.bool(False),
-	debug = cms.bool(True)
+	debug = cms.bool(False)
 )
