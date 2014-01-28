@@ -236,7 +236,7 @@ void selectedElectronFEDListProducer::produce(edm::Event & iEvent, const edm::Ev
          EBDetId idEBRaw ((*itSChits).first);
          GlobalPoint point = geometry_->getPosition(idEBRaw);
          hitFED = FEDNumbering::MINECALFEDID + TheMapping_->GetFED(double(point.eta()),double(point.phi())*radTodeg);
-
+         if (hitFED <= FEDNumbering::MINECALFEDID || hitFED >= FEDNumbering::MAXECALFEDID) continue ;
          if(debug_) std::cout<<"[selectedElectronFEDListProducer] electron hit detID Barrel "<<(*itSChits).first.rawId()<<" eta "<<double(point.eta())<<" phi "<< double(point.phi())*radTodeg <<" FED "<<hitFED<<std::endl;
          if(dumpEcalFedList_){
           if(!fedList_.empty()){ 
@@ -251,6 +251,7 @@ void selectedElectronFEDListProducer::produce(edm::Event & iEvent, const edm::Ev
          hitFED = FEDNumbering::MINECALFEDID + TheMapping_->GetFED(double(point.eta()),double(point.phi())*radTodeg);
 
          if(debug_) std::cout<<"[selectedElectronFEDListProducer] electron hit detID Endcap "<<(*itSChits).first.rawId()<<" eta "<<double(point.eta())<<" phi "<<double(point.phi())*radTodeg <<" FED "<<hitFED<<std::endl;
+         if (hitFED <= FEDNumbering::MINECALFEDID || hitFED >= FEDNumbering::MAXECALFEDID) continue ;
          if(dumpEcalFedList_){
           if(!fedList_.empty()){ 
             if(std::find(fedList_.begin(),fedList_.end(),hitFED)==fedList_.end()) fedList_.push_back(hitFED);
@@ -261,6 +262,7 @@ void selectedElectronFEDListProducer::produce(edm::Event & iEvent, const edm::Ev
           ESDetId stripX = (tmpX == DetId(0)) ? ESDetId(0) : ESDetId(tmpX);          
           hitFED = ES_fedId_[(3-stripX.zside())/2-1][stripX.plane()-1][stripX.six()-1][stripX.siy()-1];
           if(debug_) std::cout<<"[selectedElectronFEDListProducer] ES hit plane X (deiID) "<<stripX.rawId()<<" six "<<stripX.six()<<" siy "<<stripX.siy()<<" plane "<<stripX.plane()<<" FED ID "<<hitFED<<std::endl;
+          if(hitFED <= FEDNumbering::MINPreShowerFEDID || hitFED >= FEDNumbering::MAXPreShowerFEDID) continue;
           if(hitFED < 0) continue;
           if(!fedList_.empty()){ 
             if(std::find(fedList_.begin(),fedList_.end(),hitFED)==fedList_.end()) fedList_.push_back(hitFED);
