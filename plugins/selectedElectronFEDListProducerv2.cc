@@ -92,6 +92,11 @@ selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::
  }
  else dumpAllTrackerFed_ = false ;
 
+ if(iConfig.existsAs<bool>("dumpHCALFed")){
+     dumpHCALFed_ = iConfig.getParameter<bool>("dumpHCALFed");
+ }
+ else dumpHCALFed_ = false ;
+
  if(iConfig.existsAs<bool>("debug")){
    debug_ = iConfig.getParameter<bool>("debug");
  }
@@ -413,6 +418,12 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
           }
         } 
       }
+
+      if(dumpHCALFed_){
+        for(uint32_t iHcalFed = FEDNumbering::MINHCALFEDID ; iHcalFed <=   FEDNumbering::MAXHCALFEDID; iHcalFed++)
+          fedList_.push_back(iHcalFed);
+      } 
+
      } // end loop on the electron
    } 
   } // end loop on the electron collection
@@ -425,6 +436,7 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
    }
    std::cout<<"  "<<std::endl;
   }
+
   
  // make the final raw data collection
  RawDataCollection_ = new FEDRawDataCollection();
