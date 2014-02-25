@@ -171,6 +171,7 @@ class selectedElectronFEDListProducerv2 : public edm::EDProducer {
   bool dumpTrackSiPixelFedList_ ;
   bool dumpAllEcalFed_ ;
   bool dumpAllTrackerFed_;
+  bool dumpHCALFed_;
 
   bool debug_ ;
 
