@@ -73,5 +73,6 @@ HLTselectedElectronFEDList = cms.EDProducer("selectedElectronFEDListProducerv2",
 	dumpTrackSiPixelFedList = cms.bool(True),
 	dumpAllEcalFed  = cms.bool(False),
 	dumpAllTrackerFed = cms.bool(False),
+	dumpHCALFed       = cms.bool(True),
 	debug = cms.bool(False)
 )
