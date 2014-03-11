@@ -32,12 +32,22 @@ Run the stream:
 Reco the stream:
 
     cd -
+    cd StreamForElectrons/ReReco
     cmsRun dump_step2_RAW2DIGI_L1Reco_RECO.py
+    cmsRun dump_step2_RAW2DIGI_L1Reco_RECO_onSkim.py     (from scratch!)
+
 
 Reco the simple RAW file:
 
     cmsRun dump_step2_RAW2DIGI_L1Reco_RECO_onSimpleRaw.py
 
+
+
+Where:
+
+    cmsneu
+    /home/amassiro/ECAL/HLT
+    /home/amassiro/ECAL/HLT/CMSSW_6_2_2/src/StreamForElectrons/ReReco/
 
 
 
