@@ -349,14 +349,14 @@ void selectedElectronFEDListProducer::produce(edm::Event & iEvent, const edm::Ev
    }
  }// end loop on the electron collection
 
- if(debug_){
+// if(debug_){
   if(!fedList_.empty()){ 
     std::cout<<"[selectedElectronFEDListProducer] fed point ";
     for( unsigned int i =0; i< fedList_.size(); i++) 
       std::cout<<fedList_.at(i)<<"  ";
   }
   std::cout<<"  "<<std::endl;
- }
+// }
 
  // make the final raw data collection
  RawDataCollection_ = new FEDRawDataCollection();
