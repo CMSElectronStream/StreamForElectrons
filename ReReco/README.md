@@ -51,3 +51,19 @@ Where:
 
 
 
+
+
+# raw2digi
+
+    cmsDriver.py step2 -s RAW2DIGI --data --datatier RECO --eventcontent RECO --conditions GR10_P_V11::All --scenario pp --no_exec --magField AutoFromDBCurrent --process reRECO
+
+replace:
+
+    rawDataCollector
+
+into:
+
+    HLTselectedElectronFEDList:StremElectronRawFedData
+
+
+
