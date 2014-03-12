@@ -57,7 +57,7 @@ hltOutputStreamElectron.outputCommands = ['drop * ',
 					  ]
  
 
-HLTselectedElectronFEDList = cms.EDProducer("selectedElectronFEDListProducer",
+HLTselectedElectronFEDList = cms.EDProducer("selectedElectronFEDListProducerv2",
 	electronCollections = cms.VInputTag('hltGsfEle25WP80TrackIsoFilter'),
 	isGsfElectronCollection = cms.vint32(True), 
 	beamSpot            = cms.InputTag("hltOnlineBeamSpot"),
@@ -74,5 +74,6 @@ HLTselectedElectronFEDList = cms.EDProducer("selectedElectronFEDListProducer",
 	dumpAllEcalFed  = cms.bool(False),
 	dumpAllTrackerFed = cms.bool(False),
 	dumpHCALFed       = cms.bool(True),
-	debug = cms.bool(False)
+        dumpThisSelectedFEDs = cms.vint32(812,813),                                     
+	debug = cms.bool(True),
 )
