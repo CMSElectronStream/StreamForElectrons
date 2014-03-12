@@ -20,6 +20,14 @@ selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::
  }
  else{ throw cms::Exception("Configuration")<<"[selectedElectronFEDListProducer] no electron flag are given --> need at least one \n";  }
 
+ if(iConfig.existsAs<std::vector<int>>("dumpThisSelectedFEDs")){
+    dumpThisSelectedFEDs_ = iConfig.getParameter<std::vector<int>>("dumpThisSelectedFEDs");
+    if(dumpThisSelectedFEDs_.empty()){
+      dumpThisSelectedFEDs_.push_back(-1); 
+   }
+ }
+ else{ dumpThisSelectedFEDs_.push_back(-1); }
+
  if(isGsfElectronCollection_.size() < electronCollections_.size()) throw cms::Exception("Configuration")<<"[selectedElectronFEDListProducer] electron flag < electron collection  --> need at equal number to understand which are Gsf and which not \n";
 
  if(iConfig.existsAs<edm::InputTag>("beamSpot")){
@@ -122,6 +130,10 @@ selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::
   std::vector<int>::const_iterator Flag = isGsfElectronCollection_.begin();
   for( ; Tag !=electronCollections_.end() && Flag!=isGsfElectronCollection_.end() ; ++Tag , ++Flag)
      std::cout<<"[selectedElectronFEDListProducer] ele collection: "<<*(Tag)<<" isGsf "<<*(Flag)<<std::endl;
+
+  std::vector<int>::const_iterator AddFed = dumpThisSelectedFEDs_.begin();
+  for( ; AddFed !=dumpThisSelectedFEDs_.end() ; ++AddFed)
+     std::cout<<"[selectedElectronFEDListProducer] additional FED: "<<*(AddFed)<<std::endl;
      
   std::cout<<"[selectedElectronFEDListProducer] rawDataInput "<<rawDataLabel_<<std::endl; 
 
@@ -428,6 +440,14 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
    } 
   } // end loop on the electron collection
 
+  // add a set of chosen FED
+  for( unsigned int iFed = 0 ; iFed < dumpThisSelectedFEDs_.size() ; iFed++){
+    std::cout<<" dumpAdditional fed "<<dumpThisSelectedFEDs_.at(iFed)<<std::endl;
+    if(dumpThisSelectedFEDs_.at(iFed) == -1 ) continue ;
+    fedList_.push_back(dumpThisSelectedFEDs_.at(iFed));
+  }
+
+
   if(debug_){
    if(!fedList_.empty()){ 
     std::cout<<"[selectedElectronFEDListProducer] fed point ";
@@ -440,6 +460,7 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
   
  // make the final raw data collection
  RawDataCollection_ = new FEDRawDataCollection();
+ std::sort(fedList_.begin(),fedList_.end());
  std::vector<uint32_t>::const_iterator itfedList = fedList_.begin();
  for( ; itfedList!=fedList_.end() ; ++itfedList){
    const FEDRawData& data = rawdata->FEDData(*itfedList);
