@@ -158,7 +158,7 @@ class selectedElectronFEDListProducerv2 : public edm::EDProducer {
   // input from edm::ParameterSet of the producer  
   std::vector<edm::InputTag> electronCollections_ ;
   std::vector<int> isGsfElectronCollection_ ;
-
+  std::vector<int> dumpThisSelectedFEDs_ ;
   
   math::XYZVector beamSpotPosition_;
 
