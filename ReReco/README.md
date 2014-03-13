@@ -37,6 +37,7 @@ src/RecoEgamma/EgammaIsolationAlgos/src/
 
     cmsenv
     git cms-addpkg RecoEgamma/EgammaIsolationAlgos
+    git clone git@github.com:CMSElectronStream/StreamForElectrons.git
     cp StreamForElectrons/ReReco/patch/EgammaTowerIsolation.cc  src/RecoEgamma/EgammaIsolationAlgos/src/ 
     scramv1 b -j 8
 
