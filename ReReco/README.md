@@ -33,7 +33,7 @@ Prepare to run on stream:
        sed 's|MYOUTPUTFILE|stream2reco.root|' \
         > dump_step2_RAW2DIGI_L1Reco_RECO_onStream.py
 
-    sed 's|MYINPUTFILE|file:/tmp/amassiro/streamElectronRAW_ALL.root|' \
+    sed 's|MYINPUTFILE|file:/tmp/amassiro/streamElectronRAW_STREAM.root|' \
        < dump_step2_RAW2DIGI_L1Reco_RECO.py |
        sed 's|rawDataCollector|HLTselectedElectronFEDList:StremElectronRawFedData|' | \
        sed 's|MYOUTPUTFILE|stream2reco.root|' \
@@ -66,6 +66,12 @@ to run on stream:
     cmsRun dump_step2_RAW2DIGI_L1Reco_RECO_onStream.py
 
 
+
+Draw
+=======
+
+   cmsShow raw2reco.root
+   cmsShow stream2reco.root
 
 
 
