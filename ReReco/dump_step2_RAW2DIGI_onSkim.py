@@ -5,7 +5,8 @@ process = cms.Process("reRECO")
 process.source = cms.Source("PoolSource",
     secondaryFileNames = cms.untracked.vstring(),
     #fileNames = cms.untracked.vstring('file:../../HLTrigger/Configuration/test/streamElectronRAW_tmp.root')
-    fileNames = cms.untracked.vstring('file:/afs/cern.ch/user/r/rgerosa/public/xAndrea/streamGT/streamElectronRAW_GT.root')
+    fileNames = cms.untracked.vstring('file:/afs/cern.ch/user/r/rgerosa/public/xAndrea/streamGT/streamElectronRAW_noGTFED.root')
+    #fileNames = cms.untracked.vstring('file:/afs/cern.ch/user/r/rgerosa/public/xAndrea/streamGT/streamElectronRAW_GTFED.root')
 )
 process.MEtoEDMConverter = cms.EDProducer("MEtoEDMConverter",
     deleteAfterCopy = cms.untracked.bool(True),
@@ -1445,7 +1446,7 @@ process.GlobalTag = cms.ESSource("PoolDBESSource",
     BlobStreamerName = cms.untracked.string('TBufferBlobStreamingService'),
     toGet = cms.VPSet(),
     connect = cms.string('frontier://FrontierProd/CMS_COND_31X_GLOBALTAG'),
-    globaltag = cms.string('GR_P_V43C::All')
+    globaltag = cms.string('GR_R_62_V1::All')
 )
 
 
