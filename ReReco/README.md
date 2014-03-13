@@ -20,6 +20,10 @@ Prepare to run on simple raw:
        sed 's|MYOUTPUTFILE|raw2reco.root|' \
         > dump_step2_RAW2DIGI_L1Reco_RECO_onRaw.py
 
+    sed 's|MYINPUTFILE|file:/tmp/amassiro/streamElectronRAW_ALL.root|' \
+       < dump_step2_RAW2DIGI_L1Reco_RECO.py |
+       sed 's|MYOUTPUTFILE|raw2reco.root|' \
+        > dump_step2_RAW2DIGI_L1Reco_RECO_onRaw.py
 
 Prepare to run on stream:
 
@@ -29,11 +33,15 @@ Prepare to run on stream:
        sed 's|MYOUTPUTFILE|stream2reco.root|' \
         > dump_step2_RAW2DIGI_L1Reco_RECO_onStream.py
 
+    sed 's|MYINPUTFILE|file:/tmp/amassiro/streamElectronRAW_ALL.root|' \
+       < dump_step2_RAW2DIGI_L1Reco_RECO.py |
+       sed 's|rawDataCollector|HLTselectedElectronFEDList:StremElectronRawFedData|' | \
+       sed 's|MYOUTPUTFILE|stream2reco.root|' \
+        > dump_step2_RAW2DIGI_L1Reco_RECO_onStream.py
 
-# Patch the Reco
+
+Patch the Reco
 =======
-
-src/RecoEgamma/EgammaIsolationAlgos/src/
 
     cmsenv
     git cms-addpkg RecoEgamma/EgammaIsolationAlgos
@@ -42,8 +50,12 @@ src/RecoEgamma/EgammaIsolationAlgos/src/
     scramv1 b -j 8
 
 
-# Run
+Run
 =======
+
+Where:
+
+    cd StreamForElectrons/ReReco/
 
 to run on raw:
 
@@ -57,6 +69,9 @@ to run on stream:
 
 
 
+=======
+=======
+=======
 # Backup
 =======
 

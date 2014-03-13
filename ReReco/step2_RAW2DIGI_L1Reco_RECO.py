@@ -60,7 +60,7 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
 
 # Other statements
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag.globaltag = 'GR_P_V43C::All'
+process.GlobalTag.globaltag = 'GR_R_62_V1::All'
 
 # Path and EndPath definitions
 process.raw2digi_step = cms.Path(process.RawToDigi)
