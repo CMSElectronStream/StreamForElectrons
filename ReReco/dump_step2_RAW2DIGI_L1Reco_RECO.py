@@ -4,86 +4,84 @@ process = cms.Process("reRECO")
 
 process.source = cms.Source("PoolSource",
     secondaryFileNames = cms.untracked.vstring(),
-    #fileNames = cms.untracked.vstring('file:/home/amassiro/ECAL/HLT/CMSSW_5_3_13_patch1/src/StreamForElectrons/ReReco/streamElectronRAW_tmp.root')   # -> skimmed raw
-    fileNames = cms.untracked.vstring('file:../../HLTrigger/Configuration/test/streamElectronRAW_tmp.root')   #  -> streamed raw
-    #fileNames = cms.untracked.vstring('file:pickevents.root')  #  -> raw
-  )
-#process.BeamHaloSummary = cms.EDProducer("BeamHaloSummaryProducer",
-    #l_HcalPhiWedgeConfidence = cms.double(0.7),
-    #t_EcalSuperClusterSize = cms.int32(3),
-    #l_EcalSuperClusterEnergy = cms.double(10.0),
-    #l_EcalPhiWedgeConfidence = cms.double(0.7),
-    #t_EcalPhiWedgeEnergy = cms.double(20.0),
-    #t_EcalPhiWedgeConfidence = cms.double(0.9),
-    #l_HcalPhiWedgeEnergy = cms.double(20.0),
-    #t_EcalShowerShapesRoundness = cms.double(0.23),
-    #l_HcalPhiWedgeConstituents = cms.int32(6),
-    #EcalHaloDataLabel = cms.InputTag("EcalHaloData"),
-    #l_EcalShowerShapesRoundness = cms.double(0.41),
-    #l_EcalSuperClusterSize = cms.int32(3),
-    #t_HcalPhiWedgeEnergy = cms.double(25.0),
-    #t_HcalPhiWedgeConfidence = cms.double(0.9),
-    #t_EcalShowerShapesAngle = cms.double(0.51),
-    #t_EcalPhiWedgeConstituents = cms.int32(8),
-    #l_EcalPhiWedgeEnergy = cms.double(10.0),
-    #GlobalHaloDataLabel = cms.InputTag("GlobalHaloData"),
-    #l_HcalPhiWedgeToF = cms.double(-100.0),
-    #t_HcalPhiWedgeToF = cms.double(-100.0),
-    #t_HcalPhiWedgeConstituents = cms.int32(8),
-    #HcalHaloDataLabel = cms.InputTag("HcalHaloData"),
-    #t_EcalPhiWedgeToF = cms.double(-200.0),
-    #l_EcalPhiWedgeConstituents = cms.int32(6),
-    #t_EcalSuperClusterEnergy = cms.double(10.0),
-    #l_EcalPhiWedgeToF = cms.double(-200.0),
-    #l_EcalShowerShapesAngle = cms.double(0.51),
-    #CSCHaloDataLabel = cms.InputTag("CSCHaloData")
-#)
+    fileNames = cms.untracked.vstring('MYINPUTFILE')
+)
+process.BeamHaloSummary = cms.EDProducer("BeamHaloSummaryProducer",
+    l_HcalPhiWedgeConfidence = cms.double(0.7),
+    t_EcalSuperClusterSize = cms.int32(3),
+    l_EcalSuperClusterEnergy = cms.double(10.0),
+    l_EcalPhiWedgeConfidence = cms.double(0.7),
+    t_EcalPhiWedgeEnergy = cms.double(20.0),
+    t_EcalPhiWedgeConfidence = cms.double(0.9),
+    l_HcalPhiWedgeEnergy = cms.double(20.0),
+    t_EcalShowerShapesRoundness = cms.double(0.23),
+    l_HcalPhiWedgeConstituents = cms.int32(6),
+    EcalHaloDataLabel = cms.InputTag("EcalHaloData"),
+    l_EcalShowerShapesRoundness = cms.double(0.41),
+    l_EcalSuperClusterSize = cms.int32(3),
+    t_HcalPhiWedgeEnergy = cms.double(25.0),
+    t_HcalPhiWedgeConfidence = cms.double(0.9),
+    t_EcalShowerShapesAngle = cms.double(0.51),
+    t_EcalPhiWedgeConstituents = cms.int32(8),
+    l_EcalPhiWedgeEnergy = cms.double(10.0),
+    GlobalHaloDataLabel = cms.InputTag("GlobalHaloData"),
+    l_HcalPhiWedgeToF = cms.double(-100.0),
+    t_HcalPhiWedgeToF = cms.double(-100.0),
+    t_HcalPhiWedgeConstituents = cms.int32(8),
+    HcalHaloDataLabel = cms.InputTag("HcalHaloData"),
+    t_EcalPhiWedgeToF = cms.double(-200.0),
+    l_EcalPhiWedgeConstituents = cms.int32(6),
+    t_EcalSuperClusterEnergy = cms.double(10.0),
+    l_EcalPhiWedgeToF = cms.double(-200.0),
+    l_EcalShowerShapesAngle = cms.double(0.51),
+    CSCHaloDataLabel = cms.InputTag("CSCHaloData")
+)
 
 
-#process.CSCHaloData = cms.EDProducer("CSCHaloDataProducer",
-    #ExpectedBX = cms.int32(3),
-    #RecHitTime0 = cms.double(0.0),
-    #MinOuterMomentumTheta = cms.double(0.1),
-    #SALabel = cms.InputTag("standAloneMuons"),
-    #MatchingDPhiThreshold = cms.double(0.18),
-    #MaxOuterMomentumTheta = cms.double(3.0),
-    #DphiParam = cms.double(1.0),
-    #RecHitTimeWindow = cms.double(25.0),
-    #ServiceParameters = cms.PSet(
-        #Propagators = cms.untracked.vstring('SteppingHelixPropagatorAny', 
-            #'PropagatorWithMaterial', 
-            #'PropagatorWithMaterialOpposite'),
-        #RPCLayers = cms.bool(True)
-    #),
-    #DetaParam = cms.double(0.1),
-    #InnerRMinParam = cms.double(0.0),
-    #MaxFreeInverseBeta = cms.double(0.0),
-    #MaxDtMuonSegment = cms.double(-10.0),
-    #MuonLabel = cms.InputTag("muons"),
-    #MatchParameters = cms.PSet(
-        #DTsegments = cms.InputTag("dt4DSegments"),
-        #CSCsegments = cms.InputTag("cscSegments"),
-        #DTradius = cms.double(0.01),
-        #TightMatchDT = cms.bool(False),
-        #TightMatchCSC = cms.bool(True)
-    #),
-    #MaxSegmentPhiDiff = cms.double(0.35),
-    #CSCSegmentLabel = cms.InputTag("cscSegments"),
-    #InnerRMaxParam = cms.double(99999.0),
-    #MaxSegmentRDiff = cms.double(10.0),
-    #L1MuGMTReadoutLabel = cms.InputTag("gtDigis"),
-    #MaxSegmentTheta = cms.double(0.7),
-    #HLTResultLabel = cms.InputTag("TriggerResults","","HLT"),
-    #HLTBitLabel = cms.VInputTag(cms.InputTag("HLT_CSCBeamHalo"), cms.InputTag("HLT_CSCBeamHaloOverlapRing1"), cms.InputTag("HLT_CSCBeamHaloOverlapRing2"), cms.InputTag("HLT_CSCBeamHaloRing2or3")),
-    #NormChi2Param = cms.double(8.0),
-    #ALCTDigiLabel = cms.InputTag("muonCSCDigis","MuonCSCALCTDigi"),
-    #OuterRMaxParam = cms.double(99999.0),
-    #MatchingDEtaThreshold = cms.double(0.4),
-    #OuterRMinParam = cms.double(0.0),
-    #MatchingDWireThreshold = cms.int32(5),
-    #CosmicMuonLabel = cms.InputTag("muonsFromCosmics"),
-    #CSCRecHitLabel = cms.InputTag("csc2DRecHits")
-#)
+process.CSCHaloData = cms.EDProducer("CSCHaloDataProducer",
+    ExpectedBX = cms.int32(3),
+    RecHitTime0 = cms.double(0.0),
+    MinOuterMomentumTheta = cms.double(0.1),
+    SALabel = cms.InputTag("standAloneMuons"),
+    MatchingDPhiThreshold = cms.double(0.18),
+    MaxOuterMomentumTheta = cms.double(3.0),
+    DphiParam = cms.double(1.0),
+    RecHitTimeWindow = cms.double(25.0),
+    ServiceParameters = cms.PSet(
+        Propagators = cms.untracked.vstring('SteppingHelixPropagatorAny', 
+            'PropagatorWithMaterial', 
+            'PropagatorWithMaterialOpposite'),
+        RPCLayers = cms.bool(True)
+    ),
+    DetaParam = cms.double(0.1),
+    InnerRMinParam = cms.double(0.0),
+    MaxFreeInverseBeta = cms.double(0.0),
+    MaxDtMuonSegment = cms.double(-10.0),
+    MuonLabel = cms.InputTag("muons"),
+    MatchParameters = cms.PSet(
+        DTsegments = cms.InputTag("dt4DSegments"),
+        CSCsegments = cms.InputTag("cscSegments"),
+        DTradius = cms.double(0.01),
+        TightMatchDT = cms.bool(False),
+        TightMatchCSC = cms.bool(True)
+    ),
+    MaxSegmentPhiDiff = cms.double(0.35),
+    CSCSegmentLabel = cms.InputTag("cscSegments"),
+    InnerRMaxParam = cms.double(99999.0),
+    MaxSegmentRDiff = cms.double(10.0),
+    L1MuGMTReadoutLabel = cms.InputTag("gtDigis"),
+    MaxSegmentTheta = cms.double(0.7),
+    HLTResultLabel = cms.InputTag("TriggerResults","","HLT"),
+    HLTBitLabel = cms.VInputTag(cms.InputTag("HLT_CSCBeamHalo"), cms.InputTag("HLT_CSCBeamHaloOverlapRing1"), cms.InputTag("HLT_CSCBeamHaloOverlapRing2"), cms.InputTag("HLT_CSCBeamHaloRing2or3")),
+    NormChi2Param = cms.double(8.0),
+    ALCTDigiLabel = cms.InputTag("muonCSCDigis","MuonCSCALCTDigi"),
+    OuterRMaxParam = cms.double(99999.0),
+    MatchingDEtaThreshold = cms.double(0.4),
+    OuterRMinParam = cms.double(0.0),
+    MatchingDWireThreshold = cms.int32(5),
+    CosmicMuonLabel = cms.InputTag("muonsFromCosmics"),
+    CSCRecHitLabel = cms.InputTag("csc2DRecHits")
+)
 
 
 process.CastorTowerReco = cms.EDProducer("CastorTowerProducer",
@@ -3654,7 +3652,7 @@ process.castorDigis = cms.EDProducer("CastorRawToDigi",
     FilterDataQuality = cms.bool(True),
     silent = cms.untracked.bool(False),
     lastSample = cms.int32(9),
-    InputLabel = cms.InputTag("HLTselectedElectronFEDList:StremElectronRawFedData"),
+    InputLabel = cms.InputTag("rawDataCollector"),
     ComplainEmptyData = cms.untracked.bool(False),
     FEDs = cms.untracked.vint32(690, 691, 692),
     UnpackTTP = cms.untracked.bool(True),
@@ -4106,9 +4104,9 @@ process.combinedSecondaryVertexV1PositiveBJetTags = cms.EDProducer("JetTagProduc
 )
 
 
-#process.conditionsInEdm = cms.EDProducer("ConditionDumperInEdm",
-    #gtEvmDigisLabel = cms.InputTag("gtEvmDigis")
-#)
+process.conditionsInEdm = cms.EDProducer("ConditionDumperInEdm",
+    gtEvmDigisLabel = cms.InputTag("gtEvmDigis")
+)
 
 
 process.conv2Clusters = cms.EDProducer("TrackClusterRemover",
@@ -5209,7 +5207,7 @@ process.cscSegments = cms.EDProducer("CSCSegmentProducer",
 
 process.csctfDigis = cms.EDProducer("CSCTFUnpacker",
     mappingFile = cms.string(''),
-    producer = cms.InputTag("HLTselectedElectronFEDList:StremElectronRawFedData"),
+    producer = cms.InputTag("rawDataCollector"),
     MaxBX = cms.int32(9),
     slot2sector = cms.vint32(0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
@@ -6068,7 +6066,7 @@ process.dt4DSegmentsT0Seg = cms.EDProducer("DTSegment4DT0Corrector",
 
 process.dttfDigis = cms.EDProducer("DTTFFEDReader",
     verbose = cms.untracked.bool(False),
-    DTTF_FED_Source = cms.InputTag("HLTselectedElectronFEDList:StremElectronRawFedData")
+    DTTF_FED_Source = cms.InputTag("rawDataCollector")
 )
 
 
@@ -6462,7 +6460,7 @@ process.ecalDigis = cms.EDProducer("EcalRawToDigi",
     syncCheck = cms.bool(True),
     feIdCheck = cms.bool(True),
     silentMode = cms.untracked.bool(True),
-    InputLabel = cms.InputTag("HLTselectedElectronFEDList:StremElectronRawFedData"),
+    InputLabel = cms.InputTag("rawDataCollector"),
     orderedFedList = cms.vint32(601, 602, 603, 604, 605, 
         606, 607, 608, 609, 610, 
         611, 612, 613, 614, 615, 
@@ -6544,13 +6542,13 @@ process.ecalDrivenElectronSeeds = cms.EDProducer("ElectronSeedProducer",
         hcalRecHits = cms.InputTag("hbhereco"),
         z2MinB = cms.double(-0.09),
         rMinI = cms.double(-0.2),
-        hOverEConeSize = cms.double(0.0),  ##AM##      hOverEConeSize = cms.double(0.15),
+        hOverEConeSize = cms.double(0.15),
         hOverEHBMinE = cms.double(0.7),
         useRecoVertex = cms.bool(False),
         beamSpot = cms.InputTag("offlineBeamSpot"),
         vertices = cms.InputTag("offlinePrimaryVerticesWithBS"),
         DeltaPhi2F = cms.double(0.012),
-        applyHOverECut = cms.bool(False),  ##AM##  applyHOverECut = cms.bool(True),
+        applyHOverECut = cms.bool(True),
         hOverEHFMinE = cms.double(0.8),
         DeltaPhi2B = cms.double(0.008),
         PhiMin2B = cms.double(-0.002)
@@ -6594,7 +6592,7 @@ process.ecalDrivenGsfElectrons = cms.EDProducer("GsfElectronEcalDrivenProducer",
     applyAmbResolution = cms.bool(False),
     minMVAPflow = cms.double(-0.4),
     maxSigmaIetaIetaEndcapsPflow = cms.double(999999999.0),
-    hOverEConeSizePflow = cms.double(0.0),  ##AM## hOverEConeSizePflow = cms.double(0.15),
+    hOverEConeSizePflow = cms.double(0.15),
     recHitSeverityToBeExcludedEndcaps = cms.vstring('kWeird', 
         'kBad', 
         'kTime'),
@@ -6637,7 +6635,7 @@ process.ecalDrivenGsfElectrons = cms.EDProducer("GsfElectronEcalDrivenProducer",
     vetoClustered = cms.bool(False),
     hcalTowers = cms.InputTag("towerMaker"),
     etMinBarrel = cms.double(0.0),
-    intRadiusHcal = cms.double(0.0),  ##AM##  intRadiusHcal = cms.double(0.15),
+    intRadiusHcal = cms.double(0.15),
     maxHOverEBarrel = cms.double(0.15),
     maxHOverEEndcaps = cms.double(0.15),
     isBarrel = cms.bool(False),
@@ -6785,7 +6783,7 @@ process.ecalGlobalUncalibRecHit = cms.EDProducer("EcalUncalibRecHitProducer",
 
 
 process.ecalPreshowerDigis = cms.EDProducer("ESRawToDigi",
-    sourceTag = cms.InputTag("HLTselectedElectronFEDList:StremElectronRawFedData"),
+    sourceTag = cms.InputTag("rawDataCollector"),
     debugMode = cms.untracked.bool(False),
     InstanceES = cms.string(''),
     LookupTable = cms.FileInPath('EventFilter/ESDigiToRaw/data/ES_lookup_table.dat'),
@@ -12340,7 +12338,7 @@ process.gctDigis = cms.EDProducer("GctRawToDigi",
     numberOfGctSamplesToUnpack = cms.uint32(1),
     verbose = cms.untracked.bool(False),
     numberOfRctSamplesToUnpack = cms.uint32(1),
-    inputLabel = cms.InputTag("HLTselectedElectronFEDList:StremElectronRawFedData"),
+    inputLabel = cms.InputTag("rawDataCollector"),
     unpackerVersion = cms.uint32(0),
     gctFedId = cms.untracked.int32(745),
     hltMode = cms.bool(False)
@@ -13990,21 +13988,21 @@ process.gsfGeneralInOutOutInConversionTrackMerger = cms.EDProducer("ConversionTr
 )
 
 
-#process.gtDigis = cms.EDProducer("L1GlobalTriggerRawToDigi",
-    #DaqGtFedId = cms.untracked.int32(813),
-    #DaqGtInputTag = cms.InputTag("HLTselectedElectronFEDList:StremElectronRawFedData"),
-    #UnpackBxInEvent = cms.int32(-1),
-    #ActiveBoardsMask = cms.uint32(65535)
-#)
+process.gtDigis = cms.EDProducer("L1GlobalTriggerRawToDigi",
+    DaqGtFedId = cms.untracked.int32(813),
+    DaqGtInputTag = cms.InputTag("rawDataCollector"),
+    UnpackBxInEvent = cms.int32(-1),
+    ActiveBoardsMask = cms.uint32(65535)
+)
 
 
-#process.gtEvmDigis = cms.EDProducer("L1GlobalTriggerEvmRawToDigi",
-    #EvmGtFedId = cms.untracked.int32(812),
-    #EvmGtInputTag = cms.InputTag("HLTselectedElectronFEDList:StremElectronRawFedData"),
-    #UnpackBxInEvent = cms.int32(-1),
-    #ActiveBoardsMask = cms.uint32(65535),
-    #BstLengthBytes = cms.int32(-1)
-#)
+process.gtEvmDigis = cms.EDProducer("L1GlobalTriggerEvmRawToDigi",
+    EvmGtFedId = cms.untracked.int32(812),
+    EvmGtInputTag = cms.InputTag("rawDataCollector"),
+    UnpackBxInEvent = cms.int32(-1),
+    ActiveBoardsMask = cms.uint32(65535),
+    BstLengthBytes = cms.int32(-1)
+)
 
 
 process.hbheprereco = cms.EDProducer("HcalHitReconstructor",
@@ -14172,7 +14170,7 @@ process.hbherecoMB = cms.EDProducer("HcalSimpleReconstructor",
 process.hcalDigis = cms.EDProducer("HcalRawToDigi",
     UnpackZDC = cms.untracked.bool(True),
     FilterDataQuality = cms.bool(True),
-    InputLabel = cms.InputTag("HLTselectedElectronFEDList:StremElectronRawFedData"),
+    InputLabel = cms.InputTag("rawDataCollector"),
     ComplainEmptyData = cms.untracked.bool(False),
     UnpackCalib = cms.untracked.bool(True),
     UnpackTTP = cms.untracked.bool(True),
@@ -18776,9 +18774,9 @@ process.kt6TrackJets = cms.EDProducer("FastjetJetProducer",
 )
 
 
-#process.l1GtRecord = cms.EDProducer("L1GlobalTriggerRecordProducer",
-    #L1GtReadoutRecordTag = cms.InputTag("gtDigis")
-#)
+process.l1GtRecord = cms.EDProducer("L1GlobalTriggerRecordProducer",
+    L1GtReadoutRecordTag = cms.InputTag("gtDigis")
+)
 
 
 process.l1GtTriggerMenuLite = cms.EDProducer("L1GtTriggerMenuLiteProducer")
@@ -18789,24 +18787,24 @@ process.l1L1GtObjectMap = cms.EDProducer("ConvertObjectMapRecord",
 )
 
 
-#process.l1extraParticles = cms.EDProducer("L1ExtraParticlesProd",
-    #centralBxOnly = cms.bool(False),
-    #tauJetSource = cms.InputTag("gctDigis","tauJets"),
-    #etTotalSource = cms.InputTag("gctDigis"),
-    #nonIsolatedEmSource = cms.InputTag("gctDigis","nonIsoEm"),
-    #htMissSource = cms.InputTag("gctDigis"),
-    #etMissSource = cms.InputTag("gctDigis"),
-    #produceMuonParticles = cms.bool(True),
-    #hfRingEtSumsSource = cms.InputTag("gctDigis"),
-    #forwardJetSource = cms.InputTag("gctDigis","forJets"),
-    #ignoreHtMiss = cms.bool(False),
-    #centralJetSource = cms.InputTag("gctDigis","cenJets"),
-    #produceCaloParticles = cms.bool(True),
-    #muonSource = cms.InputTag("gtDigis"),
-    #isolatedEmSource = cms.InputTag("gctDigis","isoEm"),
-    #etHadSource = cms.InputTag("gctDigis"),
-    #hfRingBitCountsSource = cms.InputTag("gctDigis")
-#)
+process.l1extraParticles = cms.EDProducer("L1ExtraParticlesProd",
+    centralBxOnly = cms.bool(False),
+    tauJetSource = cms.InputTag("gctDigis","tauJets"),
+    etTotalSource = cms.InputTag("gctDigis"),
+    nonIsolatedEmSource = cms.InputTag("gctDigis","nonIsoEm"),
+    htMissSource = cms.InputTag("gctDigis"),
+    etMissSource = cms.InputTag("gctDigis"),
+    produceMuonParticles = cms.bool(True),
+    hfRingEtSumsSource = cms.InputTag("gctDigis"),
+    forwardJetSource = cms.InputTag("gctDigis","forJets"),
+    ignoreHtMiss = cms.bool(False),
+    centralJetSource = cms.InputTag("gctDigis","cenJets"),
+    produceCaloParticles = cms.bool(True),
+    muonSource = cms.InputTag("gtDigis"),
+    isolatedEmSource = cms.InputTag("gctDigis","isoEm"),
+    etHadSource = cms.InputTag("gctDigis"),
+    hfRingBitCountsSource = cms.InputTag("gctDigis")
+)
 
 
 process.logErrorHarvester = cms.EDProducer("LogErrorHarvester")
@@ -21435,7 +21433,7 @@ process.muonCSCDigis = cms.EDProducer("CSCDCCUnpacker",
     UseSelectiveUnpacking = cms.bool(True),
     UseExaminer = cms.bool(True),
     ErrorMask = cms.uint32(0),
-    InputObjects = cms.InputTag("HLTselectedElectronFEDList:StremElectronRawFedData"),
+    InputObjects = cms.InputTag("rawDataCollector"),
     UseFormatStatus = cms.bool(True),
     ExaminerMask = cms.uint32(535557110),
     UnpackStatusDigis = cms.bool(False),
@@ -21448,7 +21446,7 @@ process.muonCSCDigis = cms.EDProducer("CSCDCCUnpacker",
 
 process.muonDTDigis = cms.EDProducer("DTUnpackingModule",
     useStandardFEDid = cms.bool(True),
-    inputLabel = cms.InputTag("HLTselectedElectronFEDList:StremElectronRawFedData"),
+    inputLabel = cms.InputTag("rawDataCollector"),
     dataType = cms.string('DDU'),
     fedbyType = cms.bool(False),
     readOutParameters = cms.PSet(
@@ -21521,7 +21519,7 @@ process.muonMETValueMapProducer = cms.EDProducer("MuonMETValueMapProducer",
 
 
 process.muonRPCDigis = cms.EDProducer("RPCUnpackingModule",
-    InputLabel = cms.InputTag("HLTselectedElectronFEDList:StremElectronRawFedData"),
+    InputLabel = cms.InputTag("rawDataCollector"),
     doSynchro = cms.bool(True)
 )
 
@@ -26187,7 +26185,7 @@ process.sc7JetID = cms.EDProducer("JetIDProducer",
 
 
 process.scalersRawToDigi = cms.EDProducer("ScalersRawToDigi",
-    scalersInputTag = cms.InputTag("HLTselectedElectronFEDList:StremElectronRawFedData")
+    scalersInputTag = cms.InputTag("rawDataCollector")
 )
 
 
@@ -26380,7 +26378,7 @@ process.siPixelDigis = cms.EDProducer("SiPixelRawToDigi",
     CheckPixelOrder = cms.bool(False),
     IncludeErrors = cms.bool(True),
     UseCablingTree = cms.untracked.bool(True),
-    InputLabel = cms.InputTag("HLTselectedElectronFEDList:StremElectronRawFedData"),
+    InputLabel = cms.InputTag("rawDataCollector"),
     ErrorList = cms.vint32(29),
     Regions = cms.PSet(
 
@@ -26415,13 +26413,12 @@ process.siStripClusters = cms.EDProducer("SiStripClusterizer",
 
 process.siStripDigis = cms.EDProducer("SiStripRawToDigiModule",
     UseDaqRegister = cms.bool(False),
-    ProductLabel = cms.InputTag("HLTselectedElectronFEDList:StremElectronRawFedData"),
+    ProductLabel = cms.InputTag("rawDataCollector"),
     DoAPVEmulatorCheck = cms.bool(False),
     UnpackCommonModeValues = cms.bool(False),
     AppendedBytes = cms.int32(0),
     UseFedKey = cms.bool(False),
-    #ErrorThreshold = cms.uint32(7174),
-    ErrorThreshold = cms.uint32(71740),
+    ErrorThreshold = cms.uint32(7174),
     TriggerFedId = cms.int32(0),
     MarkModulesOnMissingFeds = cms.bool(True),
     UnpackBadChannels = cms.bool(False),
@@ -28740,7 +28737,7 @@ process.MEtoMEComparitor = cms.EDAnalyzer("MEtoMEComparitor",
 process.RECOoutput = cms.OutputModule("PoolOutputModule",
     splitLevel = cms.untracked.int32(0),
     eventAutoFlushCompressedSize = cms.untracked.int32(5242880),
-    fileName = cms.untracked.string('step2_RAW2DIGI_L1Reco_RECO.root'),
+    fileName = cms.untracked.string('MYOUTPUTFILE'),
     outputCommands = cms.untracked.vstring( ('drop *', 
         'keep DetIdedmEDCollection_siStripDigis_*_*', 
         'keep DetIdedmEDCollection_siPixelDigis_*_*', 
@@ -29102,7 +29099,7 @@ process.btagging = cms.Sequence(process.impactParameterTagInfos+process.trackCou
 process.hcalLocalRecoSequenceNZS = cms.Sequence(process.hbherecoMB+process.hfrecoMB+process.horecoMB)
 
 
-process.RawToDigi = cms.Sequence(process.csctfDigis+process.dttfDigis+process.gctDigis+process.siPixelDigis+process.siStripDigis+process.ecalDigis+process.ecalPreshowerDigis+process.hcalDigis+process.muonCSCDigis+process.muonDTDigis+process.muonRPCDigis+process.castorDigis+process.scalersRawToDigi)
+process.RawToDigi = cms.Sequence(process.csctfDigis+process.dttfDigis+process.gctDigis+process.gtDigis+process.gtEvmDigis+process.siPixelDigis+process.siStripDigis+process.ecalDigis+process.ecalPreshowerDigis+process.hcalDigis+process.muonCSCDigis+process.muonDTDigis+process.muonRPCDigis+process.castorDigis+process.scalersRawToDigi)
 
 
 process.iterativeCone5JTA = cms.Sequence(process.iterativeCone5JetTracksAssociatorAtVertex+process.iterativeCone5JetTracksAssociatorAtCaloFace+process.iterativeCone5JetExtender)
@@ -29243,7 +29240,7 @@ process.ak5JTAExplicit = cms.Sequence(process.ak5JetTracksAssociatorExplicit)
 process.uncleanedOnlyElectrons = cms.Sequence(process.uncleanedOnlyGsfElectronCores+process.uncleanedOnlyGsfElectrons)
 
 
-process.RawToDigi_noTk = cms.Sequence(process.csctfDigis+process.dttfDigis+process.gctDigis+process.ecalDigis+process.ecalPreshowerDigis+process.hcalDigis+process.muonCSCDigis+process.muonDTDigis+process.muonRPCDigis+process.castorDigis+process.scalersRawToDigi)
+process.RawToDigi_noTk = cms.Sequence(process.csctfDigis+process.dttfDigis+process.gctDigis+process.gtDigis+process.gtEvmDigis+process.ecalDigis+process.ecalPreshowerDigis+process.hcalDigis+process.muonCSCDigis+process.muonDTDigis+process.muonRPCDigis+process.castorDigis+process.scalersRawToDigi)
 
 
 process.seldigis = cms.Sequence(process.selectDigi)
@@ -29258,10 +29255,10 @@ process.muoncosmicreco1legSTA = cms.Sequence(process.CosmicMuonSeed+process.cosm
 process.recoJetAssociationsExplicit = cms.Sequence(process.ak5JTAExplicit)
 
 
-process.L1Reco = cms.Sequence(process.l1GtTriggerMenuLite+process.l1L1GtObjectMap)
+process.L1Reco = cms.Sequence(process.l1extraParticles+process.l1GtTriggerMenuLite+process.conditionsInEdm+process.l1L1GtObjectMap)
 
 
-#process.L1Reco_L1Extra_L1GtRecord = cms.Sequence(process.l1GtRecord)
+process.L1Reco_L1Extra_L1GtRecord = cms.Sequence(process.l1extraParticles+process.l1GtRecord)
 
 
 process.gsfElectronSequence = cms.Sequence(process.ecalDrivenGsfElectronCores+process.ecalDrivenGsfElectrons+process.gsfElectronCores+process.gsfElectrons)
@@ -29384,7 +29381,7 @@ process.standAloneMuonSeeds = cms.Sequence(process.ancientMuonSeed)
 process.recoJetAssociations = cms.Sequence(process.ic5JetTracksAssociatorAtVertex+process.iterativeCone5JTA+process.kt4JTA+process.ak5JTA)
 
 
-process.RawToDigi_woGCT = cms.Sequence(process.csctfDigis+process.dttfDigis+process.siPixelDigis+process.siStripDigis+process.ecalDigis+process.ecalPreshowerDigis+process.hcalDigis+process.muonCSCDigis+process.muonDTDigis+process.muonRPCDigis+process.castorDigis+process.scalersRawToDigi)
+process.RawToDigi_woGCT = cms.Sequence(process.csctfDigis+process.dttfDigis+process.gtDigis+process.gtEvmDigis+process.siPixelDigis+process.siStripDigis+process.ecalDigis+process.ecalPreshowerDigis+process.hcalDigis+process.muonCSCDigis+process.muonDTDigis+process.muonRPCDigis+process.castorDigis+process.scalersRawToDigi)
 
 
 process.recoPFMET = cms.Sequence(process.pfMet)
@@ -29426,7 +29423,7 @@ process.Conv2Step = cms.Sequence(process.conv2Clusters+process.photonConvTrajSee
 process.muoncosmicreco2legsSTA = cms.Sequence(process.CosmicMuonSeed+process.cosmicMuons)
 
 
-#process.L1Reco_L1Extra = cms.Sequence(process.l1extraParticles)
+process.L1Reco_L1Extra = cms.Sequence(process.l1extraParticles)
 
 
 process.doAlldEdXEstimators = cms.Sequence(process.dedxTruncated40+process.dedxHarmonic2+process.dedxDiscrimASmi)
@@ -29495,7 +29492,7 @@ process.InitialStep = cms.Sequence(process.initialStepSeeds+process.initialStepT
 process.reducedEcalRecHitsSequence = cms.Sequence(process.interestingEcalDetIdEB+process.interestingEcalDetIdEBU+process.interestingEcalDetIdEE+process.interestingTrackEcalDetIds+process.reducedEcalRecHitsEB+process.reducedEcalRecHitsEE+process.seldigis+process.reducedEcalRecHitsES)
 
 
-process.BeamHaloId = cms.Sequence(process.EcalHaloData+process.HcalHaloData+process.GlobalHaloData)
+process.BeamHaloId = cms.Sequence(process.CSCHaloData+process.EcalHaloData+process.HcalHaloData+process.GlobalHaloData+process.BeamHaloSummary)
 
 
 process.photonIDSequence = cms.Sequence(process.PhotonIDProd)
@@ -35278,7 +35275,7 @@ process.GlobalTag = cms.ESSource("PoolDBESSource",
     BlobStreamerName = cms.untracked.string('TBufferBlobStreamingService'),
     toGet = cms.VPSet(),
     connect = cms.string('frontier://FrontierProd/CMS_COND_31X_GLOBALTAG'),
-    globaltag = cms.string('GR_R_62_V1::All')
+    globaltag = cms.string('GR_P_V43C::All')
 )
 
 
@@ -36901,7 +36898,7 @@ process.DefaultClusterizer = cms.PSet(
 
 process.DigiToRawFEVT = cms.PSet(
     outputCommands = cms.untracked.vstring('keep FEDRawDataCollection_source_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*')
+        'keep FEDRawDataCollection_rawDataCollector_*_*')
 )
 
 process.EITopPAGEventContent = cms.PSet(
@@ -36941,13 +36938,13 @@ process.FEVTDEBUGEventContent = cms.PSet(
     outputCommands = cms.untracked.vstring( ('drop *', 
         'drop *', 
         'drop *', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
         'drop *_hlt*_*_*', 
         'keep *_hltL1GtObjectMap_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep edmTriggerResults_*_*_*', 
         'keep triggerTriggerEvent_*_*_*', 
@@ -36973,7 +36970,7 @@ process.FEVTDEBUGEventContent = cms.PSet(
         'keep *_genParticle_*_*', 
         'keep recoGenMETs_*_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep *_MEtoEDMConverter_*_*', 
         'keep *_randomEngineStateProducer_*_*', 
         'keep DetIdedmEDCollection_siStripDigis_*_*', 
@@ -37376,13 +37373,13 @@ process.FEVTDEBUGHLTEventContent = cms.PSet(
         'drop *', 
         'drop *', 
         'drop *', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
         'drop *_hlt*_*_*', 
         'keep *_hltL1GtObjectMap_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep edmTriggerResults_*_*_*', 
         'keep triggerTriggerEvent_*_*_*', 
@@ -37408,7 +37405,7 @@ process.FEVTDEBUGHLTEventContent = cms.PSet(
         'keep *_genParticle_*_*', 
         'keep recoGenMETs_*_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep *_MEtoEDMConverter_*_*', 
         'keep *_randomEngineStateProducer_*_*', 
         'keep DetIdedmEDCollection_siStripDigis_*_*', 
@@ -38013,7 +38010,7 @@ process.FEVTDEBUGHLTEventContent = cms.PSet(
         'keep *_hltTriggerSummaryAOD_*_*', 
         'keep *_hltTriggerSummaryRAW_*_*', 
         'keep DcsStatuss_hltScalersRawToDigi_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_rawDataRepacker_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep FEDRawDataCollection_virginRawDataRepacker_*_*', 
@@ -38071,13 +38068,13 @@ process.FEVTEventContent = cms.PSet(
     eventAutoFlushCompressedSize = cms.untracked.int32(5242880),
     outputCommands = cms.untracked.vstring( ('drop *', 
         'drop *', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
         'drop *_hlt*_*_*', 
         'keep *_hltL1GtObjectMap_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep edmTriggerResults_*_*_*', 
         'keep triggerTriggerEvent_*_*_*', 
@@ -38406,13 +38403,13 @@ process.FEVTHLTALLEventContent = cms.PSet(
     outputCommands = cms.untracked.vstring( ('drop *', 
         'drop *', 
         'drop *', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
         'drop *_hlt*_*_*', 
         'keep *_hltL1GtObjectMap_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep edmTriggerResults_*_*_*', 
         'keep triggerTriggerEvent_*_*_*', 
@@ -38741,13 +38738,13 @@ process.FEVTSIMEventContent = cms.PSet(
     eventAutoFlushCompressedSize = cms.untracked.int32(5242880),
     outputCommands = cms.untracked.vstring( ('drop *', 
         'drop *', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
         'drop *_hlt*_*_*', 
         'keep *_hltL1GtObjectMap_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep edmTriggerResults_*_*_*', 
         'keep triggerTriggerEvent_*_*_*', 
@@ -38773,7 +38770,7 @@ process.FEVTSIMEventContent = cms.PSet(
         'keep *_genParticle_*_*', 
         'keep recoGenMETs_*_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep *_MEtoEDMConverter_*_*', 
         'keep *_randomEngineStateProducer_*_*', 
         'keep DetIdedmEDCollection_siStripDigis_*_*', 
@@ -39121,13 +39118,13 @@ process.GENRAWEventContent = cms.PSet(
     eventAutoFlushCompressedSize = cms.untracked.int32(5242880),
     outputCommands = cms.untracked.vstring('drop *', 
         'drop *', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
         'drop *_hlt*_*_*', 
         'keep *_hltL1GtObjectMap_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep edmTriggerResults_*_*_*', 
         'keep triggerTriggerEvent_*_*_*', 
@@ -39152,7 +39149,7 @@ process.GENRAWEventContent = cms.PSet(
         'keep *_MEtoEDMConverter_*_*', 
         'keep *_randomEngineStateProducer_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep *_logErrorHarvester_*_*')
 )
 
@@ -39543,7 +39540,7 @@ process.HLTDEBUGEventContent = cms.PSet(
         'keep *_hltTriggerSummaryAOD_*_*', 
         'keep *_hltTriggerSummaryRAW_*_*', 
         'keep DcsStatuss_hltScalersRawToDigi_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_rawDataRepacker_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep FEDRawDataCollection_virginRawDataRepacker_*_*', 
@@ -39808,7 +39805,7 @@ process.HLTDebugFEVT = cms.PSet(
         'keep *_hltTriggerSummaryAOD_*_*', 
         'keep *_hltTriggerSummaryRAW_*_*', 
         'keep DcsStatuss_hltScalersRawToDigi_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_rawDataRepacker_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep FEDRawDataCollection_virginRawDataRepacker_*_*', 
@@ -40073,7 +40070,7 @@ process.HLTDebugRAW = cms.PSet(
         'keep *_hltTriggerSummaryAOD_*_*', 
         'keep *_hltTriggerSummaryRAW_*_*', 
         'keep DcsStatuss_hltScalersRawToDigi_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_rawDataRepacker_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep FEDRawDataCollection_virginRawDataRepacker_*_*', 
@@ -40137,7 +40134,7 @@ process.HLTriggerAOD = cms.PSet(
 process.HLTriggerRAW = cms.PSet(
     outputCommands = cms.vstring('drop *_hlt*_*_*', 
         'keep *_hltL1GtObjectMap_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep edmTriggerResults_*_*_*', 
         'keep triggerTriggerEvent_*_*_*')
@@ -40311,12 +40308,12 @@ process.L1TriggerFEVTDEBUG = cms.PSet(
 )
 
 process.L1TriggerRAW = cms.PSet(
-    outputCommands = cms.untracked.vstring('keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+    outputCommands = cms.untracked.vstring('keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*')
 )
 
 process.L1TriggerRAWDEBUG = cms.PSet(
-    outputCommands = cms.untracked.vstring('keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+    outputCommands = cms.untracked.vstring('keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
         'keep L1GlobalTriggerReadoutRecord_gtDigis_*_*', 
         'keep *_l1GtRecord_*_*', 
@@ -42748,13 +42745,13 @@ process.RAWDEBUGEventContent = cms.PSet(
     outputCommands = cms.untracked.vstring('drop *', 
         'drop *', 
         'drop *', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
         'drop *_hlt*_*_*', 
         'keep *_hltL1GtObjectMap_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep edmTriggerResults_*_*_*', 
         'keep triggerTriggerEvent_*_*_*', 
@@ -42780,7 +42777,7 @@ process.RAWDEBUGEventContent = cms.PSet(
         'keep *_genParticle_*_*', 
         'keep recoGenMETs_*_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep *_MEtoEDMConverter_*_*', 
         'keep *_randomEngineStateProducer_*_*', 
         'keep *_logErrorHarvester_*_*', 
@@ -42793,7 +42790,7 @@ process.RAWDEBUGEventContent = cms.PSet(
         'drop *_electrontruth_*_*', 
         'keep *_mix_MergedTrackTruth_*', 
         'keep CrossingFramePlaybackInfoExtended_*_*_*', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
         'keep L1GlobalTriggerReadoutRecord_gtDigis_*_*', 
         'keep *_l1GtRecord_*_*', 
@@ -42809,13 +42806,13 @@ process.RAWDEBUGHLTEventContent = cms.PSet(
         'drop *', 
         'drop *', 
         'drop *', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
         'drop *_hlt*_*_*', 
         'keep *_hltL1GtObjectMap_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep edmTriggerResults_*_*_*', 
         'keep triggerTriggerEvent_*_*_*', 
@@ -42841,7 +42838,7 @@ process.RAWDEBUGHLTEventContent = cms.PSet(
         'keep *_genParticle_*_*', 
         'keep recoGenMETs_*_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep *_MEtoEDMConverter_*_*', 
         'keep *_randomEngineStateProducer_*_*', 
         'keep *_logErrorHarvester_*_*', 
@@ -42854,7 +42851,7 @@ process.RAWDEBUGHLTEventContent = cms.PSet(
         'drop *_electrontruth_*_*', 
         'keep *_mix_MergedTrackTruth_*', 
         'keep CrossingFramePlaybackInfoExtended_*_*_*', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
         'keep L1GlobalTriggerReadoutRecord_gtDigis_*_*', 
         'keep *_l1GtRecord_*_*', 
@@ -43072,7 +43069,7 @@ process.RAWDEBUGHLTEventContent = cms.PSet(
         'keep *_hltTriggerSummaryAOD_*_*', 
         'keep *_hltTriggerSummaryRAW_*_*', 
         'keep DcsStatuss_hltScalersRawToDigi_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_rawDataRepacker_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep FEDRawDataCollection_virginRawDataRepacker_*_*', 
@@ -43129,13 +43126,13 @@ process.RAWEventContent = cms.PSet(
     splitLevel = cms.untracked.int32(0),
     eventAutoFlushCompressedSize = cms.untracked.int32(5242880),
     outputCommands = cms.untracked.vstring('drop *', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
         'drop *_hlt*_*_*', 
         'keep *_hltL1GtObjectMap_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep edmTriggerResults_*_*_*', 
         'keep triggerTriggerEvent_*_*_*')
@@ -43465,7 +43462,7 @@ process.RAWRECODEBUGHLTEventContent = cms.PSet(
         'keep recoPFTaus_pfTausEI_*_*', 
         'keep recoPFTauDiscriminator_pfTausDiscrimination*_*_*', 
         'keep *_pfMetEI_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep LHERunInfoProduct_*_*_*', 
         'keep LHEEventProduct_*_*_*', 
@@ -43700,7 +43697,7 @@ process.RAWRECODEBUGHLTEventContent = cms.PSet(
         'keep *_hltTriggerSummaryAOD_*_*', 
         'keep *_hltTriggerSummaryRAW_*_*', 
         'keep DcsStatuss_hltScalersRawToDigi_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_rawDataRepacker_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep FEDRawDataCollection_virginRawDataRepacker_*_*', 
@@ -44084,7 +44081,7 @@ process.RAWRECOEventContent = cms.PSet(
         'keep recoPFTaus_pfTausEI_*_*', 
         'keep recoPFTauDiscriminator_pfTausDiscrimination*_*_*', 
         'keep *_pfMetEI_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_source_*_*' ) )
 )
 
@@ -44411,7 +44408,7 @@ process.RAWRECOSIMHLTEventContent = cms.PSet(
         'keep recoPFTaus_pfTausEI_*_*', 
         'keep recoPFTauDiscriminator_pfTausDiscrimination*_*_*', 
         'keep *_pfMetEI_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep LHERunInfoProduct_*_*_*', 
         'keep LHEEventProduct_*_*_*', 
@@ -44646,7 +44643,7 @@ process.RAWRECOSIMHLTEventContent = cms.PSet(
         'keep *_hltTriggerSummaryAOD_*_*', 
         'keep *_hltTriggerSummaryRAW_*_*', 
         'keep DcsStatuss_hltScalersRawToDigi_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_rawDataRepacker_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep FEDRawDataCollection_virginRawDataRepacker_*_*', 
@@ -44704,13 +44701,13 @@ process.RAWSIMEventContent = cms.PSet(
     eventAutoFlushCompressedSize = cms.untracked.int32(5242880),
     outputCommands = cms.untracked.vstring('drop *', 
         'drop *', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
         'drop *_hlt*_*_*', 
         'keep *_hltL1GtObjectMap_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep edmTriggerResults_*_*_*', 
         'keep triggerTriggerEvent_*_*_*', 
@@ -44736,7 +44733,7 @@ process.RAWSIMEventContent = cms.PSet(
         'keep *_genParticle_*_*', 
         'keep recoGenMETs_*_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep *_MEtoEDMConverter_*_*', 
         'keep *_randomEngineStateProducer_*_*', 
         'keep *_logErrorHarvester_*_*')
@@ -44748,13 +44745,13 @@ process.RAWSIMHLTEventContent = cms.PSet(
     outputCommands = cms.untracked.vstring( ('drop *', 
         'drop *', 
         'drop *', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
         'drop *_hlt*_*_*', 
         'keep *_hltL1GtObjectMap_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep edmTriggerResults_*_*_*', 
         'keep triggerTriggerEvent_*_*_*', 
@@ -44780,7 +44777,7 @@ process.RAWSIMHLTEventContent = cms.PSet(
         'keep *_genParticle_*_*', 
         'keep recoGenMETs_*_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep *_MEtoEDMConverter_*_*', 
         'keep *_randomEngineStateProducer_*_*', 
         'keep *_logErrorHarvester_*_*', 
@@ -44995,7 +44992,7 @@ process.RAWSIMHLTEventContent = cms.PSet(
         'keep *_hltTriggerSummaryAOD_*_*', 
         'keep *_hltTriggerSummaryRAW_*_*', 
         'keep DcsStatuss_hltScalersRawToDigi_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_rawDataRepacker_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep FEDRawDataCollection_virginRawDataRepacker_*_*', 
@@ -46112,16 +46109,16 @@ process.REPACKRAWEventContent = cms.PSet(
         'drop FEDRawDataCollection_*_*_*', 
         'keep FEDRawDataCollection_rawDataRepacker_*_*', 
         'keep FEDRawDataCollection_virginRawDataRepacker_*_*', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
         'drop *_hlt*_*_*', 
         'keep *_hltL1GtObjectMap_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep edmTriggerResults_*_*_*', 
         'keep triggerTriggerEvent_*_*_*', 
         'drop FEDRawDataCollection_source_*_*', 
-        'drop FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*')
+        'drop FEDRawDataCollection_rawDataCollector_*_*')
 )
 
 process.REPACKRAWSIMEventContent = cms.PSet(
@@ -46131,11 +46128,11 @@ process.REPACKRAWSIMEventContent = cms.PSet(
         'drop FEDRawDataCollection_*_*_*', 
         'keep FEDRawDataCollection_rawDataRepacker_*_*', 
         'keep FEDRawDataCollection_virginRawDataRepacker_*_*', 
-        'keep  FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep  FEDRawDataCollection_rawDataCollector_*_*', 
         'keep  FEDRawDataCollection_source_*_*', 
         'drop *_hlt*_*_*', 
         'keep *_hltL1GtObjectMap_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
         'keep edmTriggerResults_*_*_*', 
         'keep triggerTriggerEvent_*_*_*', 
@@ -46161,12 +46158,12 @@ process.REPACKRAWSIMEventContent = cms.PSet(
         'keep *_genParticle_*_*', 
         'keep recoGenMETs_*_*_*', 
         'keep FEDRawDataCollection_source_*_*', 
-        'keep FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*', 
+        'keep FEDRawDataCollection_rawDataCollector_*_*', 
         'keep *_MEtoEDMConverter_*_*', 
         'keep *_randomEngineStateProducer_*_*', 
         'keep *_logErrorHarvester_*_*', 
         'drop FEDRawDataCollection_source_*_*', 
-        'drop FEDRawDataCollection_HLTselectedElectronFEDList:StremElectronRawFedData_*_*')
+        'drop FEDRawDataCollection_rawDataCollector_*_*')
 )
 
 process.RESIMEventContent = cms.PSet(
@@ -47775,7 +47772,7 @@ process.ecalDrivenElectronSeedsParameters = cms.PSet(
     maxHEndcaps = cms.double(0.0),
     preFilteredSeeds = cms.bool(False),
     r2MaxF = cms.double(0.15),
-    hOverEConeSize = cms.double(0.0),  ##AM##  hOverEConeSize = cms.double(0.15),
+    hOverEConeSize = cms.double(0.15),
     pPhiMin1 = cms.double(-0.075),
     initialSeeds = cms.InputTag("newCombinedSeeds"),
     deltaZ1WithVertex = cms.double(25.0),
@@ -48010,7 +48007,7 @@ process.leadTrackFinding = cms.PSet(
 )
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(-1)
+    input = cms.untracked.int32(1)
 )
 
 process.mipVariable = cms.PSet(
