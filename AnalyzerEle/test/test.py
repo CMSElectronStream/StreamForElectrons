@@ -12,7 +12,7 @@ process.source = cms.Source ("PoolSource",
 )
 
 process.TFileService = cms.Service("TFileService", 
-      fileName = cms.string("tree.root"),
+      fileName = cms.string(options.outputFile),
       closeFileFast = cms.untracked.bool(True)
 )
 
@@ -37,7 +37,6 @@ process.Analyzer = cms.EDAnalyzer('AnalyzerEle',
     dataFlag = cms.untracked.bool(True),
     saveRecHitMatrix = cms.untracked.bool(False),
     saveFbrem = cms.untracked.bool(False) # set False if running on AOD
-    
 )
 
 
