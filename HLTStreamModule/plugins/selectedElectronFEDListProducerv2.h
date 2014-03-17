@@ -96,7 +96,18 @@
 
 #include "DataFormats/Math/interface/normalizedPhi.h"
 
+#include "CalibFormats/HcalObjects/interface/HcalDbService.h"
+#include "CalibFormats/HcalObjects/interface/HcalDbRecord.h"
+#include "CondFormats/HcalObjects/interface/HcalElectronicsMap.h"
+#include "DataFormats/HcalDetId/interface/HcalElectronicsId.h"
+#include "DataFormats/HcalDetId/interface/HcalDetId.h"
+#include "DataFormats/CaloTowers/interface/CaloTowerDetId.h"
+#include "RecoEgamma/EgammaIsolationAlgos/interface/EgammaHadTower.h"
+#include "CondFormats/HcalObjects/interface/HcalMappingEntry.h"
+
+
 using namespace std;
+
 class selectedElectronFEDListProducerv2 : public edm::EDProducer {
 
  public:
@@ -155,27 +166,31 @@ class selectedElectronFEDListProducerv2 : public edm::EDProducer {
                              const PixelRegion & region);
  private:
 
-  // input from edm::ParameterSet of the producer  
+  // input parameter of the producer
   std::vector<edm::InputTag> electronCollections_ ;
   std::vector<int> isGsfElectronCollection_ ;
-  std::vector<int> dumpThisSelectedFEDs_ ;
+  std::vector<int> addThisSelectedFEDs_ ;
+
+  edm::Handle<CaloTowerCollection>* towersH_ ;
   
   math::XYZVector beamSpotPosition_;
 
   edm::InputTag   beamSpotTag_ ;
   edm::FileInPath ESLookupTable_ ; 
-  edm::InputTag rawDataLabel_ ;
+  edm::InputTag   rawDataLabel_ ;
+  edm::InputTag   hcalTowersTag_;
 
-  bool dumpEcalFedList_ ;
-  bool dumpTrackSiStripFedList_ ;
-  bool dumpTrackSiPixelFedList_ ;
+  bool dumpSelectedEcalFed_ ;
+  bool dumpSelectedSiStripFed_ ;
+  bool dumpSelectedSiPixelFed_ ;
+  bool dumpSelectedHCALFed_;
   bool dumpAllEcalFed_ ;
   bool dumpAllTrackerFed_;
-  bool dumpHCALFed_;
+  bool dumpAllHCALFed_;
 
   bool debug_ ;
 
-  double dRStripRegion_ ;
+  double dRStripRegion_  ;
   double dPhiPixelRegion_;
   double dEtaPixelRegion_;
   double maxZPixelRegion_;
@@ -197,10 +212,13 @@ class selectedElectronFEDListProducerv2 : public edm::EDProducer {
 
   boost::scoped_ptr<SiPixelFedCabling> PixelCabling_;
   std::vector<PixelModule> pixelModuleVector_ ;
+
+  EgammaHadTower * hadTower_;
   
   // fed list and output raw data
   std::vector<uint32_t> fedList_ ;
   FEDRawDataCollection   *RawDataCollection_;
+
 };
 
 #endif

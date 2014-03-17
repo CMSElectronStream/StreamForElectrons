@@ -1,4 +1,5 @@
 #include "HLTrigger/Egamma/interface/selectedElectronFEDListProducerv2.h"
+#include "CondFormats/HcalObjects/src/T_EventSetup_HcalElectronicsMap.cc"
 
 selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::ParameterSet & iConfig){
  
@@ -20,20 +21,27 @@ selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::
  }
  else{ throw cms::Exception("Configuration")<<"[selectedElectronFEDListProducer] no electron flag are given --> need at least one \n";  }
 
- if(iConfig.existsAs<std::vector<int>>("dumpThisSelectedFEDs")){
-    dumpThisSelectedFEDs_ = iConfig.getParameter<std::vector<int>>("dumpThisSelectedFEDs");
-    if(dumpThisSelectedFEDs_.empty()){
-      dumpThisSelectedFEDs_.push_back(-1); 
+ if(iConfig.existsAs<std::vector<int>>("addThisSelectedFEDs")){
+    addThisSelectedFEDs_ = iConfig.getParameter<std::vector<int>>("addThisSelectedFEDs");
+    if(addThisSelectedFEDs_.empty()){
+      addThisSelectedFEDs_.push_back(-1); 
    }
  }
- else{ dumpThisSelectedFEDs_.push_back(-1); }
+ else{ addThisSelectedFEDs_.push_back(-1); }
 
- if(isGsfElectronCollection_.size() < electronCollections_.size()) throw cms::Exception("Configuration")<<"[selectedElectronFEDListProducer] electron flag < electron collection  --> need at equal number to understand which are Gsf and which not \n";
+ if(isGsfElectronCollection_.size() < electronCollections_.size()) 
+    throw cms::Exception("Configuration")<<"[selectedElectronFEDListProducer] electron flag < electron collection  --> need at equal number to understand which are Gsf and which not \n";
 
  if(iConfig.existsAs<edm::InputTag>("beamSpot")){
    beamSpotTag_ = iConfig.getParameter<edm::InputTag>("beamSpot");
  }
  else{ beamSpotTag_ = edm::InputTag("hltOnlineBeamSpot"); }
+
+ if(iConfig.existsAs<edm::InputTag>("hcalTowersTag")){
+   hcalTowersTag_ = iConfig.getParameter<edm::InputTag>("hcalTowersTag");
+ }
+ else{ hcalTowersTag_ = edm::InputTag("hltOnlineBeamSpot"); }
+
    
  // ES look up table
  if(iConfig.existsAs<edm::FileInPath>("ESLookupTable")){
@@ -75,20 +83,25 @@ selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::
  else maxZPixelRegion_ = 24. ;
 
  // bool
- if( iConfig.existsAs<bool>("dumpEcalFedList")){
-   dumpEcalFedList_ = iConfig.getParameter< bool >("dumpEcalFedList");
+ if( iConfig.existsAs<bool>("dumpSelectedEcalFed")){
+   dumpSelectedEcalFed_ = iConfig.getParameter< bool >("dumpSelectedEcalFed");
  }
- else dumpEcalFedList_ = true ;
+ else dumpSelectedEcalFed_ = true ;
 
- if(iConfig.existsAs<bool>("dumpTrackSiStripFedList")){
-   dumpTrackSiStripFedList_ = iConfig.getParameter<bool>("dumpTrackSiStripFedList");
+ if(iConfig.existsAs<bool>("dumpSelectedSiStripFed")){
+   dumpSelectedSiStripFed_ = iConfig.getParameter<bool>("dumpSelectedSiStripFed");
  }
- else dumpTrackSiStripFedList_ = true ;
+ else dumpSelectedSiStripFed_ = true ;
 
- if(iConfig.existsAs<bool>("dumpTrackSiPixelFedList")){
-    dumpTrackSiPixelFedList_ = iConfig.getParameter<bool>("dumpTrackSiPixelFedList");
+ if(iConfig.existsAs<bool>("dumpSelectedSiPixelFed")){
+    dumpSelectedSiPixelFed_ = iConfig.getParameter<bool>("dumpSelectedSiPixelFed");
  }
- else dumpTrackSiPixelFedList_ = true ;
+ else dumpSelectedSiPixelFed_ = true ;
+
+ if(iConfig.existsAs<bool>("dumpSelectedHCALFed")){
+    dumpSelectedHCALFed_ = iConfig.getParameter<bool>("dumpSelectedHCALFed");
+ }
+ else dumpSelectedHCALFed_ = true ;
 
  if(iConfig.existsAs<bool>("dumpAllEcalFed")){
      dumpAllEcalFed_ = iConfig.getParameter<bool>("dumpAllEcalFed");
@@ -100,10 +113,10 @@ selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::
  }
  else dumpAllTrackerFed_ = false ;
 
- if(iConfig.existsAs<bool>("dumpHCALFed")){
-     dumpHCALFed_ = iConfig.getParameter<bool>("dumpHCALFed");
+ if(iConfig.existsAs<bool>("dumpAllHCALFed")){
+     dumpAllHCALFed_ = iConfig.getParameter<bool>("dumpAllHCALFed");
  }
- else dumpHCALFed_ = false ;
+ else dumpAllHCALFed_ = false ;
 
  if(iConfig.existsAs<bool>("debug")){
    debug_ = iConfig.getParameter<bool>("debug");
@@ -116,9 +129,9 @@ selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::
 
   std::cout<<"[selectedElectronFEDListProducer] beam spot Tag "<<beamSpotTag_<<std::endl;
 
-  std::cout<<"[selectedElectronFEDListProducer] dumpEcalFedList set to "<<dumpEcalFedList_<<" dumpTrackSiStripFedList "<<dumpTrackSiStripFedList_<<" dumpTrackSiPixelFedList "<<dumpTrackSiPixelFedList_<<std::endl;
+  std::cout<<"[selectedElectronFEDListProducer] dumpEcalFedList set to "<<dumpSelectedEcalFed_<<" dumpSelectedSiStripFed "<<dumpSelectedSiStripFed_<<" dumpSelectedSiPixelFed "<<dumpSelectedSiPixelFed_<<std::endl;
 
-  std::cout<<"[selectedElectronFEDListProducer] dumpAllEcalFed "<<dumpAllEcalFed_<<" dumpAllTrackerFed "<<dumpAllTrackerFed_<<std::endl;
+  std::cout<<"[selectedElectronFEDListProducer] dumpAllEcalFed "<<dumpAllEcalFed_<<" dumpAllTrackerFed "<<dumpAllTrackerFed_<<" dump all HCAL fed "<<dumpAllHCALFed_<<std::endl;
 
   std::cout<<"[selectedElectronFEDListProducer] dRStripRegion "<<dRStripRegion_<<std::endl;
 
@@ -131,8 +144,8 @@ selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::
   for( ; Tag !=electronCollections_.end() && Flag!=isGsfElectronCollection_.end() ; ++Tag , ++Flag)
      std::cout<<"[selectedElectronFEDListProducer] ele collection: "<<*(Tag)<<" isGsf "<<*(Flag)<<std::endl;
 
-  std::vector<int>::const_iterator AddFed = dumpThisSelectedFEDs_.begin();
-  for( ; AddFed !=dumpThisSelectedFEDs_.end() ; ++AddFed)
+  std::vector<int>::const_iterator AddFed = addThisSelectedFEDs_.begin();
+  for( ; AddFed !=addThisSelectedFEDs_.end() ; ++AddFed)
      std::cout<<"[selectedElectronFEDListProducer] additional FED: "<<*(AddFed)<<std::endl;
      
   std::cout<<"[selectedElectronFEDListProducer] rawDataInput "<<rawDataLabel_<<std::endl; 
@@ -240,8 +253,10 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
    }
 
    std::sort(pixelModuleVector_.begin(),pixelModuleVector_.end());
- 
+
   }
+
+  // event by event analysis
 
   // get event raw data
   edm::Handle<FEDRawDataCollection> rawdata;
@@ -260,9 +275,15 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
   std::vector<edm::InputTag>::const_iterator itTag = electronCollections_.begin();
   std::vector<int>::const_iterator itFlag = isGsfElectronCollection_.begin();
 
+  // take the calo tower collection
+  towersH_ = new edm::Handle<CaloTowerCollection>();
+  iEvent.getByLabel(hcalTowersTag_,*towersH_);
+
+  hadTower_ = new EgammaHadTower(iSetup,EgammaHadTower::HoeMode::TowersBehindCluster);
+  
   for( ; itTag!=electronCollections_.end() && itFlag!=isGsfElectronCollection_.end(); ++itTag , ++itFlag){
 
-   try { iEvent.getByLabel (*itTag,triggerElectronCollection);
+   try { iEvent.getByLabel(*itTag,triggerElectronCollection);
          if(triggerElectronCollection.failedToGet()) continue ;
    }
    catch (cms::Exception &exception) {continue;}
@@ -287,7 +308,12 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
      fedList_.push_back(iStripFed);
   }
 
-  if( !dumpAllTrackerFed_  || !dumpAllEcalFed_){
+  if(dumpAllHCALFed_){
+   for(uint32_t iHcalFed = FEDNumbering::MINHCALFEDID ; iHcalFed <=   FEDNumbering::MAXHCALFEDID; iHcalFed++)
+     fedList_.push_back(iHcalFed);
+  } 
+
+  if( !dumpAllTrackerFed_  || !dumpAllEcalFed_ ){
     for( ; itEle!=electrons.end() ; ++itEle){
 
      // get electron supercluster and the associated hit -> detID
@@ -307,25 +333,28 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
          if(hitFED <= FEDNumbering::MINECALFEDID || hitFED >= FEDNumbering::MAXECALFEDID) continue;
 
          if(debug_) std::cout<<"[selectedElectronFEDListProducer] electron hit detID Barrel "<<(*itSChits).first.rawId()<<" eta "<<double(point.eta())<<" phi "<< double(point.phi())*radTodeg <<" FED "<<hitFED<<std::endl;
-         if(dumpEcalFedList_){
+          
+         if(dumpSelectedEcalFed_){
           if(!fedList_.empty()){ 
             if(std::find(fedList_.begin(),fedList_.end(),hitFED)==fedList_.end()) fedList_.push_back(hitFED);
           }
           else fedList_.push_back(hitFED);
          }
-      } 
-      else if((*itSChits).first.subdetId()== EcalEndcap){
+
+       }
+       else if((*itSChits).first.subdetId()== EcalEndcap){
          EEDetId idEERaw ((*itSChits).first);
          GlobalPoint point = geometry_->getPosition(idEERaw);
          hitFED = FEDNumbering::MINECALFEDID + TheMapping_->GetFED(double(point.eta()),double(point.phi())*radTodeg);
          if(hitFED <= FEDNumbering::MINECALFEDID || hitFED >= FEDNumbering::MAXECALFEDID) continue;
 
          if(debug_) std::cout<<"[selectedElectronFEDListProducer] electron hit detID Endcap "<<(*itSChits).first.rawId()<<" eta "<<double(point.eta())<<" phi "<<double(point.phi())*radTodeg <<" FED "<<hitFED<<std::endl;
-         if(dumpEcalFedList_){
+         if(dumpSelectedEcalFed_){
           if(!fedList_.empty()){ 
             if(std::find(fedList_.begin(),fedList_.end(),hitFED)==fedList_.end()) fedList_.push_back(hitFED);
           }
           else fedList_.push_back(hitFED);
+
           // preshower hit for each ecal endcap hit
           DetId tmpX = (dynamic_cast<const EcalPreshowerGeometry*>(geometry__ES_))->getClosestCellInPlane(point,1);
           ESDetId stripX = (tmpX == DetId(0)) ? ESDetId(0) : ESDetId(tmpX);          
@@ -348,14 +377,36 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
             if(std::find(fedList_.begin(),fedList_.end(),hitFED)==fedList_.end()) fedList_.push_back(hitFED);
           }
           else fedList_.push_back(hitFED);      
-         }    
-        }   
+         } 
+       } // end endcap  
       } // end loop on SC hit   
-    }
-    // get the electron track
-    if( !dumpAllTrackerFed_ ){ 
+      
+      // check HCAL behind each hit
+            
+      if(dumpSelectedHCALFed_){
+       if(!towersH_->failedToGet()){ 
+         hadTower_->setTowerCollection(towersH_->product());
+         int hitFED = 0 ;
+ 	 std::vector<CaloTowerDetId> listTower = hadTower_->towersOf(*scRef);
+	 std::vector<CaloTowerDetId>::const_iterator itHcalFed = listTower.begin();
+         for( ; itHcalFed != listTower.end() ; itHcalFed++){         
+	  hitFED = FEDNumbering::MINHCALFEDID + HcalElectronicsId((*itHcalFed).rawId()).dccid();
+          if(hitFED <= FEDNumbering::MINHCALFEDID || hitFED >= FEDNumbering::MAXHCALFEDID) continue;
+          if(debug_) std::cout<<"[selectedElectronFEDListProducer] Hcal FED ID "<<hitFED<<std::endl;
+          if(hitFED < 0) continue;
+          if(!fedList_.empty()){ 
+            if(std::find(fedList_.begin(),fedList_.end(),hitFED)==fedList_.end()) fedList_.push_back(hitFED);
+          }
+          else fedList_.push_back(hitFED);      
+	}
+       }
+      }
+     } // End ecal
+
+     // get the electron track
+     if( !dumpAllTrackerFed_ ){ 
        //loop on the region
-       if(dumpTrackSiStripFedList_){
+       if(dumpSelectedSiStripFed_){
           double eta ;
           double phi ;
           if(*itFlag){
@@ -392,13 +443,13 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
                      }
                      else fedList_.push_back(hitFED);
                    }
-                 }
-	       }
-	     }
-	   }
-	}
+		 }
+	      }
+	    }
+	  }
+       } // end si strip
       
-        if(dumpTrackSiPixelFedList_){
+       if(dumpSelectedSiPixelFed_){
 
            math::XYZVector momentum;
            if(*itFlag) momentum = electron->gsfTrack()->momentum();
@@ -427,26 +478,18 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
                 itUp = std::upper_bound(pixelModuleVector_.begin(),pixelModuleVector_.end(),upperBound);
                 pixelFedDump(itDn,itUp,region);
 
-          }
-        } 
-      }
-
-      if(dumpHCALFed_){
-        for(uint32_t iHcalFed = FEDNumbering::MINHCALFEDID ; iHcalFed <=   FEDNumbering::MAXHCALFEDID; iHcalFed++)
-          fedList_.push_back(iHcalFed);
-      } 
-
-     } // end loop on the electron
-   } 
+	   }
+       }
+     } // end tracker analysis
+    }// end loop on the electron
+   }
   } // end loop on the electron collection
-
   // add a set of chosen FED
-  for( unsigned int iFed = 0 ; iFed < dumpThisSelectedFEDs_.size() ; iFed++){
-    std::cout<<" dumpAdditional fed "<<dumpThisSelectedFEDs_.at(iFed)<<std::endl;
-    if(dumpThisSelectedFEDs_.at(iFed) == -1 ) continue ;
-    fedList_.push_back(dumpThisSelectedFEDs_.at(iFed));
-  }
 
+  for( unsigned int iFed = 0 ; iFed < addThisSelectedFEDs_.size() ; iFed++){
+    if(addThisSelectedFEDs_.at(iFed) == -1 ) continue ;
+    fedList_.push_back(addThisSelectedFEDs_.at(iFed));
+  }
 
   if(debug_){
    if(!fedList_.empty()){ 
@@ -457,12 +500,11 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
    std::cout<<"  "<<std::endl;
   }
 
-  
- // make the final raw data collection
- RawDataCollection_ = new FEDRawDataCollection();
- std::sort(fedList_.begin(),fedList_.end());
- std::vector<uint32_t>::const_iterator itfedList = fedList_.begin();
- for( ; itfedList!=fedList_.end() ; ++itfedList){
+  // make the final raw data collection
+  RawDataCollection_ = new FEDRawDataCollection();
+  std::sort(fedList_.begin(),fedList_.end());
+  std::vector<uint32_t>::const_iterator itfedList = fedList_.begin();
+  for( ; itfedList!=fedList_.end() ; ++itfedList){
    const FEDRawData& data = rawdata->FEDData(*itfedList);
    if(data.size()>0){
            FEDRawData& fedData = RawDataCollection_->FEDData(*itfedList);
@@ -490,8 +532,7 @@ void selectedElectronFEDListProducerv2::pixelFedDump( std::vector<PixelModule>::
                                                       const PixelRegion & region){
 
   for( ; itDn != itUp ; ++itDn){
-    float zmodule = itDn->z-((itDn->x-beamSpotPosition_.x())*region.cosphi+(itDn->y-
-beamSpotPosition_.y())*region.sinphi)*region.atantheta;
+    float zmodule = itDn->z-((itDn->x-beamSpotPosition_.x())*region.cosphi+(itDn->y-beamSpotPosition_.y())*region.sinphi)*region.atantheta;
     if ( std::abs(zmodule) > region.maxZ ) continue; 
     int hitFED = itDn->Fed;
     if(hitFED <= FEDNumbering::MINSiPixelFEDID || hitFED >= FEDNumbering::MAXSiPixelFEDID) continue;
