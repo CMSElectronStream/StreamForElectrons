@@ -26,11 +26,11 @@ HLTGsfEle25WP80Sequence.remove("HLTFastPrimaryVertexSequence");
         	
 HLTEle25WP80PFMETMT50Sequence = cms.Sequence(HLTPFL1FastL2L3ReconstructionSequence + 
 	                                     hltPFMETProducerSequence +
-	                                     hltEle25WP80PFMT50PFMTFilter)
-#                                             HLTFastPrimaryVertexSequence)
+	                                     hltEle25WP80PFMT50PFMTFilter+
+                                             HLTFastPrimaryVertexSequence)
 
 HLTGsfEle25WP80PFMETMT50Sequence = cms.Sequence(HLTPFL1FastL2L3ReconstructionSequence + 
 	                                        hltPFMETProducerSequence +
-	                                        hltGsfEle25WP80PFMT50PFMTFilter)
-#                                                HLTFastPrimaryVertexSequence)
+	                                        hltGsfEle25WP80PFMT50PFMTFilter+
+                                                HLTFastPrimaryVertexSequence)
 
