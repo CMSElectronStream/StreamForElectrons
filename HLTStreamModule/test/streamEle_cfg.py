@@ -80,10 +80,10 @@ process.load("HLTrigger.Configuration.HLT_Ele25_WP70_cff")
 #                                       process.HLTEle25WP70Sequence+
 #                                       process.HLTEndSequence)
 
-process.HLT_GsfEle25_WP70_v13 = cms.Path( process.HLTBeginSequence +
-                                          process.hltL1sL1SingleEG20ORL1SingleEG22 +
-                                          process.HLTEle25WP70Sequence+
-                                          process.HLTEndSequence)
+#process.HLT_GsfEle25_WP70_v13 = cms.Path( process.HLTBeginSequence +
+#                                          process.hltL1sL1SingleEG20ORL1SingleEG22 +
+#                                          process.HLTEle25WP70Sequence+
+#                                          process.HLTEndSequence)
 
 
 ### Complete Trigger path sequence for Ele25 WP80
@@ -107,10 +107,10 @@ process.load("HLTrigger.Configuration.HLT_Ele25_WP90_cff")
 #                                       process.HLTEle25WP90Sequence+
 #                                       process.HLTEndSequence)
 
-process.HLT_GsfEle25_WP90_v13 = cms.Path( process.HLTBeginSequence +
-                                          process.hltL1sL1SingleEG20ORL1SingleEG22 +
-                                          process.HLTGsfEle25WP90Sequence+
-                                          process.HLTEndSequence)
+#process.HLT_GsfEle25_WP90_v13 = cms.Path( process.HLTBeginSequence +
+#                                          process.hltL1sL1SingleEG20ORL1SingleEG22 +
+#                                          process.HLTGsfEle25WP90Sequence+
+#                                          process.HLTEndSequence)
 
 
 ### complete trigger path for HLT_Ele25_WP70_PFMET_MT50
@@ -122,11 +122,11 @@ process.load("HLTrigger.Configuration.HLT_Ele25_WP70_PFMET_MT50_cff")
 #	                                         process.HLTEle25WP70PFMETMT50Sequence +
 #						 process.HLTEndSequence)
 	 
-process.HLT_GsfEle25_WP70_PFMET_MT50_v9 = cms.Path(process.HLTBeginSequence +
-                                                   process.hltL1sL1SingleEG20ORL1SingleEG22 +
-						   process.HLTGsfEle25WP70Sequence +
-	                                           process.HLTGsfEle25WP70PFMETMT50Sequence +
-						   process.HLTEndSequence)
+#process.HLT_GsfEle25_WP70_PFMET_MT50_v9 = cms.Path(process.HLTBeginSequence +
+#                                                   process.hltL1sL1SingleEG20ORL1SingleEG22 +
+#						   process.HLTGsfEle25WP70Sequence +
+#	                                           process.HLTGsfEle25WP70PFMETMT50Sequence +
+#						   process.HLTEndSequence)
 
 	       
 	       
@@ -153,11 +153,11 @@ process.load("HLTrigger.Configuration.HLT_Ele25_WP90_PFMET_MT50_cff")
 #	                                         process.HLTEle25WP90PFMETMT50Sequence +
 #						 process.HLTEndSequence)
 
-process.HLT_GsfEle25_WP90_PFMET_MT50_v9 = cms.Path( process.HLTBeginSequence +
-                                                    process.hltL1sL1SingleEG20ORL1SingleEG22 +
-						    process.HLTGsfEle25WP90Sequence +
-	                                            process.HLTGsfEle25WP90PFMETMT50Sequence +
-						    process.HLTEndSequence)
+#process.HLT_GsfEle25_WP90_PFMET_MT50_v9 = cms.Path( process.HLTBeginSequence +
+#                                                    process.hltL1sL1SingleEG20ORL1SingleEG22 +
+#						    process.HLTGsfEle25WP90Sequence +
+#	                                            process.HLTGsfEle25WP90PFMETMT50Sequence +
+#						    process.HLTEndSequence)
 
 #process.load("HLTrigger.Configuration.HLT_Ele17_Ele8_WP90_v1_cff")
 #process.HLT_Ele17_Ele8_WP90_v1 = cms.Path( process.HLTBeginSequence +
@@ -198,7 +198,7 @@ process.HLTriggerFinalPath = cms.Path( process.hltGtDigis +
 ### endpath
 process.load('HLTrigger.Configuration.HLT_ElectronStreamOutput_cff')
 
-process.hltOutputStreamElectron.fileName = cms.untracked.string("streamElectronRAW_tmp.root")
+process.hltOutputStreamElectron.fileName = cms.untracked.string("streamElectronRAW_HCAL.root")
 
 process.ElectronStreamOutputPath = cms.EndPath( process.hltPreOutput + 
 	                                        process.HLTselectedElectronFEDList + 
@@ -260,14 +260,14 @@ if 'hltDQML1SeedLogicScalers' in process.__dict__:
     process.hltDQML1SeedLogicScalers.processname              = 'HLT8E33v2'
 
 # limit the number of events to be processed
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(3000))
 
 process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.destinations = ['cout', 'cerr']
 process.MessageLogger.cerr.FwkReport.reportEvery = 1 
 
 # enable the TrigReport and TimeReport
-#process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool( True ))
+process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool( True ))
 
 # override the GlobalTag, connection string and pfnPrefix
 if 'GlobalTag' in process.__dict__:
