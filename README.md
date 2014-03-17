@@ -19,14 +19,14 @@ To install:
     git cms-addpkg DataFormats/HLTReco
     git cms-addpkg RecoEgamma/EgammaHLTProducers    
     git clone git@github.com:CMSElectronStream/StreamForElectrons.git
-    cp StreamForElectrons/python/* HLTrigger/Configuration/python 
-    cp StreamForElectrons/test/streamEle_cfg.py HLTrigger/Configuration/test
-    cp StreamForElectrons/plugins/HLTElectronOneOEMinusOneOPFilterRegional.h HLTrigger/Egamma/interface/
-    cp StreamForElectrons/plugins/HLTElectronOneOEMinusOneOPFilterRegional.cc HLTrigger/Egamma/src/
-    cp StreamForElectrons/plugins/EgammaHLTGsfTrackVarProducer.h RecoEgamma/EgammaHLTProducers/interface/
-    cp StreamForElectrons/plugins/EgammaHLTGsfTrackVarProducer.cc RecoEgamma/EgammaHLTProducers/src/
-    cp StreamForElectrons/plugins/selectedElectronFEDListProducer.h  HLTrigger/Egamma/interface/
-    cp StreamForElectrons/plugins/selectedElectronFEDListProducer.cc HLTrigger/Egamma/src/
+    cp StreamForElectrons/HLTStreamModule/python/* HLTrigger/Configuration/python 
+    cp StreamForElectrons/HLTStreamModule/test/streamEle_cfg.py HLTrigger/Configuration/test
+    cp StreamForElectrons/HLTStreamModule/plugins/HLTElectronOneOEMinusOneOPFilterRegional.h HLTrigger/Egamma/interface/
+    cp StreamForElectrons/HLTStreamModule/plugins/HLTElectronOneOEMinusOneOPFilterRegional.cc HLTrigger/Egamma/src/
+    cp StreamForElectrons/HLTStreamModule/plugins/EgammaHLTGsfTrackVarProducer.h RecoEgamma/EgammaHLTProducers/interface/
+    cp StreamForElectrons/HLTStreamModule/plugins/EgammaHLTGsfTrackVarProducer.cc RecoEgamma/EgammaHLTProducers/src/
+    cp StreamForElectrons/HLTStreamModule/plugins/selectedElectronFEDListProducer.h  HLTrigger/Egamma/interface/
+    cp StreamForElectrons/HLTStreamModule/plugins/selectedElectronFEDListProducer.cc HLTrigger/Egamma/src/
     scramv1 b -j 8
 
 test:
