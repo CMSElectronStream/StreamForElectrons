@@ -27,6 +27,10 @@ To install:
     cp StreamForElectrons/HLTStreamModule/plugins/EgammaHLTGsfTrackVarProducer.cc RecoEgamma/EgammaHLTProducers/src/
     cp StreamForElectrons/HLTStreamModule/plugins/selectedElectronFEDListProducer.h  HLTrigger/Egamma/interface/
     cp StreamForElectrons/HLTStreamModule/plugins/selectedElectronFEDListProducer.cc HLTrigger/Egamma/src/
+    cp StreamForElectrons/HLTStreamModule/plugins/selectedElectronFEDListProducerv2.h  HLTrigger/Egamma/interface/
+    cp StreamForElectrons/HLTStreamModule/plugins/selectedElectronFEDListProducerv2.cc HLTrigger/Egamma/src/
+    cp StreamForElectrons/HLTStreamModule/plugins/BuildFile.xml HLTrigger/Egamma/
+    
     scramv1 b -j 8
 
 test:
