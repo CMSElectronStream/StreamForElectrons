@@ -122,8 +122,8 @@ HLTEle25WP80Sequence = cms.Sequence( hltPreEle+
                                      hltEle25WP80DphiFilter+
                                      HLTL1SeededEgammaRegionalRecoTrackerSequence +
                                      hltEleAnyL1SeededElectronTrackIso +
-                                     hltEle25WP80TrackIsoFilter)
-#                                     HLTFastPrimaryVertexSequence)
+                                     hltEle25WP80TrackIsoFilter+
+                                     HLTFastPrimaryVertexSequence)
 
 #############################
 ### using gsf electrons  ####
@@ -191,5 +191,5 @@ HLTGsfEle25WP80Sequence = cms.Sequence(	hltPreEle+
                                         hltGsfEle25WP80DphiFilter+
                                         HLTL1SeededEgammaRegionalRecoTrackerSequence +
                                         hltGsfEleAnyL1SeededElectronTrackIso+
-                                        hltGsfEle25WP80TrackIsoFilter)
-#                                        HLTFastPrimaryVertexSequence)
+                                        hltGsfEle25WP80TrackIsoFilter+
+                                        HLTFastPrimaryVertexSequence)
