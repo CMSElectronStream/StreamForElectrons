@@ -20,6 +20,8 @@ from HLTrigger.Configuration.HLT_ElectronTrackSequence_cff import *
 
 from HLTrigger.Configuration.HLT_ElectronFilters_cff import *
 
+from HLTrigger.Configuration.HLT_FastVertexing_cff import *
+
 ## fix threshold for et cut
 hltEG25WP70EtFilter = hltEGEtFilter.clone()
 hltEG25WP70EtFilter.etcutEB = cms.double(25)
@@ -120,7 +122,8 @@ HLTEle25WP70Sequence = cms.Sequence( hltPreEle+
                                      hltEle25WP70DphiFilter+
                                      HLTL1SeededEgammaRegionalRecoTrackerSequence +
                                      hltEleAnyL1SeededElectronTrackIso +
-                                     hltEle25WP70TrackIsoFilter)
+                                     hltEle25WP70TrackIsoFilter+
+                                     HLTFastPrimaryVertexSequence)
 
 
 #############################
@@ -189,4 +192,5 @@ HLTGsfEle25WP70Sequence = cms.Sequence(	hltPreEle+
                                         hltGsfEle25WP70DphiFilter+
                                         HLTL1SeededEgammaRegionalRecoTrackerSequence +
                                         hltGsfEleAnyL1SeededElectronTrackIso+
-                                        hltGsfEle25WP70TrackIsoFilter)
+                                        hltGsfEle25WP70TrackIsoFilter+
+                                        HLTFastPrimaryVertexSequence)
