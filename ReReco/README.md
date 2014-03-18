@@ -83,10 +83,12 @@ Working examples
     sed 's|MYINPUTFILE|file:/tmp/amassiro/streamElectronRAW_HCAL.root|' \
        < dump_step2_RAW2DIGI_L1Reco_RECO.py |
        sed 's|rawDataCollector|HLTselectedElectronFEDList:StremElectronRawFedData|' | \
-       sed 's|MYOUTPUTFILE|stream2reco.root|' \
+       sed 's|MYOUTPUTFILE|stream2reco_new_now.root|' \
         > dump_step2_RAW2DIGI_L1Reco_RECO_onStream.py
 
     cmsRun dump_step2_RAW2DIGI_L1Reco_RECO_onStream.py
+
+
 
 
 =======
