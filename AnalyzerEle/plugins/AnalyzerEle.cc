@@ -243,6 +243,10 @@ class AnalyzerEle : public edm::EDAnalyzer {
       float ele1_sigmaIetaIeta;
       float ele1_DphiIn;
       float ele1_DetaIn;
+      float ele1_deltaEtaEleClusterTrackAtCalo;
+      float ele1_deltaEtaPhiClusterTrackAtCalo;
+      float ele1_deltaEtaSeedClusterTrackAtCalo;
+      float ele1_deltaPhiSeedClusterTrackAtCalo;
       float ele1_HOverE;
       float ele1_tkIso;
       float ele1_emIso;
@@ -408,6 +412,10 @@ class AnalyzerEle : public edm::EDAnalyzer {
       float ele2_sigmaIetaIeta;
       float ele2_DphiIn;
       float ele2_DetaIn;
+      float ele2_deltaEtaEleClusterTrackAtCalo;
+      float ele2_deltaEtaPhiClusterTrackAtCalo;
+      float ele2_deltaEtaSeedClusterTrackAtCalo;
+      float ele2_deltaPhiSeedClusterTrackAtCalo;
       float ele2_HOverE;
       float ele2_tkIso;
       float ele2_emIso;
@@ -664,6 +672,12 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig) {
   myTree_ -> Branch("ele1_sigmaIetaIeta", &ele1_sigmaIetaIeta, "ele1_sigmaIetaIeta/F");
   myTree_ -> Branch("ele1_DphiIn", &ele1_DphiIn, "ele1_DphiIn/F");
   myTree_ -> Branch("ele1_DetaIn", &ele1_DetaIn, "ele1_DetaIn/F");
+
+  myTree_ -> Branch("ele1_deltaEtaEleClusterTrackAtCalo", &ele1_deltaEtaEleClusterTrackAtCalo, "ele1_deltaEtaEleClusterTrackAtCalo/F");
+  myTree_ -> Branch("ele1_deltaEtaPhiClusterTrackAtCalo", &ele1_deltaEtaPhiClusterTrackAtCalo, "ele1_deltaEtaPhiClusterTrackAtCalo/F");
+  myTree_ -> Branch("ele1_deltaEtaSeedClusterTrackAtCalo", &ele1_deltaEtaSeedClusterTrackAtCalo, "ele1_deltaEtaSeedClusterTrackAtCalo/F");
+  myTree_ -> Branch("ele1_deltaPhiSeedClusterTrackAtCalo", &ele1_deltaPhiSeedClusterTrackAtCalo, "ele1_deltaPhiSeedClusterTrackAtCalo/F");
+
   myTree_ -> Branch("ele1_HOverE", &ele1_HOverE, "ele1_HOverE/F");
   myTree_ -> Branch("ele1_tkIso", &ele1_tkIso, "ele1_tkIso/F");
   myTree_ -> Branch("ele1_emIso", &ele1_emIso, "ele1_emIso/F");
@@ -765,6 +779,12 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig) {
   myTree_ -> Branch("ele2_sigmaIetaIeta", &ele2_sigmaIetaIeta, "ele2_sigmaIetaIeta/F");
   myTree_ -> Branch("ele2_DphiIn", &ele2_DphiIn, "ele2_DphiIn/F");
   myTree_ -> Branch("ele2_DetaIn", &ele2_DetaIn, "ele2_DetaIn/F");
+
+  myTree_ -> Branch("ele2_deltaEtaEleClusterTrackAtCalo", &ele2_deltaEtaEleClusterTrackAtCalo, "ele2_deltaEtaEleClusterTrackAtCalo/F");
+  myTree_ -> Branch("ele2_deltaEtaPhiClusterTrackAtCalo", &ele2_deltaEtaPhiClusterTrackAtCalo, "ele2_deltaEtaPhiClusterTrackAtCalo/F");
+  myTree_ -> Branch("ele2_deltaEtaSeedClusterTrackAtCalo", &ele2_deltaEtaSeedClusterTrackAtCalo, "ele2_deltaEtaSeedClusterTrackAtCalo/F");
+  myTree_ -> Branch("ele2_deltaPhiSeedClusterTrackAtCalo", &ele2_deltaPhiSeedClusterTrackAtCalo, "ele2_deltaPhiSeedClusterTrackAtCalo/F");
+
   myTree_ -> Branch("ele2_HOverE", &ele2_HOverE, "ele2_HOverE/F");
   myTree_ -> Branch("ele2_tkIso", &ele2_tkIso, "ele2_tkIso/F");
   myTree_ -> Branch("ele2_emIso", &ele2_emIso, "ele2_emIso/F");
@@ -949,6 +969,10 @@ void AnalyzerEle::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   ele1_sigmaIetaIeta =-99.;
   ele1_DphiIn =-99.;
   ele1_DetaIn =-99.;
+  ele1_deltaEtaEleClusterTrackAtCalo = -99.;
+  ele1_deltaEtaPhiClusterTrackAtCalo = -99.;
+  ele1_deltaEtaSeedClusterTrackAtCalo = -99.;
+  ele1_deltaPhiSeedClusterTrackAtCalo = -99.;
   ele1_HOverE =-99.;
   ele1_tkIso =-99.;
   ele1_emIso =-99.;
@@ -1089,6 +1113,10 @@ void AnalyzerEle::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   ele2_sigmaIetaIeta =-99.;
   ele2_DphiIn =-99.;
   ele2_DetaIn =-99.;
+  ele2_deltaEtaEleClusterTrackAtCalo = -99.;
+  ele2_deltaEtaPhiClusterTrackAtCalo = -99.;
+  ele2_deltaEtaSeedClusterTrackAtCalo = -99.;
+  ele2_deltaPhiSeedClusterTrackAtCalo = -99.;
   ele2_HOverE =-99.;
   ele2_tkIso =-99.;
   ele2_emIso =-99.;
@@ -1273,8 +1301,9 @@ void AnalyzerEle::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   edm::Handle<edm::View<reco::GsfElectron> > electronHandle;
   iEvent.getByLabel(EleTag_,electronHandle);
   edm::View<reco::GsfElectron> electrons = *electronHandle;
- 
+
   ///---- get the number of the electron in the event to know if it's a W or a Z ----
+  nele_ = electrons.size();
   if(doWZSelection_){
 
    int nEleTight=0,nEleMedium=0,nEleLoose=0;
@@ -1283,35 +1312,41 @@ void AnalyzerEle::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
    for ( unsigned int iEle=0; iEle<electrons.size(); ++iEle ){
     bool isEleTight = TightEle(iEvent,iSetup,iEle);
 
-    if(isEleTight){ nEleTight++;
-                    eleIts_[1./electrons.at(iEle).pt()] = iEle;
-                    continue;}
+    if(isEleTight){
+     nEleTight++;
+     eleIts_[1./electrons.at(iEle).pt()] = iEle;
+     continue;
+    }
 
     bool isEleMedium = MediumEle(iEvent,iSetup,iEle);
 
-    if(isEleMedium){nEleMedium++;
-                    eleIts_[1./electrons.at(iEle).pt()] = iEle;
-                    continue;}
+    if(isEleMedium){
+     nEleMedium++;
+     eleIts_[1./electrons.at(iEle).pt()] = iEle;
+     continue;
+    }
 
     bool isEleLoose = LooseEle(iEvent,iSetup,iEle);
 
-    if(isEleLoose){nEleLoose++;
-                   eleIts_[1./electrons.at(iEle).pt()] = iEle;
-                   continue;}
+    if(isEleLoose){
+     nEleLoose++;
+     eleIts_[1./electrons.at(iEle).pt()] = iEle;
+     continue;
+    }
    }
+
    if( nEleTight < 1 ) return ;
    if( nEleTight > 2 ) return ;
    if( nEleMedium > 1) return ;
    if( nEleLoose > 0 ) return ;
-  
+
    ///---- check if the event is good----
-   
+
    if( (nEleTight == 1) && (nEleMedium == 0) ){
     isW_=1; isZ_=0;
     std::map<float,int>::const_iterator mapIt = eleIts_.begin();
     fillEleInfo ( iEvent, iSetup, mapIt->second, "ele1" );
     fillMetInfo (iEvent, iSetup);
- 
    }
 
    if( (nEleTight == 2) || (nEleTight == 1 && nEleMedium == 1) ){
@@ -1322,36 +1357,38 @@ void AnalyzerEle::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     fillEleInfo ( iEvent, iSetup, mapIt->second, "ele2" );
     fillDoubleEleInfo (iEvent, iSetup);
     fillMetInfo (iEvent, iSetup);
- 
    }
 
-    
-   if( (nEleTight == 1) && (nEleMedium == 0) ) isGoodEvent = myWselection ( iEvent, iSetup);
-    if( (nEleTight == 2) || (nEleTight == 1 && nEleMedium == 1) ) isGoodEvent = myZselection ( iEvent, iSetup);
-    ///---- save the entry of the tree only if W/Z event ----
-    if ( isGoodEvent ) myTree_ -> Fill();
-    
-  }
-  else{
-         int nEle = electrons.size();
-         if ( nEle == 1 ) { isW_ = 1; isZ_ = 0; }
-         if ( nEle == 2 ) { isW_ = 0; isZ_ = 1; }
-  
-         if ( isW_ == 1 ) fillEleInfo ( iEvent, iSetup, 0, "ele1" );
-                      
-    
-         if ( isZ_ == 1 ) {
-           fillEleInfo ( iEvent, iSetup, 0, "ele1" );
-           fillEleInfo ( iEvent, iSetup, 1, "ele2" );
-           fillDoubleEleInfo (iEvent, iSetup);
-          }
 
-         fillMetInfo (iEvent, iSetup);
- 
-         if (isW_ == 1 || isZ_ == 1) myTree_ -> Fill();
-         }
-  
-  
+   if( (nEleTight == 1) && (nEleMedium == 0) ) {
+    isGoodEvent = myWselection ( iEvent, iSetup);
+   }
+   if( (nEleTight == 2) || (nEleTight == 1 && nEleMedium == 1) ) {
+    isGoodEvent = myZselection ( iEvent, iSetup);
+   }
+   ///---- save the entry of the tree only if W/Z event ----
+   if ( isGoodEvent ) myTree_ -> Fill();
+
+  }
+  else {
+
+   if ( nele_ == 1 ) { isW_ = 1; isZ_ = 0; }
+   if ( nele_ >= 2 ) { isW_ = 0; isZ_ = 1; }
+
+   if ( isW_ == 1 ) fillEleInfo ( iEvent, iSetup, 0, "ele1" );
+
+   if ( isZ_ == 1 ) {
+    fillEleInfo ( iEvent, iSetup, 0, "ele1" );
+    fillEleInfo ( iEvent, iSetup, 1, "ele2" );
+    fillDoubleEleInfo (iEvent, iSetup);
+   }
+
+   fillMetInfo (iEvent, iSetup);
+
+   if (isW_ == 1 || isZ_ == 1) myTree_ -> Fill();
+  }
+
+
   if( verbosity_ )
     std::cout << ">>> AnalyzerEle::analyze end <<<" << std::endl;
 }
@@ -1850,29 +1887,36 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   bool printOut = false;
   reco::GsfElectron electron = electrons.at(iEle);
   
-  if ( eleName == "ele1")
-  {
+  if ( eleName == "ele1") {
     edm::InputTag EleBad = edm::InputTag("gsfElectrons");
     
     if(EleTag_== EleBad && !electron.ecalDriven()) return ;
     
-    ele1=electron.p4();
-    ele1_charge=electron.charge();
-    ele1_p=ele1.P();
-    ele1_pt=ele1.Pt();
-    ele1_eta=ele1.eta();
-    ele1_phi=ele1.phi();
+    ele1 = electron.p4();
+    ele1_charge = electron.charge();
+    ele1_p = ele1.P();
+    ele1_pt = ele1.Pt();
+    ele1_eta = ele1.eta();
+    ele1_phi = ele1.phi();
     
-    ele1_isEB=electron.isEB();
-    ele1_isEBEEGap=electron.isEBEEGap();
-    ele1_isEBEtaGap=electron.isEBEtaGap();
-    ele1_isEBPhiGap=electron.isEBPhiGap();
-    ele1_isEEDeeGap=electron.isEEDeeGap();
-    ele1_isEERingGap=electron.isEERingGap();
+    ele1_isEB = electron.isEB();
+    ele1_isEBEEGap = electron.isEBEEGap();
+    ele1_isEBEtaGap = electron.isEBEtaGap();
+    ele1_isEBPhiGap = electron.isEBPhiGap();
+    ele1_isEEDeeGap = electron.isEEDeeGap();
+    ele1_isEERingGap = electron.isEERingGap();
     
-    ele1_sigmaIetaIeta=electron.sigmaIetaIeta();
-    ele1_DphiIn=electron.deltaPhiSuperClusterTrackAtVtx();
-    ele1_DetaIn=electron.deltaEtaSuperClusterTrackAtVtx();
+    ele1_sigmaIetaIeta=  electron.sigmaIetaIeta();
+    ele1_DphiIn = electron.deltaPhiSuperClusterTrackAtVtx();
+    ele1_DetaIn = electron.deltaEtaSuperClusterTrackAtVtx();
+    
+//     ele1_deltaEtaSuperClusterAtVtx = electron.deltaEtaSuperClusterTrackAtVtx();
+//     ele1_deltaPhiSuperClusterAtVtx = electron.deltaPhiSuperClusterTrackAtVtx();
+    ele1_deltaEtaEleClusterTrackAtCalo = electron.deltaEtaEleClusterTrackAtCalo();
+    ele1_deltaEtaPhiClusterTrackAtCalo = electron.deltaPhiEleClusterTrackAtCalo();
+    ele1_deltaEtaSeedClusterTrackAtCalo = electron.deltaEtaSeedClusterTrackAtCalo();
+    ele1_deltaPhiSeedClusterTrackAtCalo = electron.deltaPhiSeedClusterTrackAtCalo();
+
     ele1_HOverE=electron.hadronicOverEm();
     ele1_ooemoop = (1.0/electron.ecalEnergy() - electron.eSuperClusterOverP()/electron.ecalEnergy());
     ele1_tkIso=electron.dr03TkSumPt();
@@ -2485,6 +2529,14 @@ ele1_tangent_dPerr.push_back(eleTangent.at(pp).deltaP().error());
     ele2_sigmaIetaIeta=electron.sigmaIetaIeta();
     ele2_DphiIn=electron.deltaPhiSuperClusterTrackAtVtx();
     ele2_DetaIn=electron.deltaEtaSuperClusterTrackAtVtx();
+
+ //     ele2_deltaEtaSuperClusterAtVtx = electron.deltaEtaSuperClusterTrackAtVtx();
+//     ele2_deltaPhiSuperClusterAtVtx = electron.deltaPhiSuperClusterTrackAtVtx();
+    ele2_deltaEtaEleClusterTrackAtCalo = electron.deltaEtaEleClusterTrackAtCalo();
+    ele2_deltaEtaPhiClusterTrackAtCalo = electron.deltaPhiEleClusterTrackAtCalo();
+    ele2_deltaEtaSeedClusterTrackAtCalo = electron.deltaEtaSeedClusterTrackAtCalo();
+    ele2_deltaPhiSeedClusterTrackAtCalo = electron.deltaPhiSeedClusterTrackAtCalo();
+   
     ele2_HOverE=electron.hadronicOverEm();
     ele2_ooemoop= (1.0/electron.ecalEnergy() - electron.eSuperClusterOverP()/electron.ecalEnergy());
     
