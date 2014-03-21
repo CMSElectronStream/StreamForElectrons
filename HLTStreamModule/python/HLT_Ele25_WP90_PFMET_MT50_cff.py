@@ -14,22 +14,27 @@ hltEle25WP90PFMT50PFMTFilter = cms.EDFilter( "HLTElectronPFMTFilter",
     inputMetTag = cms.InputTag( "hltPFMETProducer" ),
     lowerMTCut = cms.double( 50.0 ),
     minMht = cms.double( 0.0 ),
-    inputEleTag = cms.InputTag( "hltEle25WP90TrackRhoIsoFilter" ),
+    inputEleTag = cms.InputTag( "hltEle25WP90TrackIsoFilter" ),
     upperMTCut = cms.double( 9999.0 ))
-    
+
+hltEle25WP90PFMT50PFMTFilterSequence = cms.Sequence(HLTEle25WP90Sequence)
+hltEle25WP90PFMT50PFMTFilterSequence.remove("HLTFastPrimaryVertexSequence")
+ 
+hltGsfEle25WP90PFMT50PFMTFilterSequence = cms.Sequence(HLTGsfEle25WP90Sequence)
+hltGsfEle25WP90PFMT50PFMTFilterSequence.remove("HLTFastPrimaryVertexSequence")
+
 hltGsfEle25WP90PFMT50PFMTFilter = hltEle25WP90PFMT50PFMTFilter.clone()
-hltGsfEle25WP90PFMT50PFMTFilter.inputEleTag = cms.InputTag( "hltGsfEle25WP90TrackRhoIsoFilter" )
+hltGsfEle25WP90PFMT50PFMTFilter.inputEleTag = cms.InputTag( "hltGsfEle25WP90TrackIsoFilter" )
 
-HLTEle25WP90Sequence.remove("HLTFastPrimaryVertexSequence")
-HLTGsfEle25WP90Sequence.remove("HLTFastPrimaryVertexSequence")
-
-	
-HLTEle25WP90PFMETMT50Sequence = cms.Sequence(HLTPFL1FastL2L3ReconstructionSequence + 
+        	
+HLTEle25WP90PFMETMT50Sequence = cms.Sequence(hltEle25WP90PFMT50PFMTFilterSequence+
+                                             HLTPFL1FastL2L3ReconstructionSequence + 
 	                                     hltPFMETProducerSequence +
 	                                     hltEle25WP90PFMT50PFMTFilter+
                                              HLTFastPrimaryVertexSequence)
 
-HLTGsfEle25WP90PFMETMT50Sequence = cms.Sequence(HLTPFL1FastL2L3ReconstructionSequence + 
+HLTGsfEle25WP90PFMETMT50Sequence = cms.Sequence(hltGsfEle25WP90PFMT50PFMTFilterSequence+
+                                                HLTPFL1FastL2L3ReconstructionSequence +                                                
 	                                        hltPFMETProducerSequence +
 	                                        hltGsfEle25WP90PFMT50PFMTFilter+
                                                 HLTFastPrimaryVertexSequence)
