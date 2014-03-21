@@ -6,10 +6,18 @@ options = VarParsing ('analysis')
 # add a list of strings for events to process
 options.parseArguments()
 
+
+
 process = cms.Process("SimpleAnalyzer")
 process.source = cms.Source ("PoolSource",
       fileNames = cms.untracked.vstring (options.inputFiles),
 )
+
+process.load('Configuration.StandardSequences.GeometryDB_cff')  # fix missing ESSource e.g. "TrackerDigiGeometryRecord"
+process.load("Configuration.StandardSequences.MagneticField_cff")  # missing "IdealMagneticFieldRecord"
+process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
+process.GlobalTag.globaltag = 'GR_R_62_V1::All'
+
 
 process.TFileService = cms.Service("TFileService", 
       fileName = cms.string(options.outputFile),
@@ -32,7 +40,7 @@ process.Analyzer = cms.EDAnalyzer('AnalyzerEle',
     conversionsInputTag = cms.InputTag("allConversions"),
     dataRun = cms.string("noCorrection"),
     verbosity = cms.untracked.bool(False),
-    doWZSelection = cms.untracked.bool(True),
+    doWZSelection = cms.untracked.bool(False),  # save *all* electrons combinations
     applyCorrections = cms.untracked.bool(False),
     dataFlag = cms.untracked.bool(True),
     saveRecHitMatrix = cms.untracked.bool(False),
