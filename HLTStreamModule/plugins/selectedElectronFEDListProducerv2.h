@@ -9,6 +9,8 @@
 #include "TLorentzVector.h"
 #include "TVector3.h"
 #include <boost/scoped_ptr.hpp>
+#include <ostream>
+#include <stdint.h>
 
 #include "DataFormats/FEDRawData/interface/FEDRawData.h"
 #include "DataFormats/FEDRawData/interface/FEDHeader.h"
@@ -96,15 +98,10 @@
 
 #include "DataFormats/Math/interface/normalizedPhi.h"
 
-#include "CalibFormats/HcalObjects/interface/HcalDbService.h"
-#include "CalibFormats/HcalObjects/interface/HcalDbRecord.h"
-#include "CondFormats/HcalObjects/interface/HcalElectronicsMap.h"
+#include "DataFormats/HcalRecHit/interface/HcalRecHitCollections.h"
+#include "Geometry/Records/interface/IdealGeometryRecord.h"
 #include "DataFormats/HcalDetId/interface/HcalElectronicsId.h"
 #include "DataFormats/HcalDetId/interface/HcalDetId.h"
-#include "DataFormats/CaloTowers/interface/CaloTowerDetId.h"
-#include "RecoEgamma/EgammaIsolationAlgos/interface/EgammaHadTower.h"
-#include "CondFormats/HcalObjects/interface/HcalMappingEntry.h"
-
 
 using namespace std;
 
@@ -171,14 +168,12 @@ class selectedElectronFEDListProducerv2 : public edm::EDProducer {
   std::vector<int> isGsfElectronCollection_ ;
   std::vector<int> addThisSelectedFEDs_ ;
 
-  edm::Handle<CaloTowerCollection>* towersH_ ;
-  
   math::XYZVector beamSpotPosition_;
 
   edm::InputTag   beamSpotTag_ ;
   edm::FileInPath ESLookupTable_ ; 
   edm::InputTag   rawDataLabel_ ;
-  edm::InputTag   hcalTowersTag_;
+  edm::InputTag   HBHERecHitCollection_;
 
   bool dumpSelectedEcalFed_ ;
   bool dumpSelectedSiStripFed_ ;
@@ -194,6 +189,7 @@ class selectedElectronFEDListProducerv2 : public edm::EDProducer {
   double dPhiPixelRegion_;
   double dEtaPixelRegion_;
   double maxZPixelRegion_;
+  double dRHcalRegion_;
 
   uint32_t eventCounter_ ;
 
@@ -213,8 +209,8 @@ class selectedElectronFEDListProducerv2 : public edm::EDProducer {
   boost::scoped_ptr<SiPixelFedCabling> PixelCabling_;
   std::vector<PixelModule> pixelModuleVector_ ;
 
-  EgammaHadTower * hadTower_;
-  
+  const HBHERecHitCollection* hcalRecHitCollection_;
+
   // fed list and output raw data
   std::vector<uint32_t> fedList_ ;
   FEDRawDataCollection   *RawDataCollection_;
