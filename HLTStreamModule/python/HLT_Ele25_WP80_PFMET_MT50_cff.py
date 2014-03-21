@@ -16,20 +16,25 @@ hltEle25WP80PFMT50PFMTFilter = cms.EDFilter( "HLTElectronPFMTFilter",
     minMht = cms.double( 0.0 ),
     inputEleTag = cms.InputTag( "hltEle25WP80TrackIsoFilter" ),
     upperMTCut = cms.double( 9999.0 ))
-    
+
+hltEle25WP80PFMT50PFMTFilterSequence = cms.Sequence(HLTEle25WP80Sequence)
+hltEle25WP80PFMT50PFMTFilterSequence.remove("HLTFastPrimaryVertexSequence")
+ 
+hltGsfEle25WP80PFMT50PFMTFilterSequence = cms.Sequence(HLTGsfEle25WP80Sequence)
+hltGsfEle25WP80PFMT50PFMTFilterSequence.remove("HLTFastPrimaryVertexSequence")
+
 hltGsfEle25WP80PFMT50PFMTFilter = hltEle25WP80PFMT50PFMTFilter.clone()
 hltGsfEle25WP80PFMT50PFMTFilter.inputEleTag = cms.InputTag( "hltGsfEle25WP80TrackIsoFilter" )
 
-HLTEle25WP80Sequence.remove("HLTFastPrimaryVertexSequence")
-HLTGsfEle25WP80Sequence.remove("HLTFastPrimaryVertexSequence");
-
         	
-HLTEle25WP80PFMETMT50Sequence = cms.Sequence(HLTPFL1FastL2L3ReconstructionSequence + 
+HLTEle25WP80PFMETMT50Sequence = cms.Sequence(hltEle25WP80PFMT50PFMTFilterSequence+
+                                             HLTPFL1FastL2L3ReconstructionSequence + 
 	                                     hltPFMETProducerSequence +
 	                                     hltEle25WP80PFMT50PFMTFilter+
                                              HLTFastPrimaryVertexSequence)
 
-HLTGsfEle25WP80PFMETMT50Sequence = cms.Sequence(HLTPFL1FastL2L3ReconstructionSequence + 
+HLTGsfEle25WP80PFMETMT50Sequence = cms.Sequence(hltGsfEle25WP80PFMT50PFMTFilterSequence+
+                                                HLTPFL1FastL2L3ReconstructionSequence +                                                
 	                                        hltPFMETProducerSequence +
 	                                        hltGsfEle25WP80PFMT50PFMTFilter+
                                                 HLTFastPrimaryVertexSequence)
