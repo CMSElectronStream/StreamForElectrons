@@ -17,20 +17,24 @@ hltEle25WP70PFMT50PFMTFilter = cms.EDFilter( "HLTElectronPFMTFilter",
     inputEleTag = cms.InputTag( "hltEle25WP70TrackIsoFilter" ),
     upperMTCut = cms.double( 9999.0 ))
 
+hltEle25WP70PFMT50PFMTFilterSequence = cms.Sequence(HLTEle25WP70Sequence)
+hltEle25WP70PFMT50PFMTFilterSequence.remove("HLTFastPrimaryVertexSequence")
+ 
+hltGsfEle25WP70PFMT50PFMTFilterSequence = cms.Sequence(HLTGsfEle25WP70Sequence)
+hltGsfEle25WP70PFMT50PFMTFilterSequence.remove("HLTFastPrimaryVertexSequence")
+
 hltGsfEle25WP70PFMT50PFMTFilter = hltEle25WP70PFMT50PFMTFilter.clone()
-hltGsfEle25WP70PFMT50PFMTFilter.inputEleTag = cms.InputTag("hltGsfEle25WP70TrackIsoFilter")
+hltGsfEle25WP70PFMT50PFMTFilter.inputEleTag = cms.InputTag( "hltGsfEle25WP70TrackIsoFilter" )
 
-HLTEle25WP70Sequence.remove("HLTFastPrimaryVertexSequence")
-HLTGsfEle25WP70Sequence.remove("HLTFastPrimaryVertexSequence")
-
-
-HLTEle25WP70PFMETMT50Sequence = cms.Sequence(HLTPFL1FastL2L3ReconstructionSequence + 
+        	
+HLTEle25WP70PFMETMT50Sequence = cms.Sequence(hltEle25WP70PFMT50PFMTFilterSequence+
+                                             HLTPFL1FastL2L3ReconstructionSequence + 
 	                                     hltPFMETProducerSequence +
 	                                     hltEle25WP70PFMT50PFMTFilter+
-                                             HLTFastPrimaryVertexSequence
-                                             )
+                                             HLTFastPrimaryVertexSequence)
 
-HLTGsfEle25WP70PFMETMT50Sequence = cms.Sequence(HLTPFL1FastL2L3ReconstructionSequence + 
+HLTGsfEle25WP70PFMETMT50Sequence = cms.Sequence(hltGsfEle25WP70PFMT50PFMTFilterSequence+
+                                                HLTPFL1FastL2L3ReconstructionSequence +                                                
 	                                        hltPFMETProducerSequence +
 	                                        hltGsfEle25WP70PFMT50PFMTFilter+
                                                 HLTFastPrimaryVertexSequence)
