@@ -37,10 +37,10 @@ selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::
  }
  else{ beamSpotTag_ = edm::InputTag("hltOnlineBeamSpot"); }
 
- if(iConfig.existsAs<edm::InputTag>("hcalTowersTag")){
-   hcalTowersTag_ = iConfig.getParameter<edm::InputTag>("hcalTowersTag");
+ if(iConfig.existsAs<edm::InputTag>("HBHERecHitCollection")){
+   HBHERecHitCollection_ = iConfig.getParameter<edm::InputTag>("HBHERecHitCollection");
  }
- else{ hcalTowersTag_ = edm::InputTag("hltOnlineBeamSpot"); }
+ else{ HBHERecHitCollection_ = edm::InputTag("hltHbhereco"); }
 
    
  // ES look up table
@@ -65,6 +65,12 @@ selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::
    dRStripRegion_ = iConfig.getParameter<double>("dRStripRegion");
  }
  else dRStripRegion_ = 0.5 ;
+
+ // dR for the hcal region 
+ if(iConfig.existsAs<double>("dRHcalRegion")){
+   dRHcalRegion_ = iConfig.getParameter<double>("dRHcalRegion");
+ }
+ else dRHcalRegion_ = 0.5 ;
 
  // dPhi, dEta and maxZ for pixel dump
  if(iConfig.existsAs<double>("dPhiPixelRegion")){
@@ -276,11 +282,10 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
   std::vector<int>::const_iterator itFlag = isGsfElectronCollection_.begin();
 
   // take the calo tower collection
-  towersH_ = new edm::Handle<CaloTowerCollection>();
-  iEvent.getByLabel(hcalTowersTag_,*towersH_);
+  edm::Handle<HBHERecHitCollection>  hbheRecHitHandle;
+  iEvent.getByLabel(HBHERecHitCollection_, hbheRecHitHandle);
+  hcalRecHitCollection_ = hbheRecHitHandle.product();   
 
-  hadTower_ = new EgammaHadTower(iSetup,EgammaHadTower::HoeMode::TowersBehindCluster);
-  
   for( ; itTag!=electronCollections_.end() && itFlag!=isGsfElectronCollection_.end(); ++itTag , ++itFlag){
 
    try { iEvent.getByLabel(*itTag,triggerElectronCollection);
@@ -302,9 +307,9 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
   }
 
   if(dumpAllTrackerFed_){
-   for(uint32_t iPixelFed = FEDNumbering::MINSiPixelFEDID; iPixelFed <= FEDNumbering::FEDNumbering::MAXSiPixelFEDID ; iPixelFed++)
+   for(uint32_t iPixelFed = FEDNumbering::MINSiPixelFEDID; iPixelFed <= FEDNumbering::MAXSiPixelFEDID ; iPixelFed++)
      fedList_.push_back(iPixelFed);
-   for(uint32_t iStripFed = FEDNumbering::MINSiStripFEDID; iStripFed <= FEDNumbering::FEDNumbering::MAXSiStripFEDID ; iStripFed++)
+   for(uint32_t iStripFed = FEDNumbering::MINSiStripFEDID; iStripFed <= FEDNumbering::MAXSiStripFEDID ; iStripFed++)
      fedList_.push_back(iStripFed);
   }
 
@@ -322,15 +327,14 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
      const std::vector<std::pair<DetId,float> >& hits = scRef->hitsAndFractions();
      // start in dump the ecal FED associated to the electron
      std::vector<std::pair<DetId,float> >::const_iterator itSChits = hits.begin();
-     int hitFED = 0 ;
      if(!dumpAllEcalFed_){
       for( ; itSChits!=hits.end() ; ++itSChits){
        if((*itSChits).first.subdetId()== EcalBarrel){
 
          EBDetId idEBRaw ((*itSChits).first);
          GlobalPoint point = geometry_->getPosition(idEBRaw);
-         hitFED = FEDNumbering::MINECALFEDID + TheMapping_->GetFED(double(point.eta()),double(point.phi())*radTodeg);
-         if(hitFED <= FEDNumbering::MINECALFEDID || hitFED >= FEDNumbering::MAXECALFEDID) continue;
+         int hitFED = FEDNumbering::MINECALFEDID + TheMapping_->GetFED(double(point.eta()),double(point.phi())*radTodeg);
+         if(hitFED < FEDNumbering::MINECALFEDID || hitFED > FEDNumbering::MAXECALFEDID) continue;
 
          if(debug_) std::cout<<"[selectedElectronFEDListProducer] electron hit detID Barrel "<<(*itSChits).first.rawId()<<" eta "<<double(point.eta())<<" phi "<< double(point.phi())*radTodeg <<" FED "<<hitFED<<std::endl;
           
@@ -345,8 +349,8 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
        else if((*itSChits).first.subdetId()== EcalEndcap){
          EEDetId idEERaw ((*itSChits).first);
          GlobalPoint point = geometry_->getPosition(idEERaw);
-         hitFED = FEDNumbering::MINECALFEDID + TheMapping_->GetFED(double(point.eta()),double(point.phi())*radTodeg);
-         if(hitFED <= FEDNumbering::MINECALFEDID || hitFED >= FEDNumbering::MAXECALFEDID) continue;
+         int hitFED = FEDNumbering::MINECALFEDID + TheMapping_->GetFED(double(point.eta()),double(point.phi())*radTodeg);
+         if(hitFED < FEDNumbering::MINECALFEDID || hitFED > FEDNumbering::MAXECALFEDID) continue;
 
          if(debug_) std::cout<<"[selectedElectronFEDListProducer] electron hit detID Endcap "<<(*itSChits).first.rawId()<<" eta "<<double(point.eta())<<" phi "<<double(point.phi())*radTodeg <<" FED "<<hitFED<<std::endl;
          if(dumpSelectedEcalFed_){
@@ -358,9 +362,9 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
           // preshower hit for each ecal endcap hit
           DetId tmpX = (dynamic_cast<const EcalPreshowerGeometry*>(geometry__ES_))->getClosestCellInPlane(point,1);
           ESDetId stripX = (tmpX == DetId(0)) ? ESDetId(0) : ESDetId(tmpX);          
-          hitFED = ES_fedId_[(3-stripX.zside())/2-1][stripX.plane()-1][stripX.six()-1][stripX.siy()-1];
+          int hitFED = ES_fedId_[(3-stripX.zside())/2-1][stripX.plane()-1][stripX.six()-1][stripX.siy()-1];
           if(debug_) std::cout<<"[selectedElectronFEDListProducer] ES hit plane X (deiID) "<<stripX.rawId()<<" six "<<stripX.six()<<" siy "<<stripX.siy()<<" plane "<<stripX.plane()<<" FED ID "<<hitFED<<std::endl;
-          if(hitFED <= FEDNumbering::MINPreShowerFEDID || hitFED >= FEDNumbering::MAXPreShowerFEDID) continue;
+          if(hitFED < FEDNumbering::MINPreShowerFEDID || hitFED > FEDNumbering::MAXPreShowerFEDID) continue;
           if(hitFED < 0) continue;
           if(!fedList_.empty()){ 
             if(std::find(fedList_.begin(),fedList_.end(),hitFED)==fedList_.end()) fedList_.push_back(hitFED);
@@ -370,7 +374,7 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
           DetId tmpY = (dynamic_cast<const EcalPreshowerGeometry*>(geometry__ES_))->getClosestCellInPlane(point,2);
           ESDetId stripY = (tmpY == DetId(0)) ? ESDetId(0) : ESDetId(tmpY);          
           hitFED = ES_fedId_[(3-stripY.zside())/2-1][stripY.plane()-1][stripY.six()-1][stripY.siy()-1];
-          if(hitFED <= FEDNumbering::MINPreShowerFEDID || hitFED >= FEDNumbering::MAXPreShowerFEDID) continue;
+          if(hitFED < FEDNumbering::MINPreShowerFEDID || hitFED > FEDNumbering::MAXPreShowerFEDID) continue;
           if(debug_) std::cout<<"[selectedElectronFEDListProducer] ES hit plane Y (deiID) "<<stripY.rawId()<<" six "<<stripY.six()<<" siy "<<stripY.siy()<<" plane "<<stripY.plane()<<" FED ID "<<hitFED<<std::endl;
           if(hitFED < 0) continue;
           if(!fedList_.empty()){ 
@@ -382,26 +386,27 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
       } // end loop on SC hit   
       
       // check HCAL behind each hit
-            
+                 
       if(dumpSelectedHCALFed_){
-       if(!towersH_->failedToGet()){ 
-         hadTower_->setTowerCollection(towersH_->product());
-         int hitFED = 0 ;
- 	 std::vector<CaloTowerDetId> listTower = hadTower_->towersOf(*scRef);
-	 std::vector<CaloTowerDetId>::const_iterator itHcalFed = listTower.begin();
-         for( ; itHcalFed != listTower.end() ; itHcalFed++){         
-	  hitFED = FEDNumbering::MINHCALFEDID + HcalElectronicsId((*itHcalFed).rawId()).dccid();
-          if(hitFED <= FEDNumbering::MINHCALFEDID || hitFED >= FEDNumbering::MAXHCALFEDID) continue;
-          if(debug_) std::cout<<"[selectedElectronFEDListProducer] Hcal FED ID "<<hitFED<<std::endl;
-          if(hitFED < 0) continue;
-          if(!fedList_.empty()){ 
-            if(std::find(fedList_.begin(),fedList_.end(),hitFED)==fedList_.end()) fedList_.push_back(hitFED);
+	HBHERecHitCollection::const_iterator itHcalRecHit = hcalRecHitCollection_->begin();
+	 for( ; itHcalRecHit != hcalRecHitCollection_->end() ; ++itHcalRecHit){
+    	  HcalDetId id = itHcalRecHit->detid();
+          if((HcalSubdetector)id.subdetId() != HcalSubdetector::HcalBarrel && (HcalSubdetector)id.subdetId() != HcalSubdetector::HcalEndcap) continue ;
+	  const GlobalPoint& pos = geometry_->getPosition(id);   
+          float dR = reco::deltaR(scRef->eta(),scRef->phi(),pos.eta(),pos.phi());
+          if(dR <= dRHcalRegion_){
+	   int hitFED = FEDNumbering::MINHCALFEDID + HcalElectronicsId(id.rawId()).dccid();
+           if(hitFED < FEDNumbering::MINHCALFEDID || hitFED > FEDNumbering::MAXHCALFEDID) continue; //first eighteen feds are for HBHE
+           if(debug_) std::cout<<"[selectedElectronFEDListProducer] Hcal FED ID "<<hitFED<<std::endl;
+           if(hitFED < 0) continue;
+           if(!fedList_.empty()){ 
+             if(std::find(fedList_.begin(),fedList_.end(),hitFED)==fedList_.end()) fedList_.push_back(hitFED);
           }
           else fedList_.push_back(hitFED);      
+	 }
+	 }
 	}
-       }
-      }
-     } // End ecal
+     }// End Ecal
 
      // get the electron track
      if( !dumpAllTrackerFed_ ){ 
@@ -435,8 +440,8 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
 		SiStripRegionCabling::ElementCabling::const_iterator itFedMap = fedVectorMap.begin();
 		 for( ; itFedMap!=fedVectorMap.end(); itFedMap++){
 		   for (uint32_t op=0; op<(itFedMap->second).size(); op++){
-		     hitFED = (itFedMap->second)[op].fedId(); 
-                     if(hitFED <= FEDNumbering::MINSiStripFEDID || hitFED >= FEDNumbering::MAXSiStripFEDID) continue;
+		     int hitFED = (itFedMap->second)[op].fedId(); 
+                     if(hitFED < FEDNumbering::MINSiStripFEDID || hitFED > FEDNumbering::MAXSiStripFEDID) continue;
                      if(debug_) std::cout<<"[selectedElectronFEDListProducer] SiStrip (FedID) "<<hitFED<<std::endl;
                      if(!fedList_.empty()){ 
                        if(std::find(fedList_.begin(),fedList_.end(),hitFED)==fedList_.end()) fedList_.push_back(hitFED);
@@ -517,6 +522,8 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
   iEvent.put(streamFEDRawProduct,outputLabelModule_);
 
   eventCounter_ ++ ;
+
+
 }
 
 void selectedElectronFEDListProducerv2::endJob(){
@@ -535,7 +542,7 @@ void selectedElectronFEDListProducerv2::pixelFedDump( std::vector<PixelModule>::
     float zmodule = itDn->z-((itDn->x-beamSpotPosition_.x())*region.cosphi+(itDn->y-beamSpotPosition_.y())*region.sinphi)*region.atantheta;
     if ( std::abs(zmodule) > region.maxZ ) continue; 
     int hitFED = itDn->Fed;
-    if(hitFED <= FEDNumbering::MINSiPixelFEDID || hitFED >= FEDNumbering::MAXSiPixelFEDID) continue;
+    if(hitFED < FEDNumbering::MINSiPixelFEDID || hitFED > FEDNumbering::MAXSiPixelFEDID) continue;
     if(debug_) std::cout<<"[selectedElectronFEDListProducer] electron pixel hit "<<itDn->DetId<<" hitFED "<<hitFED<<std::endl;
     if(!fedList_.empty()){ 
      if(std::find(fedList_.begin(),fedList_.end(),hitFED)==fedList_.end()) fedList_.push_back(hitFED);
