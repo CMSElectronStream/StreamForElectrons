@@ -1,6 +1,8 @@
 #include "HLTrigger/Egamma/interface/selectedElectronFEDListProducerv2.h"
 #include "CondFormats/HcalObjects/src/T_EventSetup_HcalElectronicsMap.cc"
 
+// #include "EventFilter/HcalRawToDigi/interface/HcalDCCHeader.h"
+
 selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::ParameterSet & iConfig){
  
  // input electron collection
@@ -157,28 +159,28 @@ selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::
   std::cout<<"[selectedElectronFEDListProducer] rawDataInput "<<rawDataLabel_<<std::endl; 
 
  }
- 
+
  // initialize pre-shower fed id --> look up table
  for (int i=0; i<2; ++i)
   for (int j=0; j<2; ++j)
    for (int k=0 ;k<40; ++k)
     for (int m=0; m<40; m++)
           ES_fedId_[i][j][k][m] = -1;
- 
+
  // read in look-up table
  int nLines, iz, ip, ix, iy, fed, kchip, pace, bundle, fiber, optorx;
  std::ifstream ES_file;
  ES_file.open(ESLookupTable_.fullPath().c_str());
- if(debug_) std::cout<<"[selectedElectronFEDListProducer] Look Up table for ES "<<ESLookupTable_.fullPath().c_str()<<std::endl;
- if( ES_file.is_open() ) {
+ if (debug_) std::cout<<"[selectedElectronFEDListProducer] Look Up table for ES "<<ESLookupTable_.fullPath().c_str()<<std::endl;
+ if ( ES_file.is_open() ) {
      ES_file >> nLines;
      for (int i=0; i<nLines; ++i) {
        ES_file >> iz >> ip >> ix >> iy >> fed >> kchip >> pace >> bundle >> fiber >> optorx ;
        ES_fedId_[(3-iz)/2-1][ip-1][ix-1][iy-1] = fed;
      }
- } 
+ }
  else std::cout<<"[selectedElectronFEDListProducer] Look up table file can not be found in"<<ESLookupTable_.fullPath().c_str() <<std::endl;
- 
+
  ES_file.close();
 
  produces<FEDRawDataCollection>(outputLabelModule_);
@@ -194,13 +196,14 @@ selectedElectronFEDListProducerv2::~selectedElectronFEDListProducerv2(){
 }
 
 void selectedElectronFEDListProducerv2::beginJob(){ 
- 
-  if(debug_){ std::cout<<"[selectedElectronFEDListProducer] Begin of the Job ----> "<<std::endl;
-              std::cout<<"[selectedElectronFEDListProducer] event counter set to "<<eventCounter_<<std::endl;
+
+  if(debug_){
+   std::cout<<"[selectedElectronFEDListProducer] Begin of the Job ----> "<<std::endl;
+   std::cout<<"[selectedElectronFEDListProducer] event counter set to "<<eventCounter_<<std::endl;
   }
   eventCounter_ = 0 ;
- 
-} 
+
+}
 
 void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::EventSetup & iSetup){
 
@@ -215,7 +218,7 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
    edm::ESHandle<EcalElectronicsMapping > ecalmapping;
    iSetup.get<EcalMappingRcd >().get(ecalmapping);
    TheMapping_ = ecalmapping.product();
- 
+
    // get the calo geometry_
    edm::ESHandle<CaloGeometry> caloGeometry; 
    iSetup.get<CaloGeometryRecord>().get(caloGeometry);
@@ -386,26 +389,46 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
       } // end loop on SC hit   
       
       // check HCAL behind each hit
-                 
-      if(dumpSelectedHCALFed_){
-	HBHERecHitCollection::const_iterator itHcalRecHit = hcalRecHitCollection_->begin();
-	 for( ; itHcalRecHit != hcalRecHitCollection_->end() ; ++itHcalRecHit){
-    	  HcalDetId id = itHcalRecHit->detid();
-          if((HcalSubdetector)id.subdetId() != HcalSubdetector::HcalBarrel && (HcalSubdetector)id.subdetId() != HcalSubdetector::HcalEndcap) continue ;
-	  const GlobalPoint& pos = geometry_->getPosition(id);   
-          float dR = reco::deltaR(scRef->eta(),scRef->phi(),pos.eta(),pos.phi());
-          if(dR <= dRHcalRegion_){
-	   int hitFED = FEDNumbering::MINHCALFEDID + HcalElectronicsId(id.rawId()).dccid();
-           if(hitFED < FEDNumbering::MINHCALFEDID || hitFED > FEDNumbering::MAXHCALFEDID) continue; //first eighteen feds are for HBHE
-           if(debug_) std::cout<<"[selectedElectronFEDListProducer] Hcal FED ID "<<hitFED<<std::endl;
-           if(hitFED < 0) continue;
-           if(!fedList_.empty()){ 
-             if(std::find(fedList_.begin(),fedList_.end(),hitFED)==fedList_.end()) fedList_.push_back(hitFED);
-          }
-          else fedList_.push_back(hitFED);      
-	 }
-	 }
-	}
+      if (dumpSelectedHCALFed_){
+       HBHERecHitCollection::const_iterator itHcalRecHit = hcalRecHitCollection_->begin();
+       for ( ; itHcalRecHit != hcalRecHitCollection_->end() ; ++itHcalRecHit){
+        HcalDetId id(itHcalRecHit->detid());
+        if ((HcalSubdetector)id.subdetId() != HcalSubdetector::HcalBarrel && (HcalSubdetector)id.subdetId() != HcalSubdetector::HcalEndcap) continue ;
+        const GlobalPoint& pos = geometry_->getPosition(id);
+        float dR = reco::deltaR(scRef->eta(),scRef->phi(),pos.eta(),pos.phi());
+        if (debug_) std::cout << "[selectedElectronFEDListProducer] SC: " << scRef->eta() << " , " << scRef->phi() << "   HCAL: " << pos.eta() << " , " << pos.phi() << " dR = " << dR << " <=" << dRHcalRegion_ << std::endl;
+        if (dR <= dRHcalRegion_) {
+         int hitFED = FEDNumbering::MINHCALFEDID + HcalElectronicsId(id.rawId()).dccid(); //---- dccid = 0,1,2,3, ... 29, 30, 31
+         if (hitFED < FEDNumbering::MINHCALFEDID || hitFED > FEDNumbering::MAXHCALFEDID) continue; //first eighteen feds are for HBHE
+         if (debug_) std::cout << "[selectedElectronFEDListProducer] Hcal FED ID " << hitFED  << " = " << FEDNumbering::MINHCALFEDID << " + " << HcalElectronicsId(id.rawId()).dccid() << " id.rawId() = " << id.rawId() << std::endl;
+
+         ///---- debug ----
+//          const int ifed_first=FEDNumbering::MINHCALFEDID;
+//          const int ifed_last=FEDNumbering::MAXHCALFEDID;
+// 
+//          for (int ifed=ifed_first; ifed<=ifed_last; ++ifed) {
+//           std::cout << "     >> ifed = " << ifed << std::endl;
+//           const FEDRawData& fed = rawdata->FEDData(ifed);
+//            // get the DCC header
+//           const HcalDCCHeader* dccHeader = (const HcalDCCHeader*)(fed.data());
+//           if (dccHeader) {
+//            int sourceIdOffset_ = FEDNumbering::MINHCALFEDID;
+//            int dccid=dccHeader->getSourceId()-sourceIdOffset_;
+//            std::cout << " ifed = " << ifed << " dccid = " << dccid << std::endl;
+//           }
+//          }
+//          ok ---> dccid is what I was looking for
+         ///---- debug (end) ----
+
+         if (hitFED < 0) continue;
+         if (!fedList_.empty()){ 
+          if (std::find(fedList_.begin(),fedList_.end(),hitFED)==fedList_.end()) fedList_.push_back(hitFED);
+         }
+         else fedList_.push_back(hitFED);
+        }
+       }
+      }
+
      }// End Ecal
 
      // get the electron track
@@ -471,19 +494,18 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
             pixelFedDump(itDn,itUp,region);
            }
            else{
-                if(lowerBound.Phi < -M_PI) lowerBound.Phi = lowerBound.Phi+2*M_PI;
-                PixelModule phi_p(M_PI,region.vector.eta()-region.dEta);
-                itDn = std::lower_bound(pixelModuleVector_.begin(),pixelModuleVector_.end(),lowerBound);
-                itUp = std::upper_bound(pixelModuleVector_.begin(),pixelModuleVector_.end(),phi_p);
-                pixelFedDump(itDn,itUp,region);
-                 
-                if(upperBound.Phi < -M_PI) upperBound.Phi = upperBound.Phi-2*M_PI;
-                PixelModule phi_m(-M_PI,region.vector.eta()-region.dEta);
-                itDn = std::lower_bound(pixelModuleVector_.begin(),pixelModuleVector_.end(),phi_m);
-                itUp = std::upper_bound(pixelModuleVector_.begin(),pixelModuleVector_.end(),upperBound);
-                pixelFedDump(itDn,itUp,region);
+            if(lowerBound.Phi < -M_PI) lowerBound.Phi = lowerBound.Phi+2*M_PI;
+            PixelModule phi_p(M_PI,region.vector.eta()-region.dEta);
+            itDn = std::lower_bound(pixelModuleVector_.begin(),pixelModuleVector_.end(),lowerBound);
+            itUp = std::upper_bound(pixelModuleVector_.begin(),pixelModuleVector_.end(),phi_p);
+            pixelFedDump(itDn,itUp,region);
 
-	   }
+            if(upperBound.Phi < -M_PI) upperBound.Phi = upperBound.Phi-2*M_PI;
+            PixelModule phi_m(-M_PI,region.vector.eta()-region.dEta);
+            itDn = std::lower_bound(pixelModuleVector_.begin(),pixelModuleVector_.end(),phi_m);
+            itUp = std::upper_bound(pixelModuleVector_.begin(),pixelModuleVector_.end(),upperBound);
+            pixelFedDump(itDn,itUp,region);
+     	   }
        }
      } // end tracker analysis
     }// end loop on the electron
@@ -512,11 +534,11 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
   for( ; itfedList!=fedList_.end() ; ++itfedList){
    const FEDRawData& data = rawdata->FEDData(*itfedList);
    if(data.size()>0){
-           FEDRawData& fedData = RawDataCollection_->FEDData(*itfedList);
-           fedData.resize(data.size());
-           memcpy(fedData.data(),data.data(),data.size());
-    } 
-  } 
+    FEDRawData& fedData = RawDataCollection_->FEDData(*itfedList);
+    fedData.resize(data.size());
+    memcpy(fedData.data(),data.data(),data.size());
+   }
+  }
 
   std::auto_ptr<FEDRawDataCollection> streamFEDRawProduct(RawDataCollection_);
   iEvent.put(streamFEDRawProduct,outputLabelModule_);
