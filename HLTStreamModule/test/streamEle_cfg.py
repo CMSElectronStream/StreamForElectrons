@@ -216,6 +216,7 @@ process.ElectronStreamOutputPath = cms.EndPath( process.hltPreOutput +
 process.source = cms.Source( "PoolSource",
     fileNames = cms.untracked.vstring('file:/media/DATA/CMSSWRoot/DATA2012/SingleElectron_Run2012B_RAW/B865DABE-BDA2-E111-854F-BCAEC53296F7.root'),
     #'file:/media/DATA/CMSSWRoot/DATA2012/DoubleElectron_Run2012B-ZElectron-13Jul2012-v1_RAW-RECO/FEE043A5-93D4-E111-84DC-0030486790C0.root'),		    
+    #fileNames = cms.untracked.vstring('file:/data/amassiro/CMSSWRoot/DATA2012/SingleElectron_Run2012B_RAW/B865DABE-BDA2-E111-854F-BCAEC53296F7.root'),
     secondaryFileNames = cms.untracked.vstring(),
     inputCommands = cms.untracked.vstring('keep *'))
 

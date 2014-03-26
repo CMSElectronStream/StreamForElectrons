@@ -40,6 +40,13 @@ Prepare to run on stream:
         > dump_step2_RAW2DIGI_L1Reco_RECO_onStream.py
 
 
+    sed 's|MYINPUTFILE|file:../../HLTrigger/Configuration/test/streamElectronRAW_HCAL.root|' \
+       < dump_step2_RAW2DIGI_L1Reco_RECO.py |
+       sed 's|rawDataCollector|HLTselectedElectronFEDList:StremElectronRawFedData|' | \
+       sed 's|MYOUTPUTFILE|stream2reco.root|' \
+        > dump_step2_RAW2DIGI_L1Reco_RECO_onStream.py
+
+
 Patch the Reco
 =======
 

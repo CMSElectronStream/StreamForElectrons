@@ -29,13 +29,14 @@ To install:
     cp StreamForElectrons/HLTStreamModule/plugins/selectedElectronFEDListProducer.cc HLTrigger/Egamma/src/
     cp StreamForElectrons/HLTStreamModule/plugins/selectedElectronFEDListProducerv2.h  HLTrigger/Egamma/interface/
     cp StreamForElectrons/HLTStreamModule/plugins/selectedElectronFEDListProducerv2.cc HLTrigger/Egamma/src/
-    cp StreamForElectrons/HLTStreamModule/plugins/BuildFile.xml HLTrigger/Egamma/
-    
+    cp StreamForElectrons/HLTStreamModule/plugins/BuildFile.xml.decomment HLTrigger/Egamma/BuildFile.xml
+
     scramv1 b -j 8
 
 test:
 
     cd HLTrigger/Configuration/test ;
+    cmsRun streamEle_cfg.py
 
 1. python to be executed via cmsRun is streamEle_cfg.py (cmsRun streamEle_cfg.py saveAlcaElectronStreamOutput=1 outputFile=streamElectronRAW.root maxEvents=1000):
 
@@ -191,6 +192,7 @@ test:
 	    dumpTrackSiPixelFedList = cms.bool(True),
 	    dumpAllEcalFed  = cms.bool(False),
     	dumpAllTrackerFed = cms.bool(False),
+        addThisSelectedFEDs = cms.vint32(812,813),        
     	debug = cms.bool(False))
 
      * electronCollections -> list of all the electron collection produced by the trigger paths you have chosen to be stored
@@ -210,6 +212,7 @@ test:
 
      * dumpAllEcalFed -> if true dump all the ecal fed
      * dumpAllTrackerFed -> if true dump all the tracker fed in both strip and pixel detector
+     * addThisSelectedFEDs -> add selected feds, e.g. L1GT feds
      * debug -> if true debug mode -> print a lot of info
 
 
@@ -222,5 +225,9 @@ where:
 
     cmsneu
     /home/amassiro/ECAL/HLT/CMSSW_6_2_2/src/StreamForElectrons
+
+    cd /home/amassiro/ECAL/HLT/CMSSW_6_2_2/src/
+    cd HLTrigger/Configuration/test
+    cmsRun streamEle_cfg.py
 
 

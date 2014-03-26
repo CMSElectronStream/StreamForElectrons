@@ -4,7 +4,7 @@ process = cms.Process("reRECO")
 
 process.source = cms.Source("PoolSource",
     secondaryFileNames = cms.untracked.vstring(),
-    fileNames = cms.untracked.vstring('/eos/cms/store/user/rgerosa/ElectronStreamStudy/streamElectronRAW_STREAM.root')
+    fileNames = cms.untracked.vstring('file:/afs/cern.ch/user/r/rgerosa/work/ECALCalibrationFrawmework/CMSElectronStream/CMSSW_6_2_2/src/HLTrigger/Configuration/test/streamElectronRAW.root')
 )
 process.BeamHaloSummary = cms.EDProducer("BeamHaloSummaryProducer",
     l_HcalPhiWedgeConfidence = cms.double(0.7),

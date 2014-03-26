@@ -6,7 +6,7 @@ process.source = cms.Source("PoolSource",
     secondaryFileNames = cms.untracked.vstring(),
     #fileNames = cms.untracked.vstring('file:/home/amassiro/ECAL/HLT/CMSSW_5_3_13_patch1/src/StreamForElectrons/ReReco/streamElectronRAW_tmp.root')   # -> skimmed raw
     #fileNames = cms.untracked.vstring('file:../../HLTrigger/Configuration/test/streamElectronRAW_tmp.root')   #  -> streamed raw
-    fileNames = cms.untracked.vstring('file:/afs/cern.ch/user/r/rgerosa/public/xAndrea/streamGT/streamElectronRAW_GT.root')
+    fileNames = cms.untracked.vstring('file:/afs/cern.ch/user/r/rgerosa/work/ECALCalibrationFrawmework/CMSElectronStream/CMSSW_6_2_2/src/HLTrigger/Configuration/test/streamElectronRAW_HCAL.root')
     #fileNames = cms.untracked.vstring('file:pickevents.root')  #  -> raw
   )
 process.BeamHaloSummary = cms.EDProducer("BeamHaloSummaryProducer",
