@@ -1,5 +1,4 @@
 #include "HLTrigger/Egamma/interface/selectedElectronFEDListProducerv2.h"
-#include "CondFormats/HcalObjects/src/T_EventSetup_HcalElectronicsMap.cc"
 
 selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::ParameterSet & iConfig){
  
@@ -21,6 +20,10 @@ selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::
  }
  else{ throw cms::Exception("Configuration")<<"[selectedElectronFEDListProducer] no electron flag are given --> need at least one \n";  }
 
+ if(isGsfElectronCollection_.size() < electronCollections_.size()) 
+    throw cms::Exception("Configuration")<<"[selectedElectronFEDListProducer] electron flag < electron collection  --> need at equal number to understand which are Gsf and which not \n";
+
+ // add a set of selected feds
  if(iConfig.existsAs<std::vector<int>>("addThisSelectedFEDs")){
     addThisSelectedFEDs_ = iConfig.getParameter<std::vector<int>>("addThisSelectedFEDs");
     if(addThisSelectedFEDs_.empty()){
@@ -29,32 +32,38 @@ selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::
  }
  else{ addThisSelectedFEDs_.push_back(-1); }
 
- if(isGsfElectronCollection_.size() < electronCollections_.size()) 
-    throw cms::Exception("Configuration")<<"[selectedElectronFEDListProducer] electron flag < electron collection  --> need at equal number to understand which are Gsf and which not \n";
-
+ // take the beam spot Tag 
  if(iConfig.existsAs<edm::InputTag>("beamSpot")){
    beamSpotTag_ = iConfig.getParameter<edm::InputTag>("beamSpot");
  }
  else{ beamSpotTag_ = edm::InputTag("hltOnlineBeamSpot"); }
 
+ // take the HBHE recHit Tag
  if(iConfig.existsAs<edm::InputTag>("HBHERecHitCollection")){
    HBHERecHitCollection_ = iConfig.getParameter<edm::InputTag>("HBHERecHitCollection");
  }
  else{ HBHERecHitCollection_ = edm::InputTag("hltHbhereco"); }
 
    
- // ES look up table
+ // ES look up table path
  if(iConfig.existsAs<edm::FileInPath>("ESLookupTable")){
    ESLookupTable_ = iConfig.getParameter<edm::FileInPath>("ESLookupTable");
  }
  else{ ESLookupTable_ = edm::FileInPath("EventFilter/ESDigiToRaw/data/ES_lookup_table.dat"); }
 
- // ES raw data collector label
+ // Hcal look up table path
+ if(iConfig.existsAs<edm::FileInPath>("HCALLookupTable")){
+   HCALLookupTable_ = iConfig.getParameter<edm::FileInPath>("HCALLookupTable");
+ }
+ else{ HCALLookupTable_ = edm::FileInPath("StreamForElectrons/HLTStreamModule/HcalElectronicsMap_v7.00_offline"); }
+
+ // raw data collector label
  if(iConfig.existsAs<edm::InputTag>("rawDataLabel")){
    rawDataLabel_ = iConfig.getParameter<edm::InputTag>("rawDataLabel");
  }
  else rawDataLabel_ = edm::InputTag("rawDataCollector") ;
 
+ // output model label
  if(iConfig.existsAs<std::string>("outputLabelModule")){
    outputLabelModule_ = iConfig.getParameter<std::string>("outputLabelModule");
  }
@@ -129,6 +138,7 @@ selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::
  }
  else debug_ = false ;
 
+ // only in debugging mode
  if(debug_){
 
   std::cout<<"[selectedElectronFEDListProducer] output Label "<<outputLabelModule_<<std::endl; 
@@ -180,7 +190,35 @@ selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::
  else std::cout<<"[selectedElectronFEDListProducer] Look up table file can not be found in"<<ESLookupTable_.fullPath().c_str() <<std::endl;
  
  ES_file.close();
+ 
+ // make the hcal map in a similar way
+ int idet, cr, sl, dcc, spigot, fibcha, ieta, iphi, depth, subdet; 
+ std::string subdet_tmp, buffer, tb;
+ std::ifstream HCAL_file;
+ 
+ HCAL_file.open(HCALLookupTable_.fullPath().c_str(),std::ios::in);
+ if(debug_) std::cout<<"[selectedElectronFEDListProducer] Look Up table for HCAL "<<HCALLookupTable_.fullPath().c_str()<<std::endl;
+ if( HCAL_file.is_open() ) {
+   while(!HCAL_file.eof()) {
+       getline(HCAL_file,buffer);     
+       if (buffer == "" || !buffer.find('#')) continue;
+       std::stringstream line( buffer );
+       line >> idet >> cr >> sl >> tb >> dcc >> spigot >> fiber >> fibcha >> subdet_tmp >> ieta >> iphi >> depth ;
+       if (subdet_tmp == "HB")  subdet  = 1;
+       else if (subdet_tmp == "HE") subdet  = 2;
+       else if (subdet_tmp == "HO") subdet  = 3;
+       else if (subdet_tmp == "HF") subdet  = 4;
+       else subdet = 0 ;
 
+       HCALFedId fedId (subdet,iphi,ieta,depth);
+       fedId.setDCCId(dcc);
+       HCAL_fedId_.push_back(fedId);
+     }
+ } 
+ else std::cout<<"[selectedElectronFEDListProducer] Look up table file can not be found in"<<HCALLookupTable_.fullPath().c_str() <<std::endl;
+ HCAL_file.close();
+ std::sort(HCAL_fedId_.begin(),HCAL_fedId_.end());
+ 
  produces<FEDRawDataCollection>(outputLabelModule_);
 
 }
@@ -385,27 +423,43 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
        } // end endcap  
       } // end loop on SC hit   
       
-      // check HCAL behind each hit
-                 
+      // check HCAL behind each hit    
       if(dumpSelectedHCALFed_){
-	HBHERecHitCollection::const_iterator itHcalRecHit = hcalRecHitCollection_->begin();
+	 HBHERecHitCollection::const_iterator itHcalRecHit = hcalRecHitCollection_->begin();
 	 for( ; itHcalRecHit != hcalRecHitCollection_->end() ; ++itHcalRecHit){
-    	  HcalDetId id = itHcalRecHit->detid();
-          if((HcalSubdetector)id.subdetId() != HcalSubdetector::HcalBarrel && (HcalSubdetector)id.subdetId() != HcalSubdetector::HcalEndcap) continue ;
-	  const GlobalPoint& pos = geometry_->getPosition(id);   
-          float dR = reco::deltaR(scRef->eta(),scRef->phi(),pos.eta(),pos.phi());
+ 	  HcalDetId id  (itHcalRecHit->detid());
+          const CaloCellGeometry* cellGeometry = geometry_->getSubdetectorGeometry(id)->getGeometry(id);
+          float dR = reco::deltaR(scRef->eta(),scRef->phi(),cellGeometry->getPosition().eta(),cellGeometry->getPosition().phi());
           if(dR <= dRHcalRegion_){
-	   int hitFED = FEDNumbering::MINHCALFEDID + HcalElectronicsId(id.rawId()).dccid();
+	   HCALFedId* fedId = new HCALFedId(id.subdet(),id.iphi(),id.ieta(),id.depth());
+	   std::vector<HCALFedId>::iterator itHcalFed = std::find(HCAL_fedId_.begin(),HCAL_fedId_.end(),fedId);
+           int ishift = 1 ;
+           if((*itHcalFed).fed_ == 0){
+	     while((*itHcalFed).fed_ == 0 && ishift <= HBHERecHitShift_){
+             int i = -ishift ;
+             for( ; i <= ishift && i <= HBHERecHitShift_ ; i++){
+               int j = -ishift ;
+               for( ; j <= ishift && j <= HBHERecHitShift_ ; j++){                  
+		 fedId = new HCALFedId(id.subdet(),id.iphi()+i,id.ieta()+j,id.depth());
+                 itHcalFed = std::find(HCAL_fedId_.begin(),HCAL_fedId_.end(),fedId);
+		 if((*itHcalFed).fed_ != 0){ j = HBHERecHitShift_+1; continue; }
+	       }               
+	       if(j > HBHERecHitShift_)    { i = HBHERecHitShift_+1; continue; }
+	     }
+             ishift++ ;
+	    }
+	   }
+	   int hitFED = (*itHcalFed).fed_;
            if(hitFED < FEDNumbering::MINHCALFEDID || hitFED > FEDNumbering::MAXHCALFEDID) continue; //first eighteen feds are for HBHE
            if(debug_) std::cout<<"[selectedElectronFEDListProducer] Hcal FED ID "<<hitFED<<std::endl;
            if(hitFED < 0) continue;
            if(!fedList_.empty()){ 
-             if(std::find(fedList_.begin(),fedList_.end(),hitFED)==fedList_.end()) fedList_.push_back(hitFED);
-          }
-          else fedList_.push_back(hitFED);      
+	    if(std::find(fedList_.begin(),fedList_.end(),hitFED)==fedList_.end()) fedList_.push_back(hitFED);
+	   }
+	   else fedList_.push_back(hitFED);      
+	  }
 	 }
-	 }
-	}
+      }      
      }// End Ecal
 
      // get the electron track
