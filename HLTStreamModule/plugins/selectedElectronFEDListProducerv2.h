@@ -139,7 +139,7 @@ class selectedElectronFEDListProducerv2 : public edm::EDProducer {
       PixelModule(float phi, float eta) : Phi(phi), Eta(eta), x(0.), y(0.), z(0.), DetId(0), Fed(0) {}
 
       bool operator < (const PixelModule& m) const {
-      if(Phi < m.Phi) return true;
+        if(Phi < m.Phi) return true;
         if(Phi == m.Phi && Eta < m.Eta) return true;
         if(Phi == m.Phi && Eta == m.Eta && DetId < m.DetId) return true;
         return false;
@@ -151,6 +151,62 @@ class selectedElectronFEDListProducerv2 : public edm::EDProducer {
       unsigned int Fed;
 
   };
+
+ class HCALFedId {
+
+  public: 
+
+   HCALFedId(){}
+   virtual ~HCALFedId(){}
+   HCALFedId( const int & subdet, const int & iphi, const int & ieta, const int & depth){
+
+       subdet_ = subdet;  
+       iphi_   = iphi;
+       ieta_   = ieta;
+       depth_  = depth;
+   }
+
+   bool operator < (const HCALFedId& m) const {
+        if(subdet_ <  m.subdet_) return true;
+        if(subdet_ == m.subdet_ && iphi_ < m.iphi_) return true;
+        if(subdet_ == m.subdet_ && iphi_ == m.iphi_ && ieta_ < m.ieta_) return true;
+        if(subdet_ == m.subdet_ && iphi_ == m.iphi_ && ieta_ == m.ieta_ && depth_ < m.depth_) return true;
+        return false;
+   }
+
+   bool operator < (HCALFedId* m) const {
+        if(subdet_ <  m->subdet_) return true;
+        if(subdet_ == m->subdet_ && iphi_ < m->iphi_) return true;
+        if(subdet_ == m->subdet_ && iphi_ == m->iphi_ && ieta_ < m->ieta_) return true;
+        if(subdet_ == m->subdet_ && iphi_ == m->iphi_ && ieta_ == m->ieta_ && depth_ < m->depth_) return true;
+        return false;
+   }
+
+   bool operator == (const HCALFedId & j1) const {
+
+     if((*this).subdet_ ==  j1.subdet_ && (*this).iphi_ == j1.iphi_ && (*this).ieta_ == j1.ieta_ && (*this).depth_ == j1.depth_ ) return true ;
+     return false ;        
+   }
+
+   bool operator == (HCALFedId* j1) const {
+
+     if((*this).subdet_ ==  j1->subdet_ && (*this).iphi_ == j1->iphi_ && (*this).ieta_ == j1->ieta_ && (*this).depth_ == j1->depth_ ) return true ;
+     return false ;        
+   }
+
+   void setDCCId(const int & dcc){ 
+     dcc_ = dcc;
+     fed_ = dcc+700 ;
+   }
+
+   int getFed(){
+     return (*this).fed_ ;
+   }
+  
+   int iphi_, ieta_, depth_, dcc_, fed_, subdet_ ;  
+
+ };
+
 
  protected:
 
@@ -171,9 +227,11 @@ class selectedElectronFEDListProducerv2 : public edm::EDProducer {
   math::XYZVector beamSpotPosition_;
 
   edm::InputTag   beamSpotTag_ ;
-  edm::FileInPath ESLookupTable_ ; 
   edm::InputTag   rawDataLabel_ ;
   edm::InputTag   HBHERecHitCollection_;
+
+  edm::FileInPath ESLookupTable_ ; 
+  edm::FileInPath HCALLookupTable_ ; 
 
   bool dumpSelectedEcalFed_ ;
   bool dumpSelectedSiStripFed_ ;
@@ -197,7 +255,10 @@ class selectedElectronFEDListProducerv2 : public edm::EDProducer {
 
   // internal info of geometry of each sub-detector
   int ES_fedId_[2][2][40][40];
+  std::vector<HCALFedId> HCAL_fedId_ ;
 
+  const static int HBHERecHitShift_ = 9 ;
+  
   const EcalElectronicsMapping* TheMapping_ ;
   const CaloGeometry* geometry_ ;
   const CaloSubdetectorGeometry *geometry__ES_ ;
