@@ -230,8 +230,8 @@ class selectedElectronFEDListProducerv2 : public edm::EDProducer {
   edm::InputTag   rawDataLabel_ ;
   edm::InputTag   HBHERecHitCollection_;
 
-  edm::FileInPath ESLookupTable_ ; 
-  edm::FileInPath HCALLookupTable_ ; 
+  std::string ESLookupTable_ ; 
+  std::string HCALLookupTable_ ; 
 
   bool dumpSelectedEcalFed_ ;
   bool dumpSelectedSiStripFed_ ;
