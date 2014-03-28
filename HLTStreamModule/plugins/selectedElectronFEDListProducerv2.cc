@@ -46,16 +46,16 @@ selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::
 
    
  // ES look up table path
- if(iConfig.existsAs<edm::FileInPath>("ESLookupTable")){
-   ESLookupTable_ = iConfig.getParameter<edm::FileInPath>("ESLookupTable");
+ if(iConfig.existsAs<std::string>("ESLookupTable")){
+   ESLookupTable_ = iConfig.getParameter<std::string>("ESLookupTable");
  }
- else{ ESLookupTable_ = edm::FileInPath("EventFilter/ESDigiToRaw/data/ES_lookup_table.dat"); }
+ else{ ESLookupTable_ = std::string("ES_lookup_table.dat"); }
 
  // Hcal look up table path
- if(iConfig.existsAs<edm::FileInPath>("HCALLookupTable")){
-   HCALLookupTable_ = iConfig.getParameter<edm::FileInPath>("HCALLookupTable");
+ if(iConfig.existsAs<std::string>("HCALLookupTable")){
+   HCALLookupTable_ = iConfig.getParameter<std::string>("HCALLookupTable");
  }
- else{ HCALLookupTable_ = edm::FileInPath("StreamForElectrons/HLTStreamModule/data/HcalElectronicsMap_v7.00_offline"); }
+ else{ HCALLookupTable_ = std::string("HcalElectronicsMap_v7.00_offline"); }
 
  // raw data collector label
  if(iConfig.existsAs<edm::InputTag>("rawDataLabel")){
@@ -178,8 +178,8 @@ selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::
  // read in look-up table
  int nLines, iz, ip, ix, iy, fed, kchip, pace, bundle, fiber, optorx;
  std::ifstream ES_file;
- ES_file.open(ESLookupTable_.fullPath().c_str());
- if(debug_) std::cout<<"[selectedElectronFEDListProducer] Look Up table for ES "<<ESLookupTable_.fullPath().c_str()<<std::endl;
+ ES_file.open(ESLookupTable_.c_str());
+ if(debug_) std::cout<<"[selectedElectronFEDListProducer] Look Up table for ES "<<ESLookupTable_.c_str()<<std::endl;
  if( ES_file.is_open() ) {
      ES_file >> nLines;
      for (int i=0; i<nLines; ++i) {
@@ -187,7 +187,7 @@ selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::
        ES_fedId_[(3-iz)/2-1][ip-1][ix-1][iy-1] = fed;
      }
  } 
- else std::cout<<"[selectedElectronFEDListProducer] Look up table file can not be found in"<<ESLookupTable_.fullPath().c_str() <<std::endl;
+ else std::cout<<"[selectedElectronFEDListProducer] Look up table file can not be found in "<<ESLookupTable_.c_str() <<std::endl;
  
  ES_file.close();
  
@@ -196,8 +196,8 @@ selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::
  std::string subdet_tmp, buffer, tb;
  std::ifstream HCAL_file;
  
- HCAL_file.open(HCALLookupTable_.fullPath().c_str(),std::ios::in);
- if(debug_) std::cout<<"[selectedElectronFEDListProducer] Look Up table for HCAL "<<HCALLookupTable_.fullPath().c_str()<<std::endl;
+ HCAL_file.open(HCALLookupTable_.c_str(),std::ios::in);
+ if(debug_) std::cout<<"[selectedElectronFEDListProducer] Look Up table for HCAL "<<HCALLookupTable_.c_str()<<std::endl;
  if( HCAL_file.is_open() ) {
    while(!HCAL_file.eof()) {
        getline(HCAL_file,buffer);     
@@ -215,7 +215,7 @@ selectedElectronFEDListProducerv2::selectedElectronFEDListProducerv2(const edm::
        HCAL_fedId_.push_back(fedId);
      }
  } 
- else std::cout<<"[selectedElectronFEDListProducer] Look up table file can not be found in"<<HCALLookupTable_.fullPath().c_str() <<std::endl;
+ else std::cout<<"[selectedElectronFEDListProducer] Look up table file can not be found in"<<HCALLookupTable_.c_str() <<std::endl;
  HCAL_file.close();
  std::sort(HCAL_fedId_.begin(),HCAL_fedId_.end());
  
