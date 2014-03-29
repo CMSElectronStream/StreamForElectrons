@@ -1,0 +1,1 @@
+/store/group/alca_ecalcalib/ecalMIBI/rgerosa/ElectronStreamStudy/TriggerLevel/SingleElectron_8TeV_Run2012C AlcaElectronStream
