@@ -22,7 +22,7 @@ parser.add_option('-t', '--jobtemplate',  action="store", type="string", dest="j
 parser.add_option('-p', '--outputpath',   action="store", type="string", dest="outputpath"   ,default="",help='output path to the eos directory where to store the files')
 parser.add_option('-f', '--outputfilename', action="store", type="string", dest="outputfilename", default="step2reco", help='basic root of the output file name')
 parser.add_option('-j', '--jobmodulo',    action="store", type=int,      dest="jobmodulo",        default=1, help='how many input files have to be processed in one job')
-parser.add_option('-r', '--isalcatream',  action="store", type=int,      dest="isalcastream",     default=1, help='run on the alca stream output')
+parser.add_option('-r', '--isalcastream',  action="store", type=int,      dest="isalcastream",     default=1, help='run on the alca stream output')
 parser.add_option('-q', '--queque',       action="store", type="string", dest="queque",           default="cmscaf1nd", help='queque of the batch system at cern')
 
 
@@ -49,7 +49,7 @@ if __name__ == "__main__":
    os.system("mkdir "+name[1]+"\n") ;
       
   
-   tempfilelist = "./list_"+name[1]+".txt" ;
+   tempfilelist = "./List_"+name[1]+".txt" ;
    os.system("cmsLs -R "+name[0]+"/"+name[1]+" | grep root | awk '{print $5}' > "+tempfilelist+"\n") ;
    
    totNumber = 0;
@@ -144,4 +144,4 @@ if __name__ == "__main__":
     SAMPLEJOBLISTFILE.write(command+"\n");
     
  
-# os.system("rm list_*.txt") ;
+ os.system("rm List_*.txt") ;
