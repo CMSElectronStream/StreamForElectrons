@@ -140,7 +140,7 @@ if __name__ == "__main__":
     # submit job
     ############
 
-    command = "bsub -cwd "+jobDir+" -q "+options.queque+" "+tempBjob;
+    command = "bsub -cwd "+inPath+"/"+jobDir+" -q "+options.queque+" "+inPath+"/"+tempBjob;
     SAMPLEJOBLISTFILE.write(command+"\n");
     
  
