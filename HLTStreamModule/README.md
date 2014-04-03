@@ -30,7 +30,8 @@ To install:
     cp StreamForElectrons/HLTStreamModule/plugins/selectedElectronFEDListProducerv2.h  HLTrigger/Egamma/interface/
     cp StreamForElectrons/HLTStreamModule/plugins/selectedElectronFEDListProducerv2.cc HLTrigger/Egamma/src/
     cp StreamForElectrons/HLTStreamModule/plugins/BuildFile.xml.decomment HLTrigger/Egamma/BuildFile.xml
-
+    cp StreamForElectrons/HLTStreamModule/test/ES_lookup_table.dat             HLTrigger/Configuration/test  
+    cp StreamForElectrons/HLTStreamModule/test/HcalElectronicsMap_v7.00_offline HLTrigger/Configuration/test
     scramv1 b -j 8
 
 test:
