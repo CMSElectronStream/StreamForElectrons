@@ -460,7 +460,6 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
 	  }
 	 }
       }      
->>>>>>> 224c0105198782bb890eb97881845c6c0aff61a4
      }// End Ecal
 
      // get the electron track
