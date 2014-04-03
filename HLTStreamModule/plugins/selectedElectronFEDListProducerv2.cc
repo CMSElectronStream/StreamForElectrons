@@ -392,14 +392,21 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
       if (dumpSelectedHCALFed_){
        HBHERecHitCollection::const_iterator itHcalRecHit = hcalRecHitCollection_->begin();
        for ( ; itHcalRecHit != hcalRecHitCollection_->end() ; ++itHcalRecHit){
-        HcalDetId id(itHcalRecHit->detid());
+        HcalDetId id = itHcalRecHit->id();
+        HcalDetId id2(itHcalRecHit->detid());
+        HcalDetId id3 = itHcalRecHit->detid();
+        if (debug_) std::cout << "[selectedElectronFEDListProducer] id: " << id << "," << id.rawId() << " id2: " << id2 << "," <<  id2.rawId() << " id3: " << id3 << "," <<  id3.rawId() << std::endl;
+        if (debug_) std::cout << "[selectedElectronFEDListProducer] (HcalSubdetector)id.subdetId(): " << (HcalSubdetector)id.subdetId() << " HB: " << HcalSubdetector::HcalBarrel << " HE: " << HcalSubdetector::HcalEndcap << std::endl;
+
         if ((HcalSubdetector)id.subdetId() != HcalSubdetector::HcalBarrel && (HcalSubdetector)id.subdetId() != HcalSubdetector::HcalEndcap) continue ;
         const GlobalPoint& pos = geometry_->getPosition(id);
         float dR = reco::deltaR(scRef->eta(),scRef->phi(),pos.eta(),pos.phi());
         if (debug_) std::cout << "[selectedElectronFEDListProducer] SC: " << scRef->eta() << " , " << scRef->phi() << "   HCAL: " << pos.eta() << " , " << pos.phi() << " dR = " << dR << " <=" << dRHcalRegion_ << std::endl;
         if (dR <= dRHcalRegion_) {
          int hitFED = FEDNumbering::MINHCALFEDID + HcalElectronicsId(id.rawId()).dccid(); //---- dccid = 0,1,2,3, ... 29, 30, 31
-         if (hitFED < FEDNumbering::MINHCALFEDID || hitFED > FEDNumbering::MAXHCALFEDID) continue; //first eighteen feds are for HBHE
+         if (hitFED < FEDNumbering::MINHCALFEDID || hitFED > FEDNumbering::MAXHCALFEDID) continue; //first 18 feds are for HBHE
+         //---- 700-731 is HCAL
+         // see          http://cmslxr.fnal.gov/lxr/source/DataFormats/FEDRawData/interface/FEDNumbering.h
          if (debug_) std::cout << "[selectedElectronFEDListProducer] Hcal FED ID " << hitFED  << " = " << FEDNumbering::MINHCALFEDID << " + " << HcalElectronicsId(id.rawId()).dccid() << " id.rawId() = " << id.rawId() << std::endl;
 
          ///---- debug ----

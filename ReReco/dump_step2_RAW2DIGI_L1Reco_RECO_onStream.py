@@ -4,7 +4,7 @@ process = cms.Process("reRECO")
 
 process.source = cms.Source("PoolSource",
     secondaryFileNames = cms.untracked.vstring(),
-    fileNames = cms.untracked.vstring('/eos/cms/store/user/rgerosa/ElectronStreamStudy/streamElectronRAW_STREAM.root')
+    fileNames = cms.untracked.vstring('file:../../HLTrigger/Configuration/test/streamElectronRAW_HCAL.root')
 )
 process.BeamHaloSummary = cms.EDProducer("BeamHaloSummaryProducer",
     l_HcalPhiWedgeConfidence = cms.double(0.7),
@@ -48007,7 +48007,7 @@ process.leadTrackFinding = cms.PSet(
 )
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(-1)
+    input = cms.untracked.int32(10)
 )
 
 process.mipVariable = cms.PSet(

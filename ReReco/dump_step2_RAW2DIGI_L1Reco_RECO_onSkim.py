@@ -6,7 +6,8 @@ process.source = cms.Source("PoolSource",
     secondaryFileNames = cms.untracked.vstring(),
     #fileNames = cms.untracked.vstring('file:/home/amassiro/ECAL/HLT/CMSSW_5_3_13_patch1/src/StreamForElectrons/ReReco/streamElectronRAW_tmp.root')   # -> skimmed raw
     #fileNames = cms.untracked.vstring('file:../../HLTrigger/Configuration/test/streamElectronRAW_tmp.root')   #  -> streamed raw
-    fileNames = cms.untracked.vstring('file:/afs/cern.ch/user/r/rgerosa/public/xAndrea/streamGT/streamElectronRAW_GT.root')
+    #fileNames = cms.untracked.vstring('file:/afs/cern.ch/user/r/rgerosa/public/xAndrea/streamGT/streamElectronRAW_noGTFED.root')
+    fileNames = cms.untracked.vstring('file:/afs/cern.ch/user/r/rgerosa/public/xAndrea/streamGT/streamElectronRAW_GTFED_HCAL.root')
     #fileNames = cms.untracked.vstring('file:pickevents.root')  #  -> raw
   )
 process.BeamHaloSummary = cms.EDProducer("BeamHaloSummaryProducer",
@@ -29844,7 +29845,16 @@ process.MessageLogger = cms.Service("MessageLogger",
         'infos', 
         'debugs', 
         'cout', 
-        'cerr'),
+        'cerr',
+        'detailedInfo',
+        'critical'
+           ),
+    detailedInfo   = cms.untracked.PSet(
+                          threshold  = cms.untracked.string('DEBUG')
+                                 ),
+    critical   = cms.untracked.PSet(
+                          threshold  = cms.untracked.string('INFO')
+                                 ),
     debugModules = cms.untracked.vstring(),
     infos = cms.untracked.PSet(
         optionalPSet = cms.untracked.bool(True),
@@ -48011,7 +48021,7 @@ process.leadTrackFinding = cms.PSet(
 )
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(-1)
+    input = cms.untracked.int32(50)
 )
 
 process.mipVariable = cms.PSet(
