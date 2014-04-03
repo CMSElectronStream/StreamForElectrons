@@ -422,7 +422,7 @@ void selectedElectronFEDListProducerv2::produce(edm::Event & iEvent, const edm::
          } 
        } // end endcap  
       } // end loop on SC hit   
-
+      
       // check HCAL behind each hit    
       if(dumpSelectedHCALFed_){
 	 HBHERecHitCollection::const_iterator itHcalRecHit = hcalRecHitCollection_->begin();
