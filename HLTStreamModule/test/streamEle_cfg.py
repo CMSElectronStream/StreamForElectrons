@@ -3,6 +3,14 @@ import FWCore.ParameterSet.Config as cms
 import pprint
 import sys
 
+from FWCore.ParameterSet.VarParsing import VarParsing
+options = VarParsing ('python')
+
+options.register ('saveAlcaElectronStreamOutput',True,VarParsing.multiplicity.singleton,VarParsing.varType.int,'dump the full raw collection or only the AlcaElectron Stream')
+
+options.parseArguments()
+print options
+
 process = cms.Process( "HLT8E33v2" )
 
 process.HLTConfigVersion = cms.PSet(tableName = cms.string('/online/collisions/2012/8e33/v2.2/HLT/V7'))
@@ -72,8 +80,12 @@ process.hltL1sL1DoubleEG137 = cms.EDFilter( "HLTLevel1GTSeed",
 ### PATH executed:
 process.HLTriggerFirstPath = cms.Path( process.hltGetConditions + process.hltGetRaw + process.hltBoolFalse )
 
+### call the module for the electron stream output
+from HLTrigger.Configuration.HLT_ElectronStreamOutput_cff import ElectronStreamOutput
+ElectronStreamOutput(process,options.saveAlcaElectronStreamOutput)
+
+
 ### Complete Trigger path sequence for Ele25 WP70
-process.load('HLTrigger.Configuration.HLT_ElectronStreamOutput_cff')
 process.load("HLTrigger.Configuration.HLT_Ele25_WP70_cff")
 
 #process.HLT_Ele25_WP70_v13 = cms.Path( process.HLTBeginSequence +
@@ -194,7 +206,7 @@ process.HLTriggerFinalPath = cms.Path( process.hltGtDigis +
 
 ### endpath
 
-process.hltOutputStreamElectron.fileName = cms.untracked.string("streamElectronRAW_HCAL.root")
+process.hltOutputStreamElectron.fileName = cms.untracked.string(options.outputFile)
 
 process.ElectronStreamOutputPath = cms.EndPath( process.hltPreOutput + 
 						process.hltOutputStreamElectron)
@@ -204,7 +216,6 @@ process.ElectronStreamOutputPath = cms.EndPath( process.hltPreOutput +
 process.source = cms.Source( "PoolSource",
     fileNames = cms.untracked.vstring('file:/media/DATA/CMSSWRoot/DATA2012/SingleElectron_Run2012B_RAW/B865DABE-BDA2-E111-854F-BCAEC53296F7.root'),
     #'file:/media/DATA/CMSSWRoot/DATA2012/DoubleElectron_Run2012B-ZElectron-13Jul2012-v1_RAW-RECO/FEE043A5-93D4-E111-84DC-0030486790C0.root'),		    
-    #fileNames = cms.untracked.vstring('file:/data/amassiro/CMSSWRoot/DATA2012/SingleElectron_Run2012B_RAW/B865DABE-BDA2-E111-854F-BCAEC53296F7.root'),
     secondaryFileNames = cms.untracked.vstring(),
     inputCommands = cms.untracked.vstring('keep *'))
 
@@ -256,14 +267,14 @@ if 'hltDQML1SeedLogicScalers' in process.__dict__:
     process.hltDQML1SeedLogicScalers.processname              = 'HLT8E33v2'
 
 # limit the number of events to be processed
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(3000))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(options.maxEvents))
 
 process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.destinations = ['cout', 'cerr']
 process.MessageLogger.cerr.FwkReport.reportEvery = 1 
 
 # enable the TrigReport and TimeReport
-process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
+process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(False))
 
 # override the GlobalTag, connection string and pfnPrefix
 if 'GlobalTag' in process.__dict__:

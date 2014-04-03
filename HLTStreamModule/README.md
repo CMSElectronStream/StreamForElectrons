@@ -38,7 +38,7 @@ test:
     cd HLTrigger/Configuration/test ;
     cmsRun streamEle_cfg.py
 
-1. python to be executed via cmsRun is streamEle_cfg.py:
+1. python to be executed via cmsRun is streamEle_cfg.py (cmsRun streamEle_cfg.py saveAlcaElectronStreamOutput=1 outputFile=streamElectronRAW.root maxEvents=1000):
 
         # The following part are loaded:
 
