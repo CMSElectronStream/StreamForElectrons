@@ -5,6 +5,16 @@
 # with command line options: step2 -s RAW2DIGI,L1Reco,RECO --data --datatier RECO --eventcontent RECO --conditions GR10_P_V11::All --scenario pp --no_exec --magField AutoFromDBCurrent --process reRECO
 import FWCore.ParameterSet.Config as cms
 
+####### option parsing
+from FWCore.ParameterSet.VarParsing import VarParsing
+options = VarParsing ('python')
+# add a list of strings for events to process
+options.parseArguments()
+print options
+
+
+
+
 process = cms.Process('reRECO')
 
 # import of standard configurations
@@ -28,7 +38,8 @@ process.maxEvents = cms.untracked.PSet(
 process.source = cms.Source("PoolSource",
     secondaryFileNames = cms.untracked.vstring(),
     fileNames = cms.untracked.vstring(
-       '/store/group/alca_ecalcalib/ecalMIBI/rgerosa/ElectronStreamStudy/TriggerLevel/SingleElectron_8TeV_Run2012C/AlcaElectronStream/streamElectronRAW_alcastream_170_2_6Fi.root'
+        options.inputFiles
+       #'/store/group/alca_ecalcalib/ecalMIBI/rgerosa/ElectronStreamStudy/TriggerLevel/SingleElectron_8TeV_Run2012C/AlcaElectronStream/streamElectronRAW_alcastream_170_2_6Fi.root'
    )
 )
 
@@ -49,7 +60,8 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
     splitLevel = cms.untracked.int32(0),
     eventAutoFlushCompressedSize = cms.untracked.int32(5242880),
     outputCommands = process.RECOEventContent.outputCommands,
-    fileName = cms.untracked.string('step2_rereco_onStream.root'),
+    fileName = cms.untracked.string(options.outputFile),
+    #fileName = cms.untracked.string('step2_rereco_onStream.root'),
     dataset = cms.untracked.PSet(
         filterName = cms.untracked.string(''),
         dataTier = cms.untracked.string('RECO')

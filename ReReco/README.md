@@ -72,6 +72,11 @@ to run on stream:
 
     cmsRun dump_step2_RAW2DIGI_L1Reco_RECO_onStream.py
 
+    cmsRun step2_RAW2DIGI_L1Reco_RECO_onStream.py  \
+        inputFiles=file:../../HLTrigger/Configuration/test/output.root  \
+        outputFile=reco_stream.root
+
+
 
 
 Draw
