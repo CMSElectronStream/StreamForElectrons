@@ -21,6 +21,7 @@ To install:
     git clone git@github.com:CMSElectronStream/StreamForElectrons.git
     cp StreamForElectrons/HLTStreamModule/python/* HLTrigger/Configuration/python 
     cp StreamForElectrons/HLTStreamModule/test/streamEle_cfg.py HLTrigger/Configuration/test
+    cp StreamForElectrons/HLTStreamModule/test/ES_lookup_table.dat HLTrigger/Configuration/test
     cp StreamForElectrons/HLTStreamModule/plugins/HLTElectronOneOEMinusOneOPFilterRegional.h HLTrigger/Egamma/interface/
     cp StreamForElectrons/HLTStreamModule/plugins/HLTElectronOneOEMinusOneOPFilterRegional.cc HLTrigger/Egamma/src/
     cp StreamForElectrons/HLTStreamModule/plugins/EgammaHLTGsfTrackVarProducer.h RecoEgamma/EgammaHLTProducers/interface/
@@ -230,5 +231,17 @@ where:
     cd /home/amassiro/ECAL/HLT/CMSSW_6_2_2/src/
     cd HLTrigger/Configuration/test
     cmsRun streamEle_cfg.py
+
+
+High pu run:
+
+    root://cms-xrd-global.cern.ch//store/data/Run2012D/SingleElectron25ns/RAW/v1/000/209/089/3E148D63-E246-E211-A824-003048D2C0F2.root
+    in
+    streamEle_cfg.py
+
+
+To run only the trigger and dump all raw information:
+
+    cmsRun streamEle_cfg.py saveAlcaElectronStreamOutput=0   outputFile=simpleRaw.root
 
 
