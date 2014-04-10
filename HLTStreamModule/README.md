@@ -233,7 +233,7 @@ where:
     cmsRun streamEle_cfg.py
 
 
-High pu run:
+25ns run:
 
     root://cms-xrd-global.cern.ch//store/data/Run2012D/SingleElectron25ns/RAW/v1/000/209/089/3E148D63-E246-E211-A824-003048D2C0F2.root
     in
@@ -243,5 +243,11 @@ High pu run:
 To run only the trigger and dump all raw information:
 
     cmsRun streamEle_cfg.py saveAlcaElectronStreamOutput=0   outputFile=simpleRaw.root
+
+To run the stream:
+
+    cmsRun streamEle_cfg.py saveAlcaElectronStreamOutput=1   outputFile=Stream.root
+
+
 
 
