@@ -3,15 +3,18 @@ from FWCore.ParameterSet.VarParsing import VarParsing
 
 ####### option parsing
 
-options = VarParsing ('AnalyzerEle')
+options = VarParsing ('python')
 # add a list of strings for events to process
 options.parseArguments()
 print options
 
-####### define process and modules
+
+####### define process
+process = cms.Process("SimpleAnalyzer")
+
+####### define modules
 process.load("FWCore.MessageService.MessageLogger_cfi")
 
-process = cms.Process("SimpleAnalyzer")
 process.source = cms.Source ("PoolSource",
                  fileNames = cms.untracked.vstring (options.inputFiles)
 )
@@ -38,7 +41,7 @@ process.load('StreamForElectrons.AnalyzerEle.patElectronSequence_cff')
 
 
 ####### call the final analyzer
-process.load('StreamForElectrons.AnalyzerEle.ntupleAnalyzer_cfi')
+#process.load('StreamForElectrons.AnalyzerEle.ntupleAnalyzer_cfi')
 
 process.Analyzer = cms.EDAnalyzer('AnalyzerEle',
     EleTag = cms.InputTag("gsfElectrons"),
