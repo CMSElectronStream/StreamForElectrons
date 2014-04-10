@@ -68,6 +68,10 @@ to run on raw:
 
     cmsRun dump_step2_RAW2DIGI_L1Reco_RECO_onRaw.py
 
+    cmsRun step2_RAW2DIGI_L1Reco_RECO_onRaw.py  \
+        inputFiles=file:../../HLTrigger/Configuration/test/simpleRaw.root  \
+        outputFile=reco_raw.root
+
 to run on stream:
 
     cmsRun dump_step2_RAW2DIGI_L1Reco_RECO_onStream.py
@@ -76,6 +80,9 @@ to run on stream:
         inputFiles=file:../../HLTrigger/Configuration/test/output.root  \
         outputFile=reco_stream.root
 
+    cmsRun step2_RAW2DIGI_L1Reco_RECO_onStream.py  \
+        inputFiles=file:../../HLTrigger/Configuration/test/Stream.root  \
+        outputFile=reco_stream_highpu.root
 
 
 
