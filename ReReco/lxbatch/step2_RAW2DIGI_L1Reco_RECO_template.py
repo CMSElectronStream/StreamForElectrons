@@ -80,13 +80,13 @@ process.RAWRECOEventContent.outputCommands +=  cms.untracked.vstring('keep *_*hl
                                                                      'keep *_elPFIsoValueCharged03_*_*',
                                                                      'keep *_elPFIsoValueGamma03_*_*',
                                                                      'keep *_elPFIsoValueNeutral03_*_*',
-                                                                     'keep *_elPFIsoValueChargedAll0_*_*',
+                                                                     'keep *_elPFIsoValueChargedAll_*_*',
                                                                      'keep *_elPFIsoValuePU03_*_*',
                                                                      'keep *_*_elPFIsoValueCharged03_*',
                                                                      'keep *_*_elPFIsoValueGamma03_*',
                                                                      'keep *_*_elPFIsoValueNeutral03_*',
-                                                                     'keep *_*_elPFIsoValueChargedAll0_*_*',
-                                                                     'keep *_*_elPFIsoValuePU03_*_*')
+                                                                     'keep *_*_elPFIsoValueChargedAll_*',
+                                                                     'keep *_*_elPFIsoValuePU03_*')
  
 process.RECOEventContent.outputCommands += cms.untracked.vstring('keep *_*hltKT6PFJets*_*_*',
                                                                  'keep *_*hltGsfEleAnyL1SeededElectronTrackIso*_*_*',
@@ -105,8 +105,8 @@ process.RECOEventContent.outputCommands += cms.untracked.vstring('keep *_*hltKT6
                                                                  'keep *_*_elPFIsoValueCharged03_*',
                                                                  'keep *_*_elPFIsoValueGamma03_*',
                                                                  'keep *_*_elPFIsoValueNeutral03_*',
-                                                                 'keep *_*_elPFIsoValueChargedAll0_*_*',
-                                                                 'keep *_*_elPFIsoValuePU03_*_*')
+                                                                 'keep *_*_elPFIsoValueChargedAll_*',
+                                                                 'keep *_*_elPFIsoValuePU03_*')
 
 process.RECOoutput.outputCommands += cms.untracked.vstring('keep *_**hltKT6PFJets*_*_*',
                                                            'keep *_*hltGsfEleAnyL1SeededElectronTrackIso*_*_*',
@@ -120,13 +120,13 @@ process.RECOoutput.outputCommands += cms.untracked.vstring('keep *_**hltKT6PFJet
                                                            'keep *_elPFIsoValueCharged03_*_*',
                                                            'keep *_elPFIsoValueGamma03_*_*',
                                                            'keep *_elPFIsoValueNeutral03_*_*',
-                                                           'keep *_elPFIsoValueChargedAll0_*_*',
+                                                           'keep *_elPFIsoValueChargedAll_*_*',
                                                            'keep *_elPFIsoValuePU03_*_*',
                                                            'keep *_*_elPFIsoValueCharged03_*',
                                                            'keep *_*_elPFIsoValueGamma03_*',
                                                            'keep *_*_elPFIsoValueNeutral03_*',
-                                                           'keep *_*_elPFIsoValueChargedAll0_*_*',
-                                                           'keep *_*_elPFIsoValuePU03_*_*')
+                                                           'keep *_*_elPFIsoValueChargedAll_*',
+                                                           'keep *_*_elPFIsoValuePU03_*')
 
 
 process.RECOSIMEventContent.outputCommands += cms.untracked.vstring('keep *_*hltKT6PFJets*_*_*',
@@ -141,13 +141,13 @@ process.RECOSIMEventContent.outputCommands += cms.untracked.vstring('keep *_*hlt
                                                                     'keep *_elPFIsoValueCharged03_*_*',
                                                                     'keep *_elPFIsoValueGamma03_*_*',
                                                                     'keep *_elPFIsoValueNeutral03_*_*',
-                                                                    'keep *_elPFIsoValueChargedAll0_*_*',
+                                                                    'keep *_elPFIsoValueChargedAll_*_*',
                                                                     'keep *_elPFIsoValuePU03_*_*',
                                                                     'keep *_*_elPFIsoValueCharged03_*',
                                                                     'keep *_*_elPFIsoValueGamma03_*',
                                                                     'keep *_*_elPFIsoValueNeutral03_*',
-                                                                    'keep *_*_elPFIsoValueChargedAll0_*_*',
-                                                                    'keep *_*_elPFIsoValuePU03_*_*')
+                                                                    'keep *_*_elPFIsoValueChargedAll_*',
+                                                                    'keep *_*_elPFIsoValuePU03_*')
 
 
 process.AODEventContent.outputCommands += cms.untracked.vstring('keep *_*hltKT6PFJets*_*_*',
@@ -162,13 +162,13 @@ process.AODEventContent.outputCommands += cms.untracked.vstring('keep *_*hltKT6P
                                                                 'keep *_elPFIsoValueCharged03_*_*',
                                                                 'keep *_elPFIsoValueGamma03_*_*',
                                                                 'keep *_elPFIsoValueNeutral03_*_*',
-                                                                'keep *_elPFIsoValueChargedAll0_*_*',
+                                                                'keep *_elPFIsoValueChargedAll_*_*',
                                                                 'keep *_elPFIsoValuePU03_*_*',
                                                                 'keep *_*_elPFIsoValueCharged03_*',
                                                                 'keep *_*_elPFIsoValueGamma03_*',
                                                                 'keep *_*_elPFIsoValueNeutral03_*',
-                                                                'keep *_*_elPFIsoValueChargedAll0_*_*',
-                                                                'keep *_*_elPFIsoValuePU03_*_*')
+                                                                'keep *_*_elPFIsoValueChargedAll_*',
+                                                                'keep *_*_elPFIsoValuePU03_*')
 
 
 process.AODSIMEventContent.outputCommands += cms.untracked.vstring('keep *_*hltKT6PFJets*_*_*',
@@ -183,13 +183,13 @@ process.AODSIMEventContent.outputCommands += cms.untracked.vstring('keep *_*hltK
                                                                    'keep *_elPFIsoValueCharged03_*_*',
                                                                    'keep *_elPFIsoValueGamma03_*_*',
                                                                    'keep *_elPFIsoValueNeutral03_*_*',
-                                                                   'keep *_elPFIsoValueChargedAll0_*_*',
+                                                                   'keep *_elPFIsoValueChargedAll_*_*',
                                                                    'keep *_elPFIsoValuePU03_*_*',
                                                                    'keep *_*_elPFIsoValueCharged03_*',
                                                                    'keep *_*_elPFIsoValueGamma03_*',
                                                                    'keep *_*_elPFIsoValueNeutral03_*',
-                                                                   'keep *_*_elPFIsoValueChargedAll0_*_*',
-                                                                   'keep *_*_elPFIsoValuePU03_*_*')
+                                                                   'keep *_*_elPFIsoValueChargedAll_*',
+                                                                   'keep *_*_elPFIsoValuePU03_*')
 
 
 # Schedule definition
