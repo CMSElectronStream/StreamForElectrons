@@ -2,9 +2,10 @@ import FWCore.ParameterSet.Config as cms
 from FWCore.ParameterSet.VarParsing import VarParsing
 
 ####### option parsing
+options = VarParsing ('AnalyzerEle')
 
-options = VarParsing ('python')
-# add a list of strings for events to process
+options.register ('hltPath','HLT_GsfEle25_WP80_PFMET_MT50_v9',VarParsing.multiplicity.singleton,VarParsing.varType.string,'in order to match trigger electrons with pat ones')
+
 options.parseArguments()
 print options
 
@@ -38,34 +39,14 @@ process.TFileService = cms.Service("TFileService",
 
 ####### call the electron PAT sequence + embending of electron ID informations:
 process.load('StreamForElectrons.AnalyzerEle.patElectronSequence_cff')
-
+process.PatElectronTriggerMatchHLTEle.matchedCuts = cms.string('path('+options.hltPath+')')
 
 ####### call the final analyzer
-#process.load('StreamForElectrons.AnalyzerEle.ntupleAnalyzer_cfi')
-
-process.Analyzer = cms.EDAnalyzer('AnalyzerEle',
-    EleTag = cms.InputTag("gsfElectrons"),
-    PVTag = cms.InputTag("offlinePrimaryVerticesWithBS"),
-    recHitCollection_EB = cms.InputTag("reducedEcalRecHitsEB"),
-    recHitCollection_EE = cms.InputTag("reducedEcalRecHitsEE"),
-    SRFlagCollection_EB = cms.InputTag("ecalDigis"),
-    SRFlagCollection_EE = cms.InputTag("ecalDigis"),
-    digiCollection_EB = cms.InputTag("ecalDigis","ebDigis"),
-    digiCollection_EE = cms.InputTag("ecalDigis","eeDigis"),
-    theBeamSpotTag = cms.InputTag("offlineBeamSpot"),
-    PFMetTag = cms.InputTag("pfMet"),
-    rhoTag = cms.InputTag("kt6PFJets","rho"),
-    conversionsInputTag = cms.InputTag("allConversions"),
-    dataRun = cms.string("noCorrection"),
-    verbosity = cms.untracked.bool(False),
-    doWZSelection = cms.untracked.bool(False),  # save *all* electrons combinations
-    applyCorrections = cms.untracked.bool(False),
-    dataFlag = cms.untracked.bool(True),
-    saveRecHitMatrix = cms.untracked.bool(False),
-    saveFbrem = cms.untracked.bool(False) # set False if running on AOD
-)
+process.load('StreamForElectrons.AnalyzerEle.ntupleAnalyzer_cfi')
 
 ### final path 
-process.p = cms.Path(process.Analyzer)
-process.schedule = cms.Schedule(process.p)
+process.path = cms.Path(process.patElectronSequence*
+                        process.Analyzer)
+
+process.schedule = cms.Schedule(process.path)
 
