@@ -7,7 +7,6 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig){
  edm::Service<TFileService> fs ;
  myTree_ = fs -> make <TTree>("AnalyzerEle","AnalyzerEle"); // create the output file with the output tree
 
- eventType_           = iConfig.getUntrackedParameter<int>("eventType",1);
  dataRun_             = iConfig.getParameter<std::string>("dataRun");
  digiCollection_EB_   = iConfig.getParameter<edm::InputTag>("digiCollection_EB");
  digiCollection_EE_   = iConfig.getParameter<edm::InputTag>("digiCollection_EE");
@@ -580,7 +579,6 @@ void AnalyzerEle::fillGeneratorInfo(const edm::Event & iEvent, const edm::EventS
 
  edm::Handle<reco::GenParticleCollection> genParticles; // take the genParticle collection from the event
  iEvent.getByLabel(MCtruthTag_, genParticles);
- eventType_ = 0;
 
  std::vector<const reco::Candidate*> mcCharged_p ;
  std::vector<const reco::Candidate*> mcE_p ;
