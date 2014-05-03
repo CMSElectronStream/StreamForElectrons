@@ -1,8 +1,10 @@
 import FWCore.ParameterSet.Config as cms
-from FWCore.ParameterSet.VarParsing import VarParsing
+import pprint
+import sys
 
 ####### option parsing
-options = VarParsing ('AnalyzerEle');
+from FWCore.ParameterSet.VarParsing import VarParsing
+options = VarParsing ('python');
 
 options.register ('hltPath','HLT_GsfEle25_WP80_PFMET_MT50_v9',VarParsing.multiplicity.singleton,VarParsing.varType.string,'in order to match trigger electrons with pat ones');
 options.register ('isAlcaStreamOutput',0,VarParsing.multiplicity.singleton,VarParsing.varType.int,'to set properly the input collection for the analyzer');
@@ -35,17 +37,16 @@ process.TFileService = cms.Service("TFileService",
 
 ####### call the electron PAT sequence + embending of electron ID informations:
 process.load('StreamForElectrons.AnalyzerEle.patElectronSequence_cff')
+
 if options.isAlcaStreamOutput != 0 :
     process.patElectrons.pvSrc = cms.InputTag("hltFastPVPixelVertices");
 else:
-    process.eleSelectionProducers.rhoFastJet =  cms.InputTag("kt6PFJets","rho"),
+    process.eleSelectionProducers.rhoFastJet =  cms.InputTag("kt6PFJets","rho");    
     process.eleSelectionProducers.vertexCollection = cms.InputTag("offlinePrimaryVerticesWithBS");
     
 process.PatElectronTriggerMatchHLTEle.matchedCuts = cms.string('path('+options.hltPath+')');
-
 ####### call the final analyzer
 process.load('StreamForElectrons.AnalyzerEle.ntupleAnalyzer_cfi')
-
 if options.isAlcaStreamOutput != 0 :
  process.Analyzer.PVTag    = cms.InputTag("hltFastPVPixelVertices");
  process.Analyzer.PFMetTag = cms.InputTag("hltPFMETProducer");
@@ -67,3 +68,9 @@ process.path = cms.Path(process.patElectronSequence*
 
 process.schedule = cms.Schedule(process.path)
 
+############################
+## Dump the output Python ##
+############################
+
+processDumpFile = open('processDump.py', 'w')
+print >> processDumpFile, process.dumpPython()
