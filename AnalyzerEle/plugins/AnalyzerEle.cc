@@ -21,7 +21,8 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig){
  EleTag_              = iConfig.getParameter<edm::InputTag>("EleTag");
  PFMetTag_            = iConfig.getParameter<edm::InputTag>("PFMetTag");
  conversionsInputTag_ = iConfig.getParameter<edm::InputTag>("conversionsInputTag");
-
+ MCtruthTag_          = iConfig.getParameter<edm::InputTag>("MCtruthTag");
+  
  triggerResultsCollection_ = iConfig.getParameter<edm::InputTag>("triggerResultsCollection");
  hltPaths_                 = iConfig.getParameter<std::vector<std::string> >("hltPaths") ;
 
@@ -31,7 +32,7 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig){
  dataFlag_           = iConfig.getUntrackedParameter<bool>("dataFlag", true);
  saveRecHitMatrix_   = iConfig.getUntrackedParameter<bool>("saveRecHitMatrix",false);
  saveFbrem_          = iConfig.getUntrackedParameter<bool>("saveFbrem", false);
- isMC_               = iConfig.getUntrackedParameter<bool>("isMC", false);
+ saveMCInfo_         = iConfig.getUntrackedParameter<bool>("saveMCInfo", false);
 
  eventNaiveId_ = 0;
 
@@ -52,8 +53,42 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig){
  myTree_ -> Branch("rho", &rho_, "rho/F");
  myTree_ -> Branch("nele", &nele_, "nele/I");
 
- myTree_ ->Branch("nPU",&nPU_,"nPU/F");
+ if(saveMCInfo_){
 
+  std::cout<< ">>>>>> SimpleNtupleEoverP::SimpleNtupleEoverP::set MC branches <<<" << std::endl;
+  myTree_ -> Branch("nPU",&nPU_,"nPU/F");
+
+  myTree_ -> Branch("mcV_E", &mcV_E, "mcV_E/F");
+  myTree_ -> Branch("mcV_Px", &mcV_Px, "mcV_Px/F");
+  myTree_ -> Branch("mcV_Py", &mcV_Py, "mcV_Py/F");
+  myTree_ -> Branch("mcV_Pz", &mcV_Pz, "mcV_Pz/F");
+  myTree_ -> Branch("mcV_Eta", &mcV_Eta, "mcV_Eta/F");
+  myTree_ -> Branch("mcV_Phi", &mcV_Phi, "mcV_Phi/F");
+  myTree_ -> Branch("mcV_M", &mcV_M, "mcV_M/F");
+  myTree_ -> Branch("mcV_Charge",&mcV_Charge, "mcV_Charge/I");
+  myTree_ -> Branch("mcV_PdgId", &mcV_PdgId, "mcV_PdgId/I");
+
+  myTree_ -> Branch("mcF1_fromV_E", &mcF1_fromV_E, "mcF1_fromV_E/F");
+  myTree_ -> Branch("mcF1_fromV_Px", &mcF1_fromV_Px, "mcF1_fromV_Px/F");
+  myTree_ -> Branch("mcF1_fromV_Py", &mcF1_fromV_Py, "mcF1_fromV_Py/F");
+  myTree_ -> Branch("mcF1_fromV_Pz", &mcF1_fromV_Pz, "mcF1_fromV_Pz/F");
+  myTree_ -> Branch("mcF1_fromV_Eta", &mcF1_fromV_Eta, "mcF1_fromV_Eta/F");
+  myTree_ -> Branch("mcF1_fromV_Phi", &mcF1_fromV_Phi, "mcF1_fromV_Phi/F");
+  myTree_ -> Branch("mcF1_fromV_M", &mcF1_fromV_M, "mcF1_fromV_M/F");
+  myTree_ -> Branch("mcF1_fromV_Charge",&mcF1_fromV_Charge,"mcF1_fromV_Charge/I");
+  myTree_ -> Branch("mcF1_fromV_PdgId", &mcF1_fromV_PdgId, "mcF1_fromV_PdgId/I");
+    
+  myTree_ -> Branch("mcF2_fromV_E", &mcF2_fromV_E, "mcF2_fromV_E/F");
+  myTree_ -> Branch("mcF2_fromV_Px", &mcF2_fromV_Px, "mcF2_fromV_Px/F");
+  myTree_ -> Branch("mcF2_fromV_Py", &mcF2_fromV_Py, "mcF2_fromV_Py/F");
+  myTree_ -> Branch("mcF2_fromV_Pz", &mcF2_fromV_Pz, "mcF2_fromV_Pz/F");
+  myTree_ -> Branch("mcF2_fromV_Eta", &mcF2_fromV_Eta, "mcF2_fromV_Eta/F");
+  myTree_ -> Branch("mcF2_fromV_Phi", &mcF2_fromV_Phi, "mcF2_fromV_Phi/F");
+  myTree_ -> Branch("mcF2_fromV_M", &mcF2_fromV_M, "mcF2_fromV_M/F");
+  myTree_ -> Branch("mcF2_fromV_Charge",&mcF2_fromV_Charge,"mcF2_fromV_Charge/I");
+  myTree_ -> Branch("mcF2_fromV_PdgId", &mcF2_fromV_PdgId, "mcF2_fromV_PdgId/I");
+ }
+ 
  // ele1 variables
  std::cout << ">>>>>> AnalyzerEle::AnalyzerEle::set ele1 branches <<<" << std::endl;
 
@@ -92,7 +127,6 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig){
  myTree_ -> Branch("ele1_scERaw", &ele1_scERaw, "ele1_scERaw/F");
  myTree_ -> Branch("ele1_scEtRaw", &ele1_scEtRaw, "ele1_scEtRaw/F");
  myTree_ -> Branch("ele1_scE", &ele1_scE, "ele1_scE/F");
- myTree_ -> Branch("ele1_Etrue", &ele1_Etrue, "ele1_Etrue/F");
  myTree_ -> Branch("ele1_scEt", &ele1_scEt, "ele1_scEt/F");
  myTree_ -> Branch("ele1_scERaw_PUcleaned", &ele1_scERaw_PUcleaned, "ele1_scERaw_PUcleaned/F");
  myTree_ -> Branch("ele1_es", &ele1_es, "ele1_es/F");
@@ -205,7 +239,6 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig){
  myTree_ -> Branch("ele2_scERaw", &ele2_scERaw, "ele2_scERaw/F");
  myTree_ -> Branch("ele2_scEtRaw", &ele2_scEtRaw, "ele2_scEtRaw/F");
  myTree_ -> Branch("ele2_scE", &ele2_scE, "ele2_scE/F");
- myTree_ -> Branch("ele2_Etrue", &ele2_Etrue, "ele2_Etrue/F");
  myTree_ -> Branch("ele2_scEt", &ele2_scEt, "ele2_scEt/F");
  myTree_ -> Branch("ele2_scERaw_PUcleaned", &ele2_scERaw_PUcleaned, "ele2_scERaw_PUcleaned/F");
  myTree_ -> Branch("ele2_es", &ele2_es, "ele2_es/F");
@@ -282,7 +315,6 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig){
  std::cout << ">>>>>> AnalyzerEle::AnalyzerEle::set dielectron branches <<<" << std::endl;
  myTree_ -> Branch("ele1ele2_m", &ele1ele2_m, "ele1ele2_m/F");
  myTree_ -> Branch("ele1ele2_scM", &ele1ele2_scM, "ele1ele2_scM/F");
- myTree_ -> Branch("ele1ele2_scM_regression",&ele1ele2_scM_regression,"ele1ele2_scM_regression/F");
 
  // fbrem variables
  if(saveFbrem_) {
@@ -372,7 +404,11 @@ void AnalyzerEle::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
  fillHLTInfo(iEvent,iSetup);
 
  //************* Pile Up Info
- if(isMC_) fillPileUpInfo(iEvent,iSetup); 
+ if(saveMCInfo_) fillPileUpInfo(iEvent,iSetup); 
+
+ //************* Generator info
+ if(saveMCInfo_) fillGeneratorInfo(iEvent,iSetup);
+
 
  //************* ELECTRONS
  edm::Handle<edm::View<pat::Electron> > electronHandle;
@@ -539,6 +575,128 @@ void AnalyzerEle::fillPileUpInfo (const edm::Event & iEvent, const edm::EventSet
  
 }
 
+//------------------------------------------------------------------------------------------------------------
+void AnalyzerEle::fillGeneratorInfo(const edm::Event & iEvent, const edm::EventSetup & iSetup){
+
+ edm::Handle<reco::GenParticleCollection> genParticles; // take the genParticle collection from the event
+ iEvent.getByLabel(MCtruthTag_, genParticles);
+ eventType_ = 0;
+
+ std::vector<const reco::Candidate*> mcCharged_p ;
+ std::vector<const reco::Candidate*> mcE_p ;
+ std::vector<const reco::Candidate*> mcMu_p ;
+ std::vector<const reco::Candidate*> mcTau_p ;
+ std::vector<const reco::Candidate*> mcV_p;
+
+ for(reco::GenParticleCollection::const_iterator p = genParticles -> begin(); p != genParticles -> end(); ++p){
+    // take the current element in the list and his mother
+    const reco::Candidate* pCurrent = &(*p);
+    const reco::Candidate* pMother = 0;
+    if(pCurrent -> mother()) pMother = pCurrent -> mother();
+    
+    int pdgId  = p -> pdgId();
+    int status = p -> status();
+    int charge = p -> charge();
+    int motherPdgId = 0;
+    if(pCurrent -> mother()) motherPdgId = pMother -> pdgId();            
+    // charged
+    if( (abs(charge) != 0) && (status == 1) ) mcCharged_p.push_back(pCurrent);
+    // electrons
+    if( (abs(pdgId) == 11) && (status == 1) ) mcE_p.push_back(pCurrent);    
+    // muons
+    if( (abs(pdgId) == 13) && (status == 1) ) mcMu_p.push_back(pCurrent);    
+    // taus and tauJ
+    if((abs(pdgId) == 16) && (status == 1) && (abs(motherPdgId) == 15)) mcTau_p.push_back(pMother);          
+    // W or Z
+    if(((pdgId == 23) && (status == 3)) || ( (abs(pdgId) == 24) && (status == 3)) ) mcV_p.push_back(pCurrent);
+          
+ } // loop over gen particles
+      
+ // check if it is signal
+ if(mcV_p.empty()){
+    if(verbosity_)
+      std::cerr << ">>> MCDumperZW::Analyze::Warning: no W/Z in the event" << std::endl;    
+      return;
+ }
+
+ if(mcV_p.size() > 1 ){
+    if(verbosity_)
+      std::cerr << ">>> MCDumperZW::Analyze::Warning: more than one W/Z in the event" << std::endl;    
+      return;
+ }
+
+ // find fermions from vector boson decay
+ std::vector<const reco::Candidate*> fFromVBuffer;
+
+ for(unsigned int i = 0; i < mcV_p.size() ; ++i){
+   for( unsigned int j = 0; j < mcV_p.at(i)->numberOfDaughters() ; ++j){
+     if(mcV_p.at(i)->daughter(j)-> pdgId() != mcV_p.at(i)->pdgId())
+       fFromVBuffer.push_back(mcV_p.at(i)->daughter(j)); 
+   }
+ }
+
+ if(fFromVBuffer.size() != 2){
+     if(verbosity_)
+       std::cerr << "MCDumperZW::Analyze::Warning: not a V -> ff decay --> more than on W or Z at matrx element" << std::endl;
+     return;
+ }
+  
+ const reco::Candidate* mcF1_fromV_p = fFromVBuffer.at(0);
+ const reco::Candidate* mcF2_fromV_p = fFromVBuffer.at(1);
+    
+ if(mcV_p.at(0) -> pdgId() == 23){
+    if(mcF2_fromV_p -> pt() > mcF1_fromV_p -> pt()){
+	const reco::Candidate* buffer = mcF1_fromV_p;
+	mcF1_fromV_p = mcF2_fromV_p;
+	mcF2_fromV_p = buffer;
+    }
+ }
+ else if(abs(mcV_p.at(0) -> pdgId()) == 24){
+     if( (abs(mcF1_fromV_p -> pdgId()))%2 == 0){
+	 const reco::Candidate* buffer = mcF1_fromV_p;
+	 mcF1_fromV_p = mcF2_fromV_p;
+	 mcF2_fromV_p = buffer;
+       }
+ }
+  
+ //fill info
+ mcV_E   = mcV_p.at(0)->p4().E();
+ mcV_Px  = mcV_p.at(0)->p4().Px();
+ mcV_Py  = mcV_p.at(0)->p4().Py();
+ mcV_Pz  = mcV_p.at(0)->p4().Pz();
+ mcV_Eta = mcV_p.at(0)->p4().Eta();
+ mcV_Phi = mcV_p.at(0)->p4().Phi();
+ mcV_M   = mcV_p.at(0)->p4().M();
+ mcV_Charge = mcV_p.at(0)->charge();
+ mcV_PdgId  = mcV_p.at(0)->pdgId();
+
+ // lepton1 pT > lepton2 pT
+ mcF1_fromV_E      = mcF1_fromV_p->p4().E();
+ mcF1_fromV_Px     = mcF1_fromV_p->p4().Px();
+ mcF1_fromV_Py     = mcF1_fromV_p->p4().Py();
+ mcF1_fromV_Pz     = mcF1_fromV_p->p4().Pz();
+ mcF1_fromV_Eta    = mcF1_fromV_p->p4().Eta();
+ mcF1_fromV_Phi    = mcF1_fromV_p->p4().Phi();
+ mcF1_fromV_M      = mcF1_fromV_p->p4().M();
+ mcF1_fromV_Charge = mcF1_fromV_p->charge();
+ mcF1_fromV_PdgId  = mcF1_fromV_p->pdgId();
+
+ mcF2_fromV_E      = mcF2_fromV_p->p4().E();
+ mcF2_fromV_Px     = mcF2_fromV_p->p4().Px();
+ mcF2_fromV_Py     = mcF2_fromV_p->p4().Py();
+ mcF2_fromV_Pz     = mcF2_fromV_p->p4().Pz();
+ mcF2_fromV_Eta    = mcF2_fromV_p->p4().Eta();
+ mcF2_fromV_Phi    = mcF2_fromV_p->p4().Phi();
+ mcF2_fromV_M      = mcF2_fromV_p->p4().M();
+ mcF2_fromV_Charge = mcF2_fromV_p->charge();
+ mcF2_fromV_PdgId  = mcF2_fromV_p->pdgId();
+            
+}
+  
+  
+  
+  
+
 // ------------------------------------------------------------------------------------------------------------
 void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup & iSetup, const int iEle, const std::string eleName) {
 
@@ -670,6 +828,15 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   ele1_isEBPhiGap = electron.isEBPhiGap();
   ele1_isEEDeeGap = electron.isEEDeeGap();
   ele1_isEERingGap = electron.isEERingGap();
+ 
+  ele1_idtype = -1 ;
+  if(electron.electronID("fiducial")) ele1_idtype = 0 ;
+  if(electron.electronID("loose"))    ele1_idtype = 1;
+  if(electron.electronID("medium"))   ele1_idtype = 2;
+  if(electron.electronID("tight"))    ele1_idtype = 3;
+  if(electron.electronID("WP90PU"))   ele1_idtype = 4;
+  if(electron.electronID("WP80PU"))   ele1_idtype = 5;
+  if(electron.electronID("WP70PU"))   ele1_idtype = 6;
 
   ele1_isTrackerDriven = !(electron.ecalDriven());
   ele1_classification  = electron.classification();
@@ -1226,9 +1393,7 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   }
  }
 
- if ( eleName == "ele2" )
- {
-  edm::InputTag EleBad = edm::InputTag("gsfElectrons");
+ if ( eleName == "ele2" ){
     
   ele2        = electron.p4();
   ele2_charge = electron.charge();
@@ -1243,6 +1408,15 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   ele2_isEBPhiGap  = electron.isEBPhiGap();
   ele2_isEEDeeGap  = electron.isEEDeeGap();
   ele2_isEERingGap = electron.isEERingGap();
+
+  ele2_idtype = -1 ;
+  if(electron.electronID("fiducial")) ele2_idtype = 0 ;
+  if(electron.electronID("loose"))    ele2_idtype = 1;
+  if(electron.electronID("medium"))   ele2_idtype = 2;
+  if(electron.electronID("tight"))    ele2_idtype = 3;
+  if(electron.electronID("WP90PU"))   ele2_idtype = 4;
+  if(electron.electronID("WP80PU"))   ele2_idtype = 5;
+  if(electron.electronID("WP70PU"))   ele2_idtype = 6;
     
   ele2_isTrackerDriven = !(electron.ecalDriven());
   ele2_classification  = electron.classification();
@@ -1848,7 +2022,7 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
 
 //----------------------------------------------------------------------------------------------
 
- void AnalyzerEle::fillDoubleEleInfo(const edm::Event & iEvent, const edm::EventSetup & iSetup){
+void AnalyzerEle::fillDoubleEleInfo(const edm::Event & iEvent, const edm::EventSetup & iSetup){
 
   ele1ele2_m = (ele1 + ele2).mass();
   
@@ -1856,18 +2030,14 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   ROOT::Math::PtEtaPhiEVector ele2_sc(ele2_scE*sin(2*atan(exp(-1.*ele2_eta))),ele2_eta,ele2_phi,ele2_scE);
   ele1ele2_scM = (ele1_sc + ele2_sc).mass();
 
-  ROOT::Math::PtEtaPhiEVector ele1_sc_regression(ele1_scE_regression*sin(2*atan(exp(-1.*ele1_eta))),ele1_eta,ele1_phi,ele1_scE_regression);
-  ROOT::Math::PtEtaPhiEVector ele2_sc_regression(ele2_scE_regression*sin(2*atan(exp(-1.*ele2_eta))),ele2_eta,ele2_phi,ele2_scE_regression);
-  ele1ele2_scM_regression = (ele1_sc_regression + ele2_sc_regression).mass();
-
  }
 
 
- double AnalyzerEle::deltaPhi(const double& phi1, const double& phi2){
+double AnalyzerEle::deltaPhi(const double& phi1, const double& phi2){
   double deltaphi = fabs(phi1 - phi2);
   if (deltaphi > 3.141592654) deltaphi = 6.283185308 - deltaphi;
   return deltaphi;
- }
+}
 
 
 // -----------------------------------------
@@ -1876,8 +2046,6 @@ void AnalyzerEle::initialize(){
  isW_ = -1;
  isZ_ = -1;
  nele_ = 0;
-
- nPU_ = 0 ; 
 
  // electron variables
  ele1_charge =-99.;
@@ -1888,7 +2056,7 @@ void AnalyzerEle::initialize(){
  ele1_isTrackerDriven=-99;
  ele1_classification=-99;
 
- ele1_idtype = 0 ;     
+ ele1_idtype = -1 ;     
  ele1_sigmaIetaIeta =-99.;
  ele1_DphiIn =-99.;
  ele1_DetaIn =-99.;
@@ -1907,7 +2075,6 @@ void AnalyzerEle::initialize(){
  ele1_effAreaForIso=-99.;
 
  ele1_scERaw =-99.;
- ele1_Etrue =-99.;
  ele1_scEtRaw = -99.;
  ele1_scEt = -99.;
  ele1_scLocalEta =-99.;
@@ -2030,7 +2197,7 @@ void AnalyzerEle::initialize(){
  ele2_isTrackerDriven=-99;
  ele2_classification = -99;
   
- ele2_idtype = 0 ;     
+ ele2_idtype = -1 ;     
  ele2_sigmaIetaIeta =-99.;
  ele2_DphiIn =-99.;
  ele2_DetaIn =-99.;
@@ -2049,7 +2216,6 @@ void AnalyzerEle::initialize(){
  ele2_effAreaForIso=-99.;
 
  ele2_scERaw =-99.;
- ele2_Etrue =-99.;
  ele2_scEtRaw = -99.;
  ele2_scEt = -99.;
  ele2_scLocalEta =-99.;
@@ -2163,6 +2329,39 @@ void AnalyzerEle::initialize(){
  ele2_eRegrInput_nPV= -99.;
  ele2_eRegrInput_SCsize= -99.;
 
+ if(saveMCInfo_){
+   nPU_ = 0 ;
+   mcV_E = -9999.;
+   mcV_Px = -9999.;
+   mcV_Py = -9999.;
+   mcV_Pz = -9999.;
+   mcV_Eta = -9999.;
+   mcV_Phi = -9999.;
+   mcV_M   = -9999.;
+   mcV_Charge = -99;
+   mcV_PdgId = -99;
+
+   mcF1_fromV_E   = -9999.;
+   mcF1_fromV_Px  = -9999.;
+   mcF1_fromV_Py  = -9999.;
+   mcF1_fromV_Pz  = -9999.;
+   mcF1_fromV_Eta = -9999.;
+   mcF1_fromV_Phi = -9999.;
+   mcF1_fromV_M   = -9999.;
+   mcF1_fromV_Charge = -99;
+   mcF1_fromV_PdgId  = -99;
+
+   mcF2_fromV_E = -9999.;
+   mcF2_fromV_Px = -9999.;
+   mcF2_fromV_Py = -9999.;
+   mcF2_fromV_Pz = -9999.;
+   mcF2_fromV_Eta = -9999.;
+   mcF2_fromV_Phi = -9999.;
+   mcF2_fromV_M   = -9999.;
+   mcF2_fromV_Charge = -99;
+   mcF2_fromV_PdgId = -99;
+ }
+
  if(saveFbrem_){
   ele1_inner_p = -9999.;
   ele1_inner_x = -9999.;
@@ -2207,7 +2406,6 @@ void AnalyzerEle::initialize(){
   // di-electron variables
  ele1ele2_m=-99.;
  ele1ele2_scM=-99.;
- ele1ele2_scM_regression=-99.;
 
 
 }
