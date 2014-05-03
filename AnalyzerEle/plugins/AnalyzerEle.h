@@ -147,37 +147,29 @@ class AnalyzerEle : public edm::EDAnalyzer {
 
  public:
 
-   AnalyzerEle(const edm::ParameterSet&);
+ 
+  // --- constructor and deconstructor
+  AnalyzerEle(const edm::ParameterSet&);
   ~AnalyzerEle();
   
+  // analyze method
   virtual void beginJob();
   virtual void analyze(const edm::Event&, const edm::EventSetup&);
   virtual void endJob();
 
+  // class method
   void initialize() ;
-
   void fillPVInfo     (const edm::Event & iEvent, const edm::EventSetup & iSetup);
-
-  void fillRhoInfo    (const edm::Event & iEvent, const edm::EventSetup & iSetup);
- 
+  void fillRhoInfo    (const edm::Event & iEvent, const edm::EventSetup & iSetup); 
   void fillHLTInfo    (const edm::Event & iEvent, const edm::EventSetup & iSetup);
-
   void fillPileUpInfo (const edm::Event & iEvent, const edm::EventSetup & iSetup);
-
   bool myWselection   (const edm::Event & iEvent, const edm::EventSetup & iSetup);
-
   bool myZselection   (const edm::Event & iEvent, const edm::EventSetup & iSetup);
-
   void fillEleInfo    (const edm::Event & iEvent, const edm::EventSetup & iSetup, const int iEle, const std::string eleName) ;
-
-
   void fillMetInfo    (const edm::Event & iEvent, const edm::EventSetup & iSetup) ;
-
+  void fillGeneratorInfo ( const edm::Event & iEvent, const edm::EventSetup & iSetup);
   void fillDoubleEleInfo(const edm::Event & iEvent, const edm::EventSetup & iSetup) ;
-
   void fillMatrixRecHit(reco::SuperClusterRef scRef, int type, const EcalRecHitCollection* theRecHitCollection, const CaloTopology* topology);
-
-
   double deltaPhi(const double& phi1, const double& phi2);
 
 
@@ -186,7 +178,7 @@ class AnalyzerEle : public edm::EDAnalyzer {
   EcalClusterFunctionBaseClass* EcalClusterCrackCorrection;
   EcalClusterFunctionBaseClass* EcalClusterLocalContCorrection;
  
-  ///---- input tag ----
+  ///---- input tags ----
   edm::InputTag PVTag_;
   edm::InputTag rhoTag_;
   edm::InputTag recHitCollection_EB_;
@@ -199,38 +191,36 @@ class AnalyzerEle : public edm::EDAnalyzer {
   edm::InputTag conversionsInputTag_;
   edm::InputTag EleTag_;
   edm::InputTag PFMetTag_;
+  edm::InputTag MCtruthTag_ ;
 
   edm::InputTag triggerResultsCollection_;
   std::vector<std::string> hltPaths_ ;
          
-
+  // some other useful info
   int eventType_;
   std::string dataRun_;
-  bool verbosity_; //---- true = loquacious false = silence
-  bool applyCorrections_; //---- true = correct the recHit and SC energy IN the analyzer
+  bool verbosity_; 
+  bool applyCorrections_;
   bool doWZSelection_;
   bool dataFlag_;
   bool saveRecHitMatrix_;
   bool saveFbrem_;
-  bool isMC_ ;
+  bool saveMCInfo_ ;
 
   std::map<float,int> eleIts_;
   math::XYZPoint PVPoint_;
 
+  // event variables --> branch in the output tree
   TTree* myTree_;
 
-  // event variables --> branch in the output tree
   long int bxId_;
   long int eventId_;
   int lumiId_;
   int runId_;
   int timeStampHigh_;
-
   int isW_;
   int isZ_;
-
   int eventNaiveId_;
-
   int nele_;
 
   // PV variables
@@ -238,30 +228,28 @@ class AnalyzerEle : public edm::EDAnalyzer {
   float PV_z_;
   float PV_d0_;
 
-  float nPU_ ; 
-
   // PU variables
   float rho_;
+  float nPU_ ; 
 
-  // HLT info
-  std::vector< std::string > HLTNames_; ///< List of HLT names
-  std::vector<Bool_t> HLTBits_; ///< 0=fail, 1=fire
+  // HLT info -> not stored in the output but applied on the fly
+  std::vector< std::string > HLTNames_; 
+  std::vector<Bool_t> HLTBits_; 
   std::map<std::string,bool> HLTResults_ ;
 
   // ele1 variables
+
   ROOT::Math::XYZTVector ele1;
   float ele1_charge;
   float ele1_p;
   float ele1_pt;
   float ele1_eta;
   float ele1_phi;
-  int ele1_isTrackerDriven;
-  int ele1_classification;
+  int   ele1_isTrackerDriven;
+  int   ele1_classification;
 
-  int ele1_idtype ; 
   ///< bit mask for eleID: 1=fiducial, 2=loose, 6=medium, 14=tight, 16=WP90PU, 48=WP80PU. Selection from https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaCutBasedIdentification#Electron_ID_Working_Points
-
-
+  int   ele1_idtype ; 
   float ele1_sigmaIetaIeta;
   float ele1_DphiIn;
   float ele1_DetaIn;
@@ -277,7 +265,6 @@ class AnalyzerEle : public edm::EDAnalyzer {
   float ele1_scERaw;
   float ele1_scEtRaw;
   float ele1_scEt;
-  float ele1_Etrue ;
   float ele1_scLocalEta;
   float ele1_scLocalPhi;
   float ele1_scEtaWidth;
@@ -288,10 +275,6 @@ class AnalyzerEle : public edm::EDAnalyzer {
   float ele1_scEta;
   float ele1_scPhi;
   float ele1_scLaserCorr;
-  float ele1_scE_regression;
-  float ele1_scEerr_regression;
-  float ele1_scE_regression_PhotonTuned ;
-  float ele1_scEerr_regression_PhotonTuned ;
 
   float ele1_scERaw_PUcleaned;
   float ele1_scEtaWidth_PUcleaned;
@@ -316,7 +299,7 @@ class AnalyzerEle : public edm::EDAnalyzer {
   float ele1_e5x5;
   float ele1_e3x3;
   float ele1_scNxtal;
-  int ele1_bcN;
+  int   ele1_bcN;
   float ele1_5x5LaserCorr;
   float ele1_3x3LaserCorr;
   float ele1_es;
@@ -325,30 +308,30 @@ class AnalyzerEle : public edm::EDAnalyzer {
   float ele1_seedLaserAlpha;
   float ele1_seedLaserCorr;
   float ele1_seedICConstant;
-  int ele1_seedIeta;
-  int ele1_seedIphi;
-  int ele1_seedIx;
-  int ele1_seedIy;
-  int ele1_seedZside;
+  int   ele1_seedIeta;
+  int   ele1_seedIphi;
+  int   ele1_seedIx;
+  int   ele1_seedIy;
+  int   ele1_seedZside;
   float ele1_EOverP;
 
   std::vector<float> ele1_recHit_E;
-  std::vector<int> ele1_recHit_flag;
-  std::vector<int> ele1_recHit_hashedIndex;
-  std::vector<int> ele1_recHit_ietaORix;
-  std::vector<int> ele1_recHit_iphiORiy;
-  std::vector<int> ele1_recHit_zside;
+  std::vector<int>   ele1_recHit_flag;
+  std::vector<int>   ele1_recHit_hashedIndex;
+  std::vector<int>   ele1_recHit_ietaORix;
+  std::vector<int>   ele1_recHit_iphiORiy;
+  std::vector<int>   ele1_recHit_zside;
   std::vector<float> ele1_recHit_laserCorrection;
   std::vector<float> ele1_recHit_Alpha;
   std::vector<float> ele1_recHit_ICConstant;
   int ele1_nRecHits;
 
   std::vector<float> ele1_recHitMatrix_E;
-  std::vector<int> ele1_recHitMatrix_flag;
-  std::vector<int> ele1_recHitMatrix_hashedIndex;
-  std::vector<int> ele1_recHitMatrix_ietaORix;
-  std::vector<int> ele1_recHitMatrix_iphiORiy;
-  std::vector<int> ele1_recHitMatrix_zside;
+  std::vector<int>   ele1_recHitMatrix_flag;
+  std::vector<int>   ele1_recHitMatrix_hashedIndex;
+  std::vector<int>   ele1_recHitMatrix_ietaORix;
+  std::vector<int>   ele1_recHitMatrix_iphiORiy;
+  std::vector<int>   ele1_recHitMatrix_zside;
   std::vector<float> ele1_recHitMatrix_laserCorrection;
   std::vector<float> ele1_recHitMatrix_ICConstant;
   std::vector<float> ele1_recHitMatrix_samples;
@@ -400,7 +383,6 @@ class AnalyzerEle : public edm::EDAnalyzer {
   float ele1_eRegrInput_seedbC_etacry;
   float ele1_eRegrInput_seedbC_phicry;
 
-
   float ele1_eRegrInput_ESoSC;
   float ele1_eRegrInput_nPV;
   float ele1_eRegrInput_SCsize;
@@ -413,7 +395,7 @@ class AnalyzerEle : public edm::EDAnalyzer {
   float ele1_outer_x;
   float ele1_outer_y;
   float ele1_outer_z;
-  int ele1_tangent_n;
+  int   ele1_tangent_n;
   std::vector<float> ele1_tangent_p;
   std::vector<float> ele1_tangent_x;
   std::vector<float> ele1_tangent_y;
@@ -421,21 +403,18 @@ class AnalyzerEle : public edm::EDAnalyzer {
   std::vector<float> ele1_tangent_dP;
   std::vector<float> ele1_tangent_dPerr;
 
-
-      // ele2 variables
+  // ele2 variables
   ROOT::Math::XYZTVector ele2;
   float ele2_charge;
   float ele2_p;
   float ele2_pt;
   float ele2_eta;
   float ele2_phi;
-  int ele2_isTrackerDriven;
-  int ele2_classification;
+  int   ele2_isTrackerDriven;
+  int   ele2_classification;
 
-  int ele2_idtype ;
   ///< bit mask for eleID: 1=fiducial, 2=loose, 6=medium, 14=tight, 16=WP90PU, 48=WP80PU. Selection from https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaCutBasedIdentification#Electron_ID_Working_Points
-
-
+  int   ele2_idtype ;
   float ele2_sigmaIetaIeta;
   float ele2_DphiIn;
   float ele2_DetaIn;
@@ -449,8 +428,6 @@ class AnalyzerEle : public edm::EDAnalyzer {
   float ele2_hadIso;
 
   float ele2_scERaw;
-  float ele2_Etrue ;
-
   float ele2_scEtRaw;
   float ele2_scEt;
   float ele2_scLocalEta;
@@ -463,10 +440,6 @@ class AnalyzerEle : public edm::EDAnalyzer {
   float ele2_scEta;
   float ele2_scPhi;
   float ele2_scLaserCorr;
-  float ele2_scE_regression;
-  float ele2_scEerr_regression;
-  float ele2_scE_regression_PhotonTuned ;
-  float ele2_scEerr_regression_PhotonTuned ;
   float ele2_scERaw_PUcleaned;
   float ele2_scEtaWidth_PUcleaned;
   float ele2_scPhiWidth_PUcleaned;
@@ -489,7 +462,7 @@ class AnalyzerEle : public edm::EDAnalyzer {
   float ele2_e5x5;
   float ele2_e3x3;
   float ele2_scNxtal;
-  int ele2_bcN;
+  int   ele2_bcN;
   float ele2_5x5LaserCorr;
   float ele2_3x3LaserCorr;
   float ele2_es;
@@ -498,30 +471,30 @@ class AnalyzerEle : public edm::EDAnalyzer {
   float ele2_seedLaserAlpha;
   float ele2_seedLaserCorr;
   float ele2_seedICConstant;
-  int ele2_seedIeta;
-  int ele2_seedIphi;
-  int ele2_seedIx;
-  int ele2_seedIy;
-  int ele2_seedZside;
+  int   ele2_seedIeta;
+  int   ele2_seedIphi;
+  int   ele2_seedIx;
+  int   ele2_seedIy;
+  int   ele2_seedZside;
   float ele2_EOverP;
 
   std::vector<float> ele2_recHit_E;
-  std::vector<int> ele2_recHit_flag;
-  std::vector<int> ele2_recHit_hashedIndex;
-  std::vector<int> ele2_recHit_ietaORix;
-  std::vector<int> ele2_recHit_iphiORiy;
-  std::vector<int> ele2_recHit_zside;
+  std::vector<int>   ele2_recHit_flag;
+  std::vector<int>   ele2_recHit_hashedIndex;
+  std::vector<int>   ele2_recHit_ietaORix;
+  std::vector<int>   ele2_recHit_iphiORiy;
+  std::vector<int>   ele2_recHit_zside;
   std::vector<float> ele2_recHit_laserCorrection;
   std::vector<float> ele2_recHit_Alpha;
   std::vector<float> ele2_recHit_ICConstant;
   int ele2_nRecHits;
 
   std::vector<float> ele2_recHitMatrix_E;
-  std::vector<int> ele2_recHitMatrix_flag;
-  std::vector<int> ele2_recHitMatrix_hashedIndex;
-  std::vector<int> ele2_recHitMatrix_ietaORix;
-  std::vector<int> ele2_recHitMatrix_iphiORiy;
-  std::vector<int> ele2_recHitMatrix_zside;
+  std::vector<int>   ele2_recHitMatrix_flag;
+  std::vector<int>   ele2_recHitMatrix_hashedIndex;
+  std::vector<int>   ele2_recHitMatrix_ietaORix;
+  std::vector<int>   ele2_recHitMatrix_iphiORiy;
+  std::vector<int>   ele2_recHitMatrix_zside;
   std::vector<float> ele2_recHitMatrix_laserCorrection;
   std::vector<float> ele2_recHitMatrix_ICConstant;
   std::vector<float> ele2_recHitMatrix_samples;
@@ -534,8 +507,7 @@ class AnalyzerEle : public edm::EDAnalyzer {
   int ele2_isEEDeeGap;
   int ele2_isEERingGap;
 
-
-      // Regression V3 variables
+  // Regression V3 variables
   float ele2_eRegrInput_rawE;
   float ele2_eRegrInput_r9;
   float ele2_eRegrInput_eta;
@@ -588,7 +560,7 @@ class AnalyzerEle : public edm::EDAnalyzer {
   float ele2_outer_x;
   float ele2_outer_y;
   float ele2_outer_z;
-  int ele2_tangent_n;
+  int   ele2_tangent_n;
   std::vector<float> ele2_tangent_p;
   std::vector<float> ele2_tangent_x;
   std::vector<float> ele2_tangent_y;
@@ -596,7 +568,7 @@ class AnalyzerEle : public edm::EDAnalyzer {
   std::vector<float> ele2_tangent_dP;
   std::vector<float> ele2_tangent_dPerr;
 
-      // met variables
+  // met variables
   ROOT::Math::XYZTVector met;
   ROOT::Math::XYZTVector* p_met;
   float met_et;
@@ -605,11 +577,42 @@ class AnalyzerEle : public edm::EDAnalyzer {
   float ele1Met_mt;
   float ele1Met_Dphi;
 
-      // di-electron variables
+  // di-electron variables
   float ele1ele2_m;
   float ele1ele2_scM;
-  float ele1ele2_scM_regression;
   float ele1ele2_scMZS;
+
+  // MC Info
+  float mcV_E;
+  float mcV_Px;
+  float mcV_Py;
+  float mcV_Pz;
+  float mcV_Eta;
+  float mcV_Phi;
+  float mcV_M;
+  int   mcV_Charge;
+  int   mcV_PdgId;
+
+  float mcF1_fromV_E;
+  float mcF1_fromV_Px;
+  float mcF1_fromV_Py;
+  float mcF1_fromV_Pz;
+  float mcF1_fromV_Eta;
+  float mcF1_fromV_Phi;
+  float mcF1_fromV_M;
+  int   mcF1_fromV_Charge;
+  int   mcF1_fromV_PdgId;
+
+  float mcF2_fromV_E;
+  float mcF2_fromV_Px;
+  float mcF2_fromV_Py;
+  float mcF2_fromV_Pz;
+  float mcF2_fromV_Eta;
+  float mcF2_fromV_Phi;
+  float mcF2_fromV_M;
+  int   mcF2_fromV_Charge;
+  int   mcF2_fromV_PdgId;
+
   
 };
 
