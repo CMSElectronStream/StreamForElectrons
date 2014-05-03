@@ -197,7 +197,6 @@ class AnalyzerEle : public edm::EDAnalyzer {
   std::vector<std::string> hltPaths_ ;
          
   // some other useful info
-  int eventType_;
   std::string dataRun_;
   bool verbosity_; 
   bool applyCorrections_;
