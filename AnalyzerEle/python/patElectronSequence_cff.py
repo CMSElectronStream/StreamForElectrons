@@ -5,27 +5,26 @@ from StreamForElectrons.AnalyzerEle.electronSelection_cfi import *
 
 from PhysicsTools.PatAlgos.producersLayer1.electronProducer_cfi import *
 
-patElectrons.electronSource = cms.InputTag("gsfElectrons")
+patElectrons.electronSource  = cms.InputTag("gsfElectrons")
 patElectrons.useParticleFlow = cms.bool(False)
-patElectrons.addElectronID = cms.bool(True)
-patElectrons.addGenMatch = cms.bool(True)
-patElectrons.pvSrc = cms.InputTag("offlinePrimaryVertices")
+patElectrons.addElectronID   = cms.bool(True)
+patElectrons.addGenMatch     = cms.bool(True)
+patElectrons.pvSrc           = cms.InputTag("offlinePrimaryVertices")
 patElectrons.reducedBarrelRecHitCollection = cms.InputTag("reducedEcalRecHitsEB")
 patElectrons.reducedEndcapRecHitCollection = cms.InputTag("reducedEcalRecHitsEE")
 patElectrons.embedPFCandidate = cms.bool(True) ## embed in AOD externally stored particle flow candidate
 patElectrons.embedTrack = cms.bool(True) ## embed in AOD externally stored track (note: gsf electrons don't have a track), make it point to reducedtrack collection
-patElectrons.pvSrc = cms.InputTag("hltFastPVPixelVertices")
 
 patElectrons.electronIDSources = cms.PSet(
 # configure many IDs as InputTag <someName> = <someTag> you
 # can comment out those you don't want to save some disk space
   fiducial = cms.InputTag("eleSelectionProducers", "fiducial"),
-  WP70PU = cms.InputTag("eleSelectionProducers", "WP70PU"),
-  WP80PU = cms.InputTag("eleSelectionProducers", "WP80PU"),
-  WP90PU = cms.InputTag("eleSelectionProducers", "WP90PU"),
-  loose = cms.InputTag("eleSelectionProducers", "loose"),
-  medium = cms.InputTag("eleSelectionProducers", "medium"),
-  tight = cms.InputTag("eleSelectionProducers", "tight")
+  WP70PU   = cms.InputTag("eleSelectionProducers", "WP70PU"),
+  WP80PU   = cms.InputTag("eleSelectionProducers", "WP80PU"),
+  WP90PU   = cms.InputTag("eleSelectionProducers", "WP90PU"),
+  loose    = cms.InputTag("eleSelectionProducers", "loose"),
+  medium   = cms.InputTag("eleSelectionProducers", "medium"),
+  tight    = cms.InputTag("eleSelectionProducers", "tight")
 )
 
 

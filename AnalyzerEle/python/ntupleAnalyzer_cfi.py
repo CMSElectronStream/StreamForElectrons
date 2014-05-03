@@ -1,7 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 
 Analyzer = cms.EDAnalyzer('AnalyzerEle',
-               EleTag              = cms.InputTag("gsfElectrons"),
+               EleTag              = cms.InputTag("patElectrons"),
                PVTag               = cms.InputTag("hltFastPVPixelVertices"),
                recHitCollection_EB = cms.InputTag("reducedEcalRecHitsEB"),
                recHitCollection_EE = cms.InputTag("reducedEcalRecHitsEE"),
@@ -26,5 +26,6 @@ Analyzer = cms.EDAnalyzer('AnalyzerEle',
                applyCorrections    = cms.untracked.bool(False),
                dataFlag            = cms.untracked.bool(True),
                saveRecHitMatrix    = cms.untracked.bool(False),
-               saveFbrem           = cms.untracked.bool(False) # set False if running on AOD
+               saveFbrem           = cms.untracked.bool(False), # set False if running on AOD
+               saveMCInfo          = cms.untracked.bool(False)           
 )
