@@ -42,7 +42,6 @@ EleSelectionProducers::~EleSelectionProducers(){}
 void EleSelectionProducers::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
   using namespace edm;
-  
   std::vector<SelectionValue_t>  fiducial_vec;
   std::vector<SelectionValue_t>  WP70_PU_vec;
   std::vector<SelectionValue_t>  WP80_PU_vec;
@@ -71,16 +70,18 @@ void EleSelectionProducers::produce(edm::Event& iEvent, const edm::EventSetup& i
 
   //------------------------------ ISO DEPOSITS
   iEvent.getByLabel(chIsoValsTAG, chIsoValsHandle);
-  if(!chIsoValsHandle.isValid()){
+  iEvent.getByLabel(emIsoValsTAG, emIsoValsHandle);  
+  iEvent.getByLabel(nhIsoValsTAG, nhIsoValsHandle);
+  if(!chIsoValsHandle.isValid() or !emIsoValsHandle.isValid() or !nhIsoValsHandle.isValid()){
     chIsoValsTAG=edm::InputTag(chIsoValsTAG.label().substr(0,chIsoValsTAG.label().find("PFIso",chIsoValsTAG.label().size()-6))+"Gsf", chIsoValsTAG.instance(), chIsoValsTAG.process());
     emIsoValsTAG=edm::InputTag(emIsoValsTAG.label().substr(0,emIsoValsTAG.label().find("PFIso",emIsoValsTAG.label().size()-6))+"Gsf", emIsoValsTAG.instance(), emIsoValsTAG.process());
     nhIsoValsTAG=edm::InputTag(nhIsoValsTAG.label().substr(0,nhIsoValsTAG.label().find("PFIso",nhIsoValsTAG.label().size()-6))+"Gsf", nhIsoValsTAG.instance(), nhIsoValsTAG.process());
 
-  iEvent.getByLabel(chIsoValsTAG, chIsoValsHandle);
+    iEvent.getByLabel(chIsoValsTAG, chIsoValsHandle);
+    iEvent.getByLabel(emIsoValsTAG, emIsoValsHandle);  
+    iEvent.getByLabel(nhIsoValsTAG, nhIsoValsHandle);
 
   }
-  iEvent.getByLabel(emIsoValsTAG, emIsoValsHandle);  
-  iEvent.getByLabel(nhIsoValsTAG, nhIsoValsHandle);
   
    
 #ifdef DEBUG
@@ -89,7 +90,6 @@ void EleSelectionProducers::produce(edm::Event& iEvent, const edm::EventSetup& i
   for(reco::GsfElectronCollection::const_iterator ele_itr = (electronsHandle)->begin(); 
       ele_itr != (electronsHandle)->end(); ele_itr++){
     const reco::GsfElectronRef eleRef(electronsHandle, ele_itr-electronsHandle->begin());
-
     // the new tree has one event per each electron
     pat::strbitset fiducial_ret;
     pat::strbitset WP70_PU_ret;
@@ -99,7 +99,7 @@ void EleSelectionProducers::produce(edm::Event& iEvent, const edm::EventSetup& i
     pat::strbitset medium_ret;
     pat::strbitset tight_ret;
 
-
+    std::cout<<" fiducial selectior "<<std::endl;
     fiducial_selector(eleRef, fiducial_ret);
     fiducial_vec.push_back(fiducial_selector.result());
 
@@ -136,8 +136,6 @@ void EleSelectionProducers::produce(edm::Event& iEvent, const edm::EventSetup& i
       }
     }
     
-    //     WP80_PU_vec.push_back((SelectionValue_t)WP80_PU_selector.bitMask());
-    //     WP90_PU_vec.push_back((SelectionValue_t)WP90_PU_selector.bitMask());
 #ifdef DEBUG
     std::cout << "[DEBUG] WP80 ret=" << WP80_PU_selector.bitMask() << std::endl;
     std::cout << "[DEBUG] WP80 ret= (float)" << (SelectionValue_t) WP80_PU_selector.bitMask() << std::endl;
