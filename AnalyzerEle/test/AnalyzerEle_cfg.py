@@ -6,8 +6,12 @@ import sys
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('python');
 
-options.register ('hltPath','HLT_GsfEle25_WP80_PFMET_MT50_v9',VarParsing.multiplicity.singleton,VarParsing.varType.string,'in order to match trigger electrons with pat ones');
-options.register ('isAlcaStreamOutput',0,VarParsing.multiplicity.singleton,VarParsing.varType.int,'to set properly the input collection for the analyzer');
+options.register ('hltPath','HLT_GsfEle25_WP80_PFMET_MT50_v9',VarParsing.multiplicity.singleton,VarParsing.varType.string,
+                  'in order to match trigger electrons with pat ones');
+options.register ('isAlcaStreamOutput',0,VarParsing.multiplicity.singleton,VarParsing.varType.int,
+                  'to set properly the input collection for the analyzer');
+options.register ('skipAnalyzerAndDumpOutput', False, VarParsing.multiplicity.singleton, VarParsing.varType.int,
+                  "true if you don't want to run the analyzer but dump a output file with all the collections keep*")
 
 options.parseArguments();
 print options;
@@ -18,24 +22,50 @@ process = cms.Process("SimpleAnalyzer");
 
 ####### define modules
 process.load("FWCore.MessageService.MessageLogger_cfi");
+process.load('Configuration.StandardSequences.Services_cff')
+process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
+process.load('Configuration.StandardSequences.GeometryDB_cff')
+process.load('Configuration.EventContent.EventContent_cff')
+process.load("Configuration.StandardSequences.MagneticField_cff")
+process.load('Configuration.StandardSequences.EndOfProcess_cff')
+process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.source = cms.Source ("PoolSource",fileNames = cms.untracked.vstring (options.inputFiles));
 
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(options.maxEvents));
 
-####### define generic configuration
-process.load('Configuration.StandardSequences.GeometryDB_cff')  # fix missing ESSource e.g. "TrackerDigiGeometryRecord"
-process.load("Configuration.StandardSequences.MagneticField_cff")  # missing "IdealMagneticFieldRecord"
-process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 
 process.GlobalTag.globaltag = 'GR_R_62_V1::All';
 
 ####### define output file
-process.TFileService = cms.Service("TFileService", 
-      fileName = cms.string(options.outputFile),
-      closeFileFast = cms.untracked.bool(True));
+if not options.skipAnalyzerAndDumpOutput :
+ process.TFileService = cms.Service("TFileService", 
+                       fileName = cms.string(options.outputFile),
+                       closeFileFast = cms.untracked.bool(True));
+else:
+ process.output = cms.OutputModule("PoolOutputModule",
+                                    fileName = cms.untracked.string(options.outputFile),
+                                    outputCommands = cms.untracked.vstring('keep *'),
+                                    dropMetaData   = cms.untracked.string('ALL'))
 
-####### call the electron PAT sequence + embending of electron ID informations:
+####### sequence for doing the pfIsolation --> fix for 6_2_2
+process.load('CommonTools.ParticleFlow.pfParticleSelection_cff')
+process.pfPileUpIso.PFCandidates = cms.InputTag("particleFlow")
+process.pfNoPileUpIso.bottomCollection = cms.InputTag("particleFlowPtrs")
+process.pfParticleSelectionSequence.remove(process.pfNoPileUpSequence)
+
+process.load('CommonTools.ParticleFlow.Isolation.pfElectronIsolation_cff')
+process.elPFIsoDepositCharged.src    = cms.InputTag("gsfElectrons")
+process.elPFIsoDepositChargedAll.src = cms.InputTag("gsfElectrons")
+process.elPFIsoDepositGamma.src      = cms.InputTag("gsfElectrons")
+process.elPFIsoDepositNeutral.src    = cms.InputTag("gsfElectrons")
+process.elPFIsoDepositPU.src         = cms.InputTag("gsfElectrons")   
+
+process.IsolationSequence = cms.Sequence(process.pfParticleSelectionSequence*
+                                         process.pfElectronIsolationSequence)
+
+
+####### the electron PAT sequence + embending of electron ID informations:
 process.load('StreamForElectrons.AnalyzerEle.patElectronSequence_cff')
 
 if options.isAlcaStreamOutput != 0 :
@@ -44,7 +74,7 @@ else:
     process.eleSelectionProducers.rhoFastJet =  cms.InputTag("kt6PFJets","rho");    
     process.eleSelectionProducers.vertexCollection = cms.InputTag("offlinePrimaryVerticesWithBS");
     
-process.PatElectronTriggerMatchHLTEle.matchedCuts = cms.string('path('+options.hltPath+')');
+process.PatElectronTriggerMatchHLTEle.matchedCuts = cms.string('path("'+options.hltPath+'")');
 ####### call the final analyzer
 process.load('StreamForElectrons.AnalyzerEle.ntupleAnalyzer_cfi')
 if options.isAlcaStreamOutput != 0 :
@@ -62,11 +92,20 @@ else:
  process.Analyzer.doWZSelection = cms.bool(False);
  process.Analyzer.saveMCInfo    = cms.bool(False);
 
-### final path 
-process.path = cms.Path(process.patElectronSequence*
-                        process.Analyzer)
+### final path
+if not options.skipAnalyzerAndDumpOutput: 
+ process.path = cms.Path(process.IsolationSequence*
+                         process.patElectronSequence*
+                         process.Analyzer)
+ 
+else:
+ process.path = cms.Path(process.IsolationSequence*
+                         process.patElectronSequence)
 
-process.schedule = cms.Schedule(process.path)
+ process.EndPath = cms.EndPath(process.output)
+
+ process.schedule = cms.Schedule(process.path,process.EndPath)
+     
 
 ############################
 ## Dump the output Python ##
