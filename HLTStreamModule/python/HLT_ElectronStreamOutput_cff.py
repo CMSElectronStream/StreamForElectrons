@@ -82,7 +82,7 @@ def ElectronStreamOutput(process,
 
   ## define what to store in the output
   process.hltOutputStreamElectron.outputCommands = ['drop * ',
-                                            'keep *_edmTriggerResults_*_*',
+                                            'keep edmTriggerResults_*_*_*',
                                             'keep *_hltL1GtObjectMap_*_*',
                                             'keep triggerTriggerEvent_*_*_*',
    	   				    'keep *_HLTselectedElectronFEDList_*StremElectronRawFedData*_*',
