@@ -192,17 +192,17 @@ process.load("HLTrigger.Configuration.HLT_Ele25_WP90_PFMET_MT50_cff")
 process.load("HLTrigger.Configuration.HLT_LastSequences_cff")
  
 process.HLT_LogMonitor_v4 = cms.Path( process.hltGtDigis + 
-                                  process.hltLogMonitorFilter + 
-                      process.hltPreLogMonitor + 
-                              process.HLTEndSequence )
+                                      process.hltLogMonitorFilter + 
+                                      process.hltPreLogMonitor + 
+                                      process.HLTEndSequence )
 
 
 ### final HLT trigger path
 process.HLTriggerFinalPath = cms.Path( process.hltGtDigis + 
-                                   process.hltScalersRawToDigi + 
-                       process.hltFEDSelector + 
-                               process.hltTriggerSummaryAOD + 
-                       process.hltTriggerSummaryRAW )
+                                       process.hltScalersRawToDigi + 
+                                       process.hltFEDSelector + 
+                                       process.hltTriggerSummaryAOD + 
+                                       process.hltTriggerSummaryRAW )
 
 ### endpath
 
