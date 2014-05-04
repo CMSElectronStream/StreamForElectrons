@@ -6,7 +6,7 @@ eleSelectionProducers = cms.EDProducer('EleSelectionProducers',
                                        vertexCollection = cms.InputTag('hltFastPVPixelVertices'),
                                        conversionCollection = cms.InputTag('allConversions'),
                                        BeamSpotCollection = cms.InputTag('offlineBeamSpot'),
-                                       chIsoVals = cms.InputTag('elPFIsoValueCharged03'),
-                                       emIsoVals = cms.InputTag('elPFIsoValueGamma03'),
-                                       nhIsoVals = cms.InputTag('elPFIsoValueNeutral03'))
+                                       chIsoVals = cms.InputTag('elPFIsoValueCharged03PFId'),
+                                       emIsoVals = cms.InputTag('elPFIsoValueGamma03PFId'),
+                                       nhIsoVals = cms.InputTag('elPFIsoValueNeutral03PFId'))
 
