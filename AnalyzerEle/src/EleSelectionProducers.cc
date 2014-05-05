@@ -99,7 +99,6 @@ void EleSelectionProducers::produce(edm::Event& iEvent, const edm::EventSetup& i
     pat::strbitset medium_ret;
     pat::strbitset tight_ret;
 
-    std::cout<<" fiducial selectior "<<std::endl;
     fiducial_selector(eleRef, fiducial_ret);
     fiducial_vec.push_back(fiducial_selector.result());
 
