@@ -104,7 +104,7 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig){
  myTree_ -> Branch("ele1_isEEDeeGap", &ele1_isEEDeeGap, "ele1_isEEDeeGap/I");
  myTree_ -> Branch("ele1_isEERingGap",&ele1_isEERingGap,"ele1_isEERingGap/I");
 
- myTree_ -> Branch("ele1_idtype", &ele1_idtype, "ele1_idtype/I");
+ myTree_ -> Branch("ele1_idtype","std::vector<int>",&ele1_idtype);
   
  myTree_ -> Branch("ele1_isTrackerDriven",&ele1_isTrackerDriven,"ele1_isTrackerDriven/I");
  myTree_ -> Branch("ele1_classification",&ele1_classification,"ele1_classification/I");
@@ -205,7 +205,7 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig){
  myTree_ -> Branch("ele2_eta", &ele2_eta, "ele2_eta/F");
  myTree_ -> Branch("ele2_phi", &ele2_phi, "ele2_phi/F");
 
- myTree_ -> Branch("ele2_idtype", &ele2_idtype, "ele2_idtype/I");
+ myTree_ -> Branch("ele2_idtype", "std::vector<int>",&ele2_idtype);
   
  myTree_ -> Branch("ele2_isEB", &ele2_isEB, "ele2_isEB/I");
  myTree_ -> Branch("ele2_isEBEEGap", &ele2_isEBEEGap, "ele2_isEBEEGap/I");
@@ -423,20 +423,21 @@ void AnalyzerEle::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
    int nWP70 = 0; //only WP70
    int nWP90 = 0; //only WP90
+
    for( unsigned int iEle = 0 ; iEle < electrons.size(); iEle++){
-     if(electrons.at(iEle).electronID("tight")){
-	  ++nWP70;
+     if(electrons.at(iEle).electronID("cIso70") or electrons.at(iEle).electronID("relIso70")){
+          ++nWP70; ++nWP90;
           eleIts_[1./electrons.at(iEle).pt()] = iEle;
 	  continue;
      }
-     if(electrons.at(iEle).electronID("loose")){
+     if(electrons.at(iEle).electronID("cIso90") or electrons.at(iEle).electronID("relIso90")){
 	  ++nWP90;
           eleIts_[1./electrons.at(iEle).pt()] = iEle;
 	  continue;
       }
    }
 
-   if( nWP70 < 1 or nWP90 < 2 ) return;
+   if( nWP70 < 1 ) return;
    if( nWP90 > 2 ) return;
 
   ///---- check if the event is good----
@@ -466,15 +467,12 @@ void AnalyzerEle::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   int nEle = electrons.size();      
   if ( nEle == 1 ) { isW_ = 1; isZ_ = 0; }
   if ( nEle >= 2 ) { isW_ = 0; isZ_ = 1; }
-
   if ( isW_ == 1 ) fillEleInfo ( iEvent, iSetup, 0, "ele1" );
-
   if ( isZ_ == 1 ) {
    fillEleInfo ( iEvent, iSetup, 0, "ele1" );
    fillEleInfo ( iEvent, iSetup, 1, "ele2" );
    fillDoubleEleInfo (iEvent, iSetup);
   }
-
   fillMetInfo (iEvent, iSetup);
   if (isW_ == 1 || isZ_ == 1) myTree_ -> Fill();
 
@@ -827,15 +825,15 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   ele1_isEEDeeGap = electron.isEEDeeGap();
   ele1_isEERingGap = electron.isEERingGap();
  
-  ele1_idtype = -1 ;
-  if(electron.electronID("fiducial")) ele1_idtype = 0 ;
-  if(electron.electronID("loose"))    ele1_idtype = 1;
-  if(electron.electronID("medium"))   ele1_idtype = 2;
-  if(electron.electronID("tight"))    ele1_idtype = 3;
-  if(electron.electronID("WP90PU"))   ele1_idtype = 4;
-  if(electron.electronID("WP80PU"))   ele1_idtype = 5;
-  if(electron.electronID("WP70PU"))   ele1_idtype = 6;
-
+  ele1_idtype.assign(7,0);
+  if(electron.electronID("fiducial"))  ele1_idtype.at(0) = 1;
+  if(electron.electronID("relIso90"))  ele1_idtype.at(1) = 1;
+  if(electron.electronID("relIso80"))  ele1_idtype.at(2) = 1;
+  if(electron.electronID("relIso70"))  ele1_idtype.at(3) = 1;
+  if(electron.electronID("cIso90"))    ele1_idtype.at(4) = 1;
+  if(electron.electronID("cIso80"))    ele1_idtype.at(5) = 1;
+  if(electron.electronID("cIso70"))    ele1_idtype.at(6) = 1;
+  
   ele1_isTrackerDriven = !(electron.ecalDriven());
   ele1_classification  = electron.classification();
   ele1_sigmaIetaIeta   = electron.sigmaIetaIeta();
@@ -1407,15 +1405,15 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   ele2_isEEDeeGap  = electron.isEEDeeGap();
   ele2_isEERingGap = electron.isEERingGap();
 
-  ele2_idtype = -1 ;
-  if(electron.electronID("fiducial")) ele2_idtype = 0 ;
-  if(electron.electronID("loose"))    ele2_idtype = 1;
-  if(electron.electronID("medium"))   ele2_idtype = 2;
-  if(electron.electronID("tight"))    ele2_idtype = 3;
-  if(electron.electronID("WP90PU"))   ele2_idtype = 4;
-  if(electron.electronID("WP80PU"))   ele2_idtype = 5;
-  if(electron.electronID("WP70PU"))   ele2_idtype = 6;
-    
+  ele2_idtype.assign(7,0);
+  if(electron.electronID("fiducial"))  ele2_idtype.at(0) = 1;
+  if(electron.electronID("relIso90"))  ele2_idtype.at(1) = 1;
+  if(electron.electronID("relIso80"))  ele2_idtype.at(2) = 1;
+  if(electron.electronID("relIso70"))  ele2_idtype.at(3) = 1;
+  if(electron.electronID("cIso90"))    ele2_idtype.at(4) = 1;
+  if(electron.electronID("cIso80"))    ele2_idtype.at(5) = 1;
+  if(electron.electronID("cIso70"))    ele2_idtype.at(6) = 1;
+      
   ele2_isTrackerDriven = !(electron.ecalDriven());
   ele2_classification  = electron.classification();
   ele2_sigmaIetaIeta   = electron.sigmaIetaIeta();
@@ -2054,7 +2052,7 @@ void AnalyzerEle::initialize(){
  ele1_isTrackerDriven=-99;
  ele1_classification=-99;
 
- ele1_idtype = -1 ;     
+ ele1_idtype.clear() ;     
  ele1_sigmaIetaIeta =-99.;
  ele1_DphiIn =-99.;
  ele1_DetaIn =-99.;
@@ -2195,7 +2193,7 @@ void AnalyzerEle::initialize(){
  ele2_isTrackerDriven=-99;
  ele2_classification = -99;
   
- ele2_idtype = -1 ;     
+ ele2_idtype.clear() ;     
  ele2_sigmaIetaIeta =-99.;
  ele2_DphiIn =-99.;
  ele2_DetaIn =-99.;
@@ -2401,7 +2399,7 @@ void AnalyzerEle::initialize(){
  ele1Met_Dphi = -99.;
   
   
-  // di-electron variables
+ // di-electron variables
  ele1ele2_m=-99.;
  ele1ele2_scM=-99.;
 
