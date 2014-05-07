@@ -11,26 +11,27 @@ EleSelectionProducers::EleSelectionProducers(const edm::ParameterSet& iConfig):
   rhoTAG(iConfig.getParameter<edm::InputTag>("rhoFastJet")), 
   fiducial_selector("fiducial", electronsHandle, conversionsHandle, bsHandle, vertexHandle,
 		    chIsoValsHandle, emIsoValsHandle, nhIsoValsHandle, rhoHandle),
-  WP70_PU_selector("WP70PU", electronsHandle, conversionsHandle, bsHandle, vertexHandle,
+  relIso70_selector("relIso70", electronsHandle, conversionsHandle, bsHandle, vertexHandle,
 		    chIsoValsHandle, emIsoValsHandle, nhIsoValsHandle, rhoHandle),
-  WP80_PU_selector("WP80PU", electronsHandle, conversionsHandle, bsHandle, vertexHandle,
+  relIso80_selector("relIso80", electronsHandle, conversionsHandle, bsHandle, vertexHandle,
 		    chIsoValsHandle, emIsoValsHandle, nhIsoValsHandle, rhoHandle),
-  WP90_PU_selector("WP90PU", electronsHandle, conversionsHandle, bsHandle, vertexHandle,
+  relIso90_selector("relIso90", electronsHandle, conversionsHandle, bsHandle, vertexHandle,
 		    chIsoValsHandle, emIsoValsHandle, nhIsoValsHandle, rhoHandle),
-  loose_selector("loose", electronsHandle, conversionsHandle, bsHandle, vertexHandle,
+  cIso70_selector("cIso70", electronsHandle, conversionsHandle, bsHandle, vertexHandle,
 		    chIsoValsHandle, emIsoValsHandle, nhIsoValsHandle, rhoHandle),
-  medium_selector("medium", electronsHandle, conversionsHandle, bsHandle, vertexHandle,
+  cIso80_selector("cIso80", electronsHandle, conversionsHandle, bsHandle, vertexHandle,
 		    chIsoValsHandle, emIsoValsHandle, nhIsoValsHandle, rhoHandle),
-  tight_selector("tight", electronsHandle, conversionsHandle, bsHandle, vertexHandle,
-  chIsoValsHandle, emIsoValsHandle, nhIsoValsHandle, rhoHandle)
-{
+  cIso90_selector("cIso90", electronsHandle, conversionsHandle, bsHandle, vertexHandle,
+  chIsoValsHandle, emIsoValsHandle, nhIsoValsHandle, rhoHandle){
+
   produces< SelectionMap >("fiducial");
-  produces< SelectionMap >("WP70PU");
-  produces< SelectionMap >("WP80PU");
-  produces< SelectionMap >("WP90PU");
-  produces< SelectionMap >("loose");
-  produces< SelectionMap >("medium");
-  produces< SelectionMap >("tight");
+  produces< SelectionMap >("relIso70");
+  produces< SelectionMap >("relIso80");
+  produces< SelectionMap >("relIso90");
+  
+  produces< SelectionMap >("cIso70");
+  produces< SelectionMap >("cIso80");
+  produces< SelectionMap >("cIso90");
   
 }
 
@@ -39,25 +40,25 @@ EleSelectionProducers::~EleSelectionProducers(){}
 
 
 // ------------ method called to produce the data  ------------
-void EleSelectionProducers::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
-{
+void EleSelectionProducers::produce(edm::Event& iEvent, const edm::EventSetup& iSetup){
+
   using namespace edm;
   std::vector<SelectionValue_t>  fiducial_vec;
-  std::vector<SelectionValue_t>  WP70_PU_vec;
-  std::vector<SelectionValue_t>  WP80_PU_vec;
-  std::vector<SelectionValue_t>  WP90_PU_vec;
+  std::vector<SelectionValue_t>  relIso70_vec;
+  std::vector<SelectionValue_t>  relIso80_vec;
+  std::vector<SelectionValue_t>  relIso90_vec;
+  
   std::auto_ptr<SelectionMap> fiducialMap(new SelectionMap());
-  std::auto_ptr<SelectionMap> WP70_PUMap(new SelectionMap());
-  std::auto_ptr<SelectionMap> WP80_PUMap(new SelectionMap());
-  std::auto_ptr<SelectionMap> WP90_PUMap(new SelectionMap());
-  std::vector<SelectionValue_t>  loose_vec;
-  std::vector<SelectionValue_t>  medium_vec;
-  std::vector<SelectionValue_t>  tight_vec;
-  std::auto_ptr<SelectionMap> looseMap(new SelectionMap());
-  std::auto_ptr<SelectionMap> mediumMap(new SelectionMap());
-  std::auto_ptr<SelectionMap> tightMap(new SelectionMap());
-
-
+  std::auto_ptr<SelectionMap> relIso70_Map(new SelectionMap());
+  std::auto_ptr<SelectionMap> relIso80_Map(new SelectionMap());
+  std::auto_ptr<SelectionMap> relIso90_Map(new SelectionMap());
+  std::vector<SelectionValue_t>  cIso70_vec;
+  std::vector<SelectionValue_t>  cIso80_vec;
+  std::vector<SelectionValue_t>  cIso90_vec;
+  std::auto_ptr<SelectionMap> cIso70_Map(new SelectionMap());
+  std::auto_ptr<SelectionMap> cIso80_Map(new SelectionMap());
+  std::auto_ptr<SelectionMap> cIso90_Map(new SelectionMap());
+  
   //------------------------------ ELECTRON
   iEvent.getByLabel(electronsTAG, electronsHandle);
    
@@ -92,54 +93,51 @@ void EleSelectionProducers::produce(edm::Event& iEvent, const edm::EventSetup& i
     const reco::GsfElectronRef eleRef(electronsHandle, ele_itr-electronsHandle->begin());
     // the new tree has one event per each electron
     pat::strbitset fiducial_ret;
-    pat::strbitset WP70_PU_ret;
-    pat::strbitset WP80_PU_ret;
-    pat::strbitset WP90_PU_ret;
-    pat::strbitset loose_ret;
-    pat::strbitset medium_ret;
-    pat::strbitset tight_ret;
-
+    pat::strbitset cIso70_ret;
+    pat::strbitset cIso80_ret;
+    pat::strbitset cIso90_ret;
+    pat::strbitset relIso70_ret;
+    pat::strbitset relIso80_ret;
+    pat::strbitset relIso90_ret;
+    
     fiducial_selector(eleRef, fiducial_ret);
     fiducial_vec.push_back(fiducial_selector.result());
-
-    WP70_PU_selector(eleRef, WP70_PU_ret);
-    WP80_PU_selector(eleRef, WP80_PU_ret);
-    WP90_PU_selector(eleRef, WP90_PU_ret);
+    
+    relIso70_selector(eleRef, relIso70_ret);
+    relIso80_selector(eleRef, relIso80_ret);
+    relIso90_selector(eleRef, relIso90_ret);
      
-    WP70_PU_vec.push_back(WP70_PU_selector.result()); // result gives a float
-    WP80_PU_vec.push_back(WP80_PU_selector.result()); // result gives a float
-    WP90_PU_vec.push_back(WP90_PU_selector.result()); // result gives a float
+    relIso70_vec.push_back(relIso70_selector.result()); // result gives a float
+    relIso80_vec.push_back(relIso80_selector.result()); // result gives a float
+    relIso90_vec.push_back(relIso90_selector.result()); // result gives a float
+    
+    cIso70_selector(eleRef, cIso70_ret);
+    cIso80_selector(eleRef, cIso80_ret);
+    cIso90_selector(eleRef, cIso90_ret);
 
-    WP70_PU_selector(eleRef, WP70_PU_ret);
-    WP80_PU_selector(eleRef, WP80_PU_ret);
-    WP90_PU_selector(eleRef, WP90_PU_ret);
-
-    loose_selector(eleRef, loose_ret);
-    loose_vec.push_back(loose_selector.result());
-    medium_selector(eleRef, medium_ret);
-    medium_vec.push_back(medium_selector.result());
-    tight_selector(eleRef, tight_ret);
-    tight_vec.push_back(tight_selector.result());
-
-    if(((bool)tight_selector.result())){
-      if(!(bool) medium_selector.result() || !(bool) loose_selector.result()){
+    cIso70_vec.push_back(cIso70_selector.result());
+    cIso80_vec.push_back(cIso80_selector.result());
+    cIso90_vec.push_back(cIso90_selector.result());
+    
+    if(((bool)cIso80_selector.result())){
+      if(!(bool) cIso80_selector.result() || !(bool) cIso90_selector.result()){
 	edm::LogError("Incoherent selection") << "passing tight but not medium or loose";
 	exit (1);
       }
     }
 
-    if(((bool)medium_selector.result())){
-      if( !(bool) loose_selector.result()){
+    if(((bool)cIso80_selector.result())){
+      if( !(bool) cIso90_selector.result()){
 	edm::LogError("Incoherent selection") << "passing medium but not loose";
 	exit (1);
       }
     }
     
 #ifdef DEBUG
-    std::cout << "[DEBUG] WP80 ret=" << WP80_PU_selector.bitMask() << std::endl;
-    std::cout << "[DEBUG] WP80 ret= (float)" << (SelectionValue_t) WP80_PU_selector.bitMask() << std::endl;
-    std::cout << "[DEBUG] loose ret=" << loose_selector.bitMask() << std::endl;
-    std::cout << "[DEBUG] loose ret= (float)" << (SelectionValue_t) loose_selector.bitMask() << std::endl;
+    std::cout << "[DEBUG] relIso80 ret=" << relIso80_selector.bitMask() << std::endl;
+    std::cout << "[DEBUG] relIso80 ret= (float)" << (SelectionValue_t) relIso80_selector.bitMask() << std::endl;
+    std::cout << "[DEBUG] cIso80 ret=" << cIso80_selector.bitMask() << std::endl;
+    std::cout << "[DEBUG] cIso80 ret= (float)" << (SelectionValue_t) cIso80_selector.bitMask() << std::endl;
 
 #endif
   }
@@ -147,41 +145,43 @@ void EleSelectionProducers::produce(edm::Event& iEvent, const edm::EventSetup& i
   //prepare product 
   // declare the filler of the ValueMap
   SelectionMap::Filler fiducial_filler(*fiducialMap);
-  SelectionMap::Filler WP70_PU_filler(*WP70_PUMap);
-  SelectionMap::Filler WP80_PU_filler(*WP80_PUMap);
-  SelectionMap::Filler WP90_PU_filler(*WP90_PUMap);
-  SelectionMap::Filler loose_filler(*looseMap);
-  SelectionMap::Filler medium_filler(*mediumMap);
-  SelectionMap::Filler tight_filler(*tightMap);
-
+  SelectionMap::Filler relIso90_filler(*relIso90_Map);
+  SelectionMap::Filler relIso80_filler(*relIso80_Map);
+  SelectionMap::Filler relIso70_filler(*relIso70_Map);
+  SelectionMap::Filler cIso90_filler(*cIso90_Map);
+  SelectionMap::Filler cIso80_filler(*cIso80_Map);
+  SelectionMap::Filler cIso70_filler(*cIso70_Map);
+  
   //fill and insert valuemap
   fiducial_filler.insert(electronsHandle,fiducial_vec.begin(),fiducial_vec.end());
-  WP70_PU_filler.insert(electronsHandle,WP70_PU_vec.begin(),WP70_PU_vec.end());
-  WP80_PU_filler.insert(electronsHandle,WP80_PU_vec.begin(),WP80_PU_vec.end());
-  WP90_PU_filler.insert(electronsHandle,WP90_PU_vec.begin(),WP90_PU_vec.end());
-  loose_filler.insert(electronsHandle,loose_vec.begin(),loose_vec.end());
-  medium_filler.insert(electronsHandle,medium_vec.begin(),medium_vec.end());
-  tight_filler.insert(electronsHandle,tight_vec.begin(),tight_vec.end());
+  
+  cIso90_filler.insert(electronsHandle,cIso90_vec.begin(),cIso90_vec.end());
+  cIso80_filler.insert(electronsHandle,cIso80_vec.begin(),cIso80_vec.end());
+  cIso70_filler.insert(electronsHandle,cIso70_vec.begin(),cIso70_vec.end());
 
+  relIso90_filler.insert(electronsHandle,relIso90_vec.begin(),relIso90_vec.end());
+  relIso80_filler.insert(electronsHandle,relIso80_vec.begin(),relIso80_vec.end());
+  relIso70_filler.insert(electronsHandle,relIso70_vec.begin(),relIso70_vec.end());
   
   fiducial_filler.fill();
-  WP70_PU_filler.fill();
-  WP80_PU_filler.fill();
-  WP90_PU_filler.fill();
-  loose_filler.fill();
-  medium_filler.fill();
-  tight_filler.fill();
-    
+  relIso90_filler.fill();
+  relIso80_filler.fill();
+  relIso70_filler.fill();
 
+  cIso90_filler.fill();
+  cIso80_filler.fill();
+  cIso70_filler.fill();
+  
   //------------------------------
   // put the ValueMap in the event
+  
   iEvent.put(fiducialMap, "fiducial");
-  iEvent.put(WP70_PUMap, "WP70PU");
-  iEvent.put(WP80_PUMap, "WP80PU");
-  iEvent.put(WP90_PUMap, "WP90PU");
-  iEvent.put(looseMap, "loose");
-  iEvent.put(mediumMap, "medium");
-  iEvent.put(tightMap, "tight");
+  iEvent.put(relIso90_Map,"relIso90");
+  iEvent.put(relIso80_Map,"relIso80");
+  iEvent.put(relIso70_Map,"relIso70");
+  iEvent.put(cIso90_Map,  "cIso90");
+  iEvent.put(cIso80_Map,  "cIso80");
+  iEvent.put(cIso70_Map,  "cIso70");
 
 }
 
