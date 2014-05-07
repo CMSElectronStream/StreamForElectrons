@@ -27,12 +27,12 @@ patElectrons.electronIDSources = cms.PSet(
 # configure many IDs as InputTag <someName> = <someTag> you
 # can comment out those you don't want to save some disk space
   fiducial = cms.InputTag("eleSelectionProducers", "fiducial"),
-  WP70PU   = cms.InputTag("eleSelectionProducers", "WP70PU"),
-  WP80PU   = cms.InputTag("eleSelectionProducers", "WP80PU"),
-  WP90PU   = cms.InputTag("eleSelectionProducers", "WP90PU"),
-  loose    = cms.InputTag("eleSelectionProducers", "loose"),
-  medium   = cms.InputTag("eleSelectionProducers", "medium"),
-  tight    = cms.InputTag("eleSelectionProducers", "tight")
+  relIso90 = cms.InputTag("eleSelectionProducers", "relIso90"),
+  relIso80 = cms.InputTag("eleSelectionProducers", "relIso80"),
+  relIso70 = cms.InputTag("eleSelectionProducers", "relIso70"),
+  cIso90   = cms.InputTag("eleSelectionProducers", "cIso90"),
+  cIso80   = cms.InputTag("eleSelectionProducers", "cIso80"),
+  cIso70   = cms.InputTag("eleSelectionProducers", "cIso70")
 )
 
 
@@ -68,5 +68,4 @@ patElectronSequence = cms.Sequence(eleSelectionProducers* ## make the electron i
                                    patElectrons* ## build pat electron 
                                    patTrigger*   ## patTrigger
                                    PatElectronTriggerMatchHLTEle* ## matching electron with pat trigger
-                                   PatElectronsTriggerMatch*                                         
-                                   patTriggerEvent)
+                                   PatElectronsTriggerMatch)
