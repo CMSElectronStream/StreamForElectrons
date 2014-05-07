@@ -82,12 +82,12 @@ private:
 
   
   SimpleCutBasedElectronIDSelectionFunctor fiducial_selector;
-  SimpleCutBasedElectronIDSelectionFunctor WP70_PU_selector;
-  SimpleCutBasedElectronIDSelectionFunctor WP80_PU_selector;
-  SimpleCutBasedElectronIDSelectionFunctor WP90_PU_selector;
-  SimpleCutBasedElectronIDSelectionFunctor loose_selector;
-  SimpleCutBasedElectronIDSelectionFunctor medium_selector;
-  SimpleCutBasedElectronIDSelectionFunctor tight_selector;
+  SimpleCutBasedElectronIDSelectionFunctor relIso70_selector;
+  SimpleCutBasedElectronIDSelectionFunctor relIso80_selector;
+  SimpleCutBasedElectronIDSelectionFunctor relIso90_selector;
+  SimpleCutBasedElectronIDSelectionFunctor cIso70_selector;
+  SimpleCutBasedElectronIDSelectionFunctor cIso80_selector;
+  SimpleCutBasedElectronIDSelectionFunctor cIso90_selector;
   
 };
 
