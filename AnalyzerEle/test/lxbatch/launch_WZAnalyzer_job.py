@@ -24,6 +24,7 @@ parser.add_option('-j','--jobmodulo',      action="store", type=int,       dest=
 parser.add_option('-r','--isalcastream',   action="store", type=int,       dest="isalcastream",   default=1, help='run on the alca stream output')
 parser.add_option('-q','--queque',         action="store", type="string",  dest="queque",         default="cmscaf1nd", help='queque of the batch system at cern')
 parser.add_option('-l','--hltPath',        action="store", type="string",  dest="hltPath",        default="HLT_GsfEle25_WP80_PFMET_MT50_v9", help='hltPath to select')
+parser.add_option('-d','--jobDirsuffix',   action="store", type="string",  dest="jobDirsuffix",   default="", help='suffix for job directory')
 
 (options, args) = parser.parse_args()
 
@@ -43,8 +44,8 @@ if __name__ == "__main__":
    if name[0] == "#" : continue ;
    print "base dir ",name [0]," sub dir ",name[1] ;
    
-   os.system("rm -r "+name[1]+"\n") ;
-   os.system("mkdir "+name[1]+"\n") ;
+   os.system("rm -r "+name[1]+options.jobDirsuffix+"\n") ;
+   os.system("mkdir "+name[1]+options.jobDirsuffix+"\n") ;
       
   
    tempfilelist = "./List_"+name[1]+".txt" ;
@@ -70,7 +71,7 @@ if __name__ == "__main__":
     
    for jobId in range(jobNumber):
     
-    jobDir = name[1]+"/JOB_"+str(jobId) ;
+    jobDir = name[1]+options.jobDirsuffix+"/JOB_"+str(jobId) ;
     os.system("mkdir "+jobDir+" \n") ;
     
     tempBjob = jobDir+"/bjob_"+str(jobId)+".sh" ;
@@ -124,13 +125,13 @@ if __name__ == "__main__":
     command = "cp "+inPath+"/"+jobcfgfile+" ./"
     SAMPLEJOBFILE.write(command+"\n");
 
-    command = "cmsMkdir "+options.outputpath+"/"+name[1];
+    command = "cmsMkdir "+options.outputpath+"/"+name[1]+options.jobDirsuffix;
     SAMPLEJOBFILE.write(command+"\n");
 
     command = "cmsRun "+options.jobtemplate.replace("_template","")+" isAlcaStreamOutput="+str(options.isalcastream)+" hltPath="+options.hltPath ;
     SAMPLEJOBFILE.write(command+"\n");
 
-    command = "cmsStage "+options.outputfilename+"_"+str(jobId)+".root "+options.outputpath+"/"+name[1];
+    command = "cmsStage "+options.outputfilename+"_"+str(jobId)+".root "+options.outputpath+"/"+name[1]+options.jobDirsuffix;
     SAMPLEJOBFILE.write(command+"\n");
 
     ############
