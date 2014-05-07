@@ -248,7 +248,7 @@ class AnalyzerEle : public edm::EDAnalyzer {
   int   ele1_classification;
 
   ///< bit mask for eleID: 1=fiducial, 2=loose, 6=medium, 14=tight, 16=WP90PU, 48=WP80PU. Selection from https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaCutBasedIdentification#Electron_ID_Working_Points
-  int   ele1_idtype ; 
+  std::vector<int>   ele1_idtype ; 
   float ele1_sigmaIetaIeta;
   float ele1_DphiIn;
   float ele1_DetaIn;
@@ -413,7 +413,7 @@ class AnalyzerEle : public edm::EDAnalyzer {
   int   ele2_classification;
 
   ///< bit mask for eleID: 1=fiducial, 2=loose, 6=medium, 14=tight, 16=WP90PU, 48=WP80PU. Selection from https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaCutBasedIdentification#Electron_ID_Working_Points
-  int   ele2_idtype ;
+  std::vector<int>   ele2_idtype ;
   float ele2_sigmaIetaIeta;
   float ele2_DphiIn;
   float ele2_DetaIn;
