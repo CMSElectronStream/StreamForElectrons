@@ -31,7 +31,7 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
-process.source = cms.Source ("PoolSource",fileNames = cms.untracked.vstring('MYINPUTFILE'));
+process.source = cms.Source ("PoolSource",fileNames = cms.untracked.vstring(MYINPUTFILE));
 
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(options.maxEvents));
 
@@ -85,7 +85,7 @@ if options.isAlcaStreamOutput != 0 :
  process.Analyzer.PFMetTag = cms.InputTag("hltPFMETProducer");
  process.Analyzer.rhoTag   = cms.InputTag("hltKT6PFJets","rho");
  process.Analyzer.triggerResultsCollection = cms.InputTag('TriggerResults::HLT');
- process.Analyzer.doWZSelection = cms.untracked.bool(True);
+ process.Analyzer.doWZSelection = cms.untracked.bool(False);
  process.Analyzer.saveMCInfo    = cms.untracked.bool(False);
 else:
  if options.usePatElectronsTriggerMatch :
@@ -94,7 +94,7 @@ else:
  process.Analyzer.PFMetTag = cms.InputTag("pfMet");
  process.Analyzer.rhoTag   = cms.InputTag("kt6PFJets","rho");   
  process.Analyzer.triggerResultsCollection = cms.InputTag('TriggerResults::HLT')
- process.Analyzer.doWZSelection = cms.untracked.bool(True);
+ process.Analyzer.doWZSelection = cms.untracked.bool(False);
  process.Analyzer.saveMCInfo    = cms.untracked.bool(False);
 
 ### final path
