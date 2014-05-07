@@ -12,7 +12,8 @@ options.register ('isAlcaStreamOutput',0,VarParsing.multiplicity.singleton,VarPa
                   'to set properly the input collection for the analyzer');
 options.register ('skipAnalyzerAndDumpOutput', False, VarParsing.multiplicity.singleton, VarParsing.varType.int,
                   "true if you don't want to run the analyzer but dump a output file with all the collections keep*")
-
+options.register ('usePatElectronsTriggerMatch',False,VarParsing.multiplicity.singleton, VarParsing.varType.int,
+                  "true if you want to match trigger electron with the pat one and use this collection as input in the analyzer") 
 options.parseArguments();
 print options;
 
@@ -78,19 +79,23 @@ process.PatElectronTriggerMatchHLTEle.matchedCuts = cms.string('path("'+options.
 ####### call the final analyzer
 process.load('StreamForElectrons.AnalyzerEle.ntupleAnalyzer_cfi')
 if options.isAlcaStreamOutput != 0 :
+ if options.usePatElectronsTriggerMatch :
+     process.Analyzer.EleTag = cms.InputTag("PatElectronsTriggerMatch")
  process.Analyzer.PVTag    = cms.InputTag("hltFastPVPixelVertices");
  process.Analyzer.PFMetTag = cms.InputTag("hltPFMETProducer");
  process.Analyzer.rhoTag   = cms.InputTag("hltKT6PFJets","rho");
  process.Analyzer.triggerResultsCollection = cms.InputTag('TriggerResults::HLT');
- process.Analyzer.doWZSelection = cms.bool(False);
- process.Analyzer.saveMCInfo    = cms.bool(False);
+ process.Analyzer.doWZSelection = cms.untracked.bool(True);
+ process.Analyzer.saveMCInfo    = cms.untracked.bool(False);
 else:
+ if options.usePatElectronsTriggerMatch :
+     process.Analyzer.EleTag = cms.InputTag("PatElectronsTriggerMatch")
  process.Analyzer.PVTag    = cms.InputTag("offlinePrimaryVerticesWithBS");
  process.Analyzer.PFMetTag = cms.InputTag("pfMet");
  process.Analyzer.rhoTag   = cms.InputTag("kt6PFJets","rho");   
  process.Analyzer.triggerResultsCollection = cms.InputTag('TriggerResults::HLT')
- process.Analyzer.doWZSelection = cms.bool(False);
- process.Analyzer.saveMCInfo    = cms.bool(False);
+ process.Analyzer.doWZSelection = cms.untracked.bool(True);
+ process.Analyzer.saveMCInfo    = cms.untracked.bool(False);
 
 ### final path
 if not options.skipAnalyzerAndDumpOutput: 
