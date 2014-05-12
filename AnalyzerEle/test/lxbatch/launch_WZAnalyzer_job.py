@@ -11,6 +11,9 @@ from subprocess import Popen
 from optparse import OptionParser
 from array import array
 
+#python launch_WZAnalyzer_job.py --listofsamples list_of_samples.txt --jobtemplate ./AnalyzerEle_template_cfg.py --outputpath /store/group/alca_ecalcalib/ecalMIBI/rgerosa/ElectronStreamStudy/AnalyzerEle --jobmodulo 10  --isalcastream 0  --queque 1nh --jobDirsuffix noSelectio
+
+
 ############################################
 #              Job steering                #
 ############################################
@@ -131,7 +134,7 @@ if __name__ == "__main__":
     command = "cmsRun "+options.jobtemplate.replace("_template","")+" isAlcaStreamOutput="+str(options.isalcastream)+" hltPath="+options.hltPath ;
     SAMPLEJOBFILE.write(command+"\n");
 
-    command = "cmsStage "+options.outputfilename+"_"+str(jobId)+".root "+options.outputpath+"/"+name[1]+options.jobDirsuffix;
+    command = "cmsStage -f "+options.outputfilename+"_"+str(jobId)+".root "+options.outputpath+"/"+name[1]+options.jobDirsuffix;
     SAMPLEJOBFILE.write(command+"\n");
 
     ############
