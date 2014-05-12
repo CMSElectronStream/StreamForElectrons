@@ -211,6 +211,7 @@ class AnalyzerEle : public edm::EDAnalyzer {
 
   // event variables --> branch in the output tree
   TTree* myTree_;
+  edm::Service<TFileService> fs_ ;
 
   long int bxId_;
   long int eventId_;
