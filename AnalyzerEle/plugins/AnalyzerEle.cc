@@ -4,9 +4,6 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig){
 
  std::cout << ">>> AnalyzerEle::AnalyzerEle begin <<<" << std::endl;
 
- edm::Service<TFileService> fs ;
- myTree_ = fs -> make <TTree>("AnalyzerEle","AnalyzerEle"); // create the output file with the output tree
-
  dataRun_             = iConfig.getParameter<std::string>("dataRun");
  digiCollection_EB_   = iConfig.getParameter<edm::InputTag>("digiCollection_EB");
  digiCollection_EE_   = iConfig.getParameter<edm::InputTag>("digiCollection_EE");
@@ -34,6 +31,19 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig){
  saveMCInfo_         = iConfig.getUntrackedParameter<bool>("saveMCInfo", false);
 
  eventNaiveId_ = 0;
+
+ EcalClusterCrackCorrection = EcalClusterFunctionFactory::get()->create("EcalClusterCrackCorrection", iConfig);
+ EcalClusterLocalContCorrection = EcalClusterFunctionFactory::get()->create("EcalClusterLocalContCorrection", iConfig);
+
+}
+
+// --------------------------------------------------------------------
+AnalyzerEle::~AnalyzerEle () { std::cout << ">>> AnalyzerEle::~AnalyzerEle <<< analyzed " << eventNaiveId_ << " events" << std::endl;}
+
+// ------------ method called once each job just before starting event loop ------------
+void AnalyzerEle::beginJob(){
+
+ myTree_ = fs_->make<TTree>("AnalyzerEle","AnalyzerEle"); 
 
  std::cout << ">>>>>> AnalyzerEle::AnalyzerEle::set event branches <<<" << std::endl;
 
@@ -353,18 +363,9 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig){
   myTree_ -> Branch("ele2_tangent_dPerr","std::vector<float>",&ele2_tangent_dPerr);
  }
 
- std::cout << ">>>>>> AnalyzerEle::AnalyzerEle::get cluster corrections <<<" << std::endl;
- EcalClusterCrackCorrection = EcalClusterFunctionFactory::get()->create("EcalClusterCrackCorrection", iConfig);
- EcalClusterLocalContCorrection = EcalClusterFunctionFactory::get()->create("EcalClusterLocalContCorrection", iConfig);
-
  std::cout << ">>> AnalyzerEle::AnalyzerEle end <<<" << std::endl;
+
 }
-
-// --------------------------------------------------------------------
-AnalyzerEle::~AnalyzerEle () { std::cout << ">>> AnalyzerEle::~AnalyzerEle <<< analyzed " << eventNaiveId_ << " events" << std::endl;}
-
-// ------------ method called once each job just before starting event loop ------------
-void AnalyzerEle::beginJob(){}
 
 // ------------ method called once each job just after ending the event loop ------------
 void AnalyzerEle::endJob(){
