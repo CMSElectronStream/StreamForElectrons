@@ -26,4 +26,19 @@ On streamed electrons:
 
 
 
+Variables comparison
+====
+
+Compile:
+
+    g++ -Wall -o EventComparison.exe `root-config --glibs --libs --cflags` EventComparison.cpp -lTreePlayer
+
+Run:
+    ./EventComparison.exe    /data/amassiro/ECAL/EleStream/AnalyzerEle_AlcaElectronStream_noSelection.root    /data/amassiro/ECAL/EleStream/AnalyzerEle_streamA_noSelection.root
+
+
+
+
+
+
 
