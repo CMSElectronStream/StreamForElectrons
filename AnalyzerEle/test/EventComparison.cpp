@@ -385,8 +385,8 @@ void SetVariablesMapEntry(std::map<std::string,TH1F*> & DistributionStreamMap, s
  DifferenceMap.insert(mapElement("ele1Met_mt",new TH1F("ele1Met_mtRatio","",100,-25,25)));       
 
   // electron variables
- DistributionStreamMap.insert(mapElement("ele1_pt",new TH1F("ele1_ptStream","",50,0,300)));       
- DistributionRecoMap.insert(mapElement("ele1_pt",new TH1F("ele1_ptReco","",50,0,300)));       
+ DistributionStreamMap.insert(mapElement("ele1_pt",new TH1F("ele1_ptStream","",50,30,300)));       
+ DistributionRecoMap.insert(mapElement("ele1_pt",new TH1F("ele1_ptReco","",50,30,300)));       
  DifferenceMap.insert(mapElement("ele1_pt",new TH1F("ele1_ptRatio","",200,-1,1)));       
 
  DistributionStreamMap.insert(mapElement("ele1_eta",new TH1F("ele1_etaStream","",50,-3,3)));       
@@ -425,8 +425,8 @@ void SetVariablesMapEntry(std::map<std::string,TH1F*> & DistributionStreamMap, s
  DistributionRecoMap.insert(mapElement("ele1_hadIso",new TH1F("ele1_hadIsoReco","",50,0,10)));       
  DifferenceMap.insert(mapElement("ele1_hadIso",new TH1F("ele1_hadIsoRatio","",100,-5,5)));       
 
- DistributionStreamMap.insert(mapElement("ele1_scE",new TH1F("ele1_scEStream","",50,0,300)));       
- DistributionRecoMap.insert(mapElement("ele1_scE",new TH1F("ele1_scEReco","",50,0,300)));       
+ DistributionStreamMap.insert(mapElement("ele1_scE",new TH1F("ele1_scEStream","",50,30,300)));       
+ DistributionRecoMap.insert(mapElement("ele1_scE",new TH1F("ele1_scEReco","",50,30,300)));       
  DifferenceMap.insert(mapElement("ele1_scE",new TH1F("ele1_scERatio","",100,-3,3)));       
 
  DistributionStreamMap.insert(mapElement("ele1_es",new TH1F("ele1_esStream","",50,0,30)));       
@@ -451,7 +451,7 @@ void SetVariablesMapEntry(std::map<std::string,TH1F*> & DistributionStreamMap, s
 
  DistributionStreamMap.insert(mapElement("ele1_tkP",new TH1F("ele1_tkPStream","",50,0,300)));       
  DistributionRecoMap.insert(mapElement("ele1_tkP",new TH1F("ele1_tkPReco","",50,0,300)));       
- DifferenceMap.insert(mapElement("ele1_tkP",new TH1F("ele1_tkPRatio","",100,-1,1)));       
+ DifferenceMap.insert(mapElement("ele1_tkP",new TH1F("ele1_tkPRatio","",100,-0.01,0.01)));       
 
  DistributionStreamMap.insert(mapElement("ele1_fbrem",new TH1F("ele1_fbremStream","",50,-1,1)));       
  DistributionRecoMap.insert(mapElement("ele1_fbrem",new TH1F("ele1_fbremReco","",50,-1,1)));       
