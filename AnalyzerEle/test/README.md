@@ -35,7 +35,7 @@ Compile:
 
 Run:
 
-    ./EventComparison.exe    /data/amassiro/ECAL/EleStream/AnalyzerEle_AlcaElectronStream_noSelection.root    /data/amassiro/ECAL/EleStream/AnalyzerEle_streamA_noSelection.root
+    EventComparison.exe    /data/amassiro/ECAL/EleStream/AnalyzerEle_AlcaElectronStream_noSelection.root    /data/amassiro/ECAL/EleStream/AnalyzerEle_streamA_noSelection.root
 
 
 
