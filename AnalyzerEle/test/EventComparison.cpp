@@ -18,7 +18,7 @@
 
 
 Int_t runId_s,lumiId_s, runId_r,lumiId_r, isW_s, isW_r, isZ_s, isZ_r, PV_n_s, PV_n_r, nele_s, nele_r,ele1_isEB_s,ele1_isEB_r;
-Int_t ele1_seedIeta_s,ele1_seedIeta_r,ele1_seedIphi_s,ele1_seedIphi_r,ele1_seedIx_s,ele1_seedIx_r,ele1_seedIy_s,ele1_seedIy_r,ele1_seedZside_r,ele1_seedZside_s;
+Int_t ele1_seedIeta_s,ele1_seedIeta_r,ele1_seedIphi_s,ele1_seedIphi_r,ele1_seedIx_s,ele1_seedIx_r,ele1_seedIy_s,ele1_seedIy_r,ele1_seedZside_r,ele1_seedZside_s,ele1_scNxtal_s,ele1_scNxtal_r;
 
 Long64_t eventId_s, eventId_r ;
 
@@ -222,6 +222,10 @@ int main (int argc, char** argv){
    DistributionStreamMap["ele1_e3x3"]->Fill(ele1_e3x3_s);       
    DistributionRecoMap["ele1_e3x3"]->Fill(ele1_e3x3_r);
    DifferenceMap["ele1_e3x3"]->Fill(ele1_e3x3_s-ele1_e3x3_r);
+
+   DistributionStreamMap["ele1_scNxtal"]->Fill(ele1_scNxtal_s);       
+   DistributionRecoMap["ele1_scNxtal"]->Fill(ele1_scNxtal_r);
+   DifferenceMap["ele1_scNxtal"]->Fill(ele1_scNxtal_s-ele1_scNxtal_r);
 
 
    if(ele1_isEB_s == 1 and ele1_isEB_r == 1){
@@ -493,6 +497,10 @@ void SetVariablesMapEntry(std::map<std::string,TH1F*> & DistributionStreamMap, s
  DistributionRecoMap.insert(mapElement("ele1_seedIy",new TH1F("ele1_seedIyReco","",50,0,50)));       
  DifferenceMap.insert(mapElement("ele1_seedIy",new TH1F("ele1_seedIyRatio","",10,-5,5)));       
 
+ DistributionStreamMap.insert(mapElement("ele1_scNxtal",new TH1F("ele1_scNxtalStream","",200,0,200)));       
+ DistributionRecoMap.insert(mapElement("ele1_scNxtal",new TH1F("ele1_scNxtalReco","",200,0,200)));       
+ DifferenceMap.insert(mapElement("ele1_scNxtal",new TH1F("ele1_scNxtalRatio","",40,-20,20)));       
+
  return ;
 
 }
@@ -540,6 +548,7 @@ void SetStartingBranchTrees(TTree* streamTree, TTree* recoTree){
  streamTree->SetBranchStatus("ele1_seedIx",1);
  streamTree->SetBranchStatus("ele1_seedIy",1);
  streamTree->SetBranchStatus("ele1_seedZside",1);
+ streamTree->SetBranchStatus("ele1_scNxtal",1);
  streamTree->SetBranchStatus("ele1_recHit_E",1);
  streamTree->SetBranchStatus("ele1_idtype",1);
  streamTree->SetBranchStatus("met_et",1);
@@ -585,6 +594,7 @@ void SetStartingBranchTrees(TTree* streamTree, TTree* recoTree){
  streamTree->SetBranchAddress("ele1_seedIx",&ele1_seedIx_s);
  streamTree->SetBranchAddress("ele1_seedIy",&ele1_seedIy_s);
  streamTree->SetBranchAddress("ele1_seedZside",&ele1_seedZside_s);
+ streamTree->SetBranchAddress("ele1_scNxtal",&ele1_scNxtal_s);
  streamTree->SetBranchAddress("ele1_recHit_E",&ele1_recHit_E_s,&b_ele1_recHit_E_s);
  streamTree->SetBranchAddress("ele1_idtype",&ele1_idtype_s,&b_ele1_idtype_s);
  streamTree->SetBranchAddress("met_et",&met_s);
@@ -676,6 +686,7 @@ void SetStartingBranchTrees(TTree* streamTree, TTree* recoTree){
  recoTree->SetBranchAddress("ele1_seedIx",&ele1_seedIx_r);
  recoTree->SetBranchAddress("ele1_seedIy",&ele1_seedIy_r);
  recoTree->SetBranchAddress("ele1_seedZside",&ele1_seedZside_r);
+ recoTree->SetBranchAddress("ele1_scNxtal",&ele1_scNxtal_r);
  recoTree->SetBranchAddress("ele1_recHit_E",&ele1_recHit_E_r,&b_ele1_recHit_E_r);
  recoTree->SetBranchAddress("ele1_idtype",&ele1_idtype_r,&b_ele1_idtype_r);
  recoTree->SetBranchAddress("met_et",&met_r);
