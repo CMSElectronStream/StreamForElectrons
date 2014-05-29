@@ -2,7 +2,6 @@
 <use name="FWCore/PluginManager"/>
 <use name="FWCore/ParameterSet"/>
 <use name="PhysicsTools/UtilAlgos"/>
-
 <!-- <use name="root"/> -->
 <!-- <use name="rootcore"/> -->
 <use name="FWCore/ServiceRegistry"/>
@@ -30,5 +29,6 @@
 <use name="RecoEgamma/EgammaTools"/>
 <use name="CalibCalorimetry/EcalLaserCorrection"/>
 <use name="RecoVertex/PrimaryVertexProducer"/>
-
+<use name="EgammaAnalysis/ElectronTools"/>
+<use name="boost"/>
 <flags EDM_PLUGIN="1"/>

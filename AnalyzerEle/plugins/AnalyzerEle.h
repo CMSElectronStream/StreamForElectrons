@@ -136,7 +136,7 @@
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 
-
+#include "EgammaAnalysis/ElectronTools/interface/SuperClusterHelper.h"
 
 
 //----------------------------------
@@ -184,10 +184,6 @@ class AnalyzerEle : public edm::EDAnalyzer {
   edm::InputTag recHitCollection_EB_;
   edm::InputTag recHitCollection_EE_;
   edm::InputTag BSTag_;
-  edm::InputTag SRFlagCollection_EB_;
-  edm::InputTag SRFlagCollection_EE_;
-  edm::InputTag digiCollection_EB_;
-  edm::InputTag digiCollection_EE_;
   edm::InputTag conversionsInputTag_;
   edm::InputTag EleTag_;
   edm::InputTag PFMetTag_;
@@ -202,29 +198,32 @@ class AnalyzerEle : public edm::EDAnalyzer {
   bool applyCorrections_;
   bool doWZSelection_;
   bool dataFlag_;
-  bool saveRecHitMatrix_;
-  bool saveFbrem_;
   bool saveMCInfo_ ;
 
   std::map<float,int> eleIts_;
   math::XYZPoint PVPoint_;
 
+  SuperClusterHelper * mySCHelper_ ;
+
+  ////////////////////////////////////////////////////////////
   // event variables --> branch in the output tree
+  ////////////////////////////////////////////////////////////
+
   TTree* myTree_;
   edm::Service<TFileService> fs_ ;
 
   long int bxId_;
   long int eventId_;
-  int lumiId_;
-  int runId_;
-  int timeStampHigh_;
-  int isW_;
-  int isZ_;
-  int eventNaiveId_;
-  int nele_;
+  int      lumiId_;
+  int      runId_;
+  int      timeStampHigh_;
+  int      isW_;
+  int      isZ_;
+  int      eventNaiveId_;
+  int      nele_;
 
   // PV variables
-  int PV_n_;
+  int   PV_n_;
   float PV_z_;
   float PV_d0_;
 
@@ -234,7 +233,7 @@ class AnalyzerEle : public edm::EDAnalyzer {
 
   // HLT info -> not stored in the output but applied on the fly
   std::vector< std::string > HLTNames_; 
-  std::vector<Bool_t> HLTBits_; 
+  std::vector<Bool_t>        HLTBits_; 
   std::map<std::string,bool> HLTResults_ ;
 
   // ele1 variables
@@ -250,6 +249,7 @@ class AnalyzerEle : public edm::EDAnalyzer {
 
   ///< bit mask for eleID: 1=fiducial, 2=loose, 6=medium, 14=tight, 16=WP90PU, 48=WP80PU. Selection from https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaCutBasedIdentification#Electron_ID_Working_Points
   std::vector<int>   ele1_idtype ; 
+
   float ele1_sigmaIetaIeta;
   float ele1_DphiIn;
   float ele1_DetaIn;
@@ -275,11 +275,6 @@ class AnalyzerEle : public edm::EDAnalyzer {
   float ele1_scEta;
   float ele1_scPhi;
   float ele1_scLaserCorr;
-
-  float ele1_scERaw_PUcleaned;
-  float ele1_scEtaWidth_PUcleaned;
-  float ele1_scPhiWidth_PUcleaned;
-  float ele1_fCorrection_PUcleaned;
 
   float ele1_fEta;
   float ele1_fEtaCorr;
@@ -326,16 +321,6 @@ class AnalyzerEle : public edm::EDAnalyzer {
   std::vector<float> ele1_recHit_ICConstant;
   int ele1_nRecHits;
 
-  std::vector<float> ele1_recHitMatrix_E;
-  std::vector<int>   ele1_recHitMatrix_flag;
-  std::vector<int>   ele1_recHitMatrix_hashedIndex;
-  std::vector<int>   ele1_recHitMatrix_ietaORix;
-  std::vector<int>   ele1_recHitMatrix_iphiORiy;
-  std::vector<int>   ele1_recHitMatrix_zside;
-  std::vector<float> ele1_recHitMatrix_laserCorrection;
-  std::vector<float> ele1_recHitMatrix_ICConstant;
-  std::vector<float> ele1_recHitMatrix_samples;
-
   int ele1_isEB;
   int ele1_isEBEEGap;
   int ele1_isEBEtaGap;
@@ -348,60 +333,74 @@ class AnalyzerEle : public edm::EDAnalyzer {
   float ele1_eRegrInput_r9;
   float ele1_eRegrInput_eta;
   float ele1_eRegrInput_phi;
-  float ele1_eRegrInput_r25;
-  float ele1_eRegrInput_hoe;
   float ele1_eRegrInput_etaW;
   float ele1_eRegrInput_phiW;
-  float ele1_eRegrInput_rho;
-  float ele1_eRegrInput_Deta_bC_sC;
-  float ele1_eRegrInput_Dphi_bC_sC;
-  float ele1_eRegrInput_bCE_Over_sCE;
-  float ele1_eRegrInput_e3x3_Over_bCE;
-  float ele1_eRegrInput_e5x5_Over_bCE;
-  float ele1_eRegrInput_sigietaieta_bC1;
-  float ele1_eRegrInput_sigiphiiphi_bC1;
-  float ele1_eRegrInput_sigietaiphi_bC1;
-  float ele1_eRegrInput_bEMax_Over_bCE;
-  float ele1_eRegrInput_bE2nd_Over_bCE;
-  float ele1_eRegrInput_bEtop_Over_bCE;
-  float ele1_eRegrInput_bEbot_Over_bCE;
-
-  float ele1_eRegrInput_bEleft_Over_bCE;
-  float ele1_eRegrInput_bEright_Over_bCE;
-  float ele1_eRegrInput_be2x5max_Over_bCE;
-  float ele1_eRegrInput_be2x5top_Over_bCE;
-  float ele1_eRegrInput_be2x5bottom_Over_bCE;
-  float ele1_eRegrInput_be2x5left_Over_bCE;
-  float ele1_eRegrInput_be2x5right_Over_bCE;
-
-  float ele1_eRegrInput_seedbC_eta;
-  float ele1_eRegrInput_seedbC_phi;
-  float ele1_eRegrInput_seedbC_eta_p5;
-  float ele1_eRegrInput_seedbC_phi_p2;
-  float ele1_eRegrInput_seedbC_bieta;
-  float ele1_eRegrInput_seedbC_phi_p20;
-  float ele1_eRegrInput_seedbC_etacry;
-  float ele1_eRegrInput_seedbC_phicry;
-
-  float ele1_eRegrInput_ESoSC;
-  float ele1_eRegrInput_nPV;
   float ele1_eRegrInput_SCsize;
+  float ele1_eRegrInput_rho;
+  float ele1_eRegrInput_hoe;
+  float ele1_eRegrInput_nPV;
+  float ele1_eRegrInput_seed_eta;
+  float ele1_eRegrInput_seed_phi;
+  float ele1_eRegrInput_seed_E;
+  float ele1_eRegrInput_seed_e3x3;
+  float ele1_eRegrInput_seed_e5x5;
+  float ele1_eRegrInput_sigietaieta;
+  float ele1_eRegrInput_sigiphiiphi;
+  float ele1_eRegrInput_sigietaiphi;
+  float ele1_eRegrInput_eMax;
+  float ele1_eRegrInput_e2nd;
+  float ele1_eRegrInput_eTop;
+  float ele1_eRegrInput_eBottom;
+  float ele1_eRegrInput_eLeft;
+  float ele1_eRegrInput_eRight;
+  float ele1_eRegrInput_e2x5Max;
+  float ele1_eRegrInput_e2x5Top;
+  float ele1_eRegrInput_e2x5Bottom;
+  float ele1_eRegrInput_e2x5Left;
+  float ele1_eRegrInput_e2x5Right;
+  float ele1_eRegrInput_seed_ieta;
+  float ele1_eRegrInput_seed_iphi;
+  float ele1_eRegrInput_seed_etaCrySeed;
+  float ele1_eRegrInput_seed_phiCrySeed;
+  float ele1_eRegrInput_preshowerEnergyOverRaw;
+  float ele1_eRegrInput_ecalDrivenSeed;
+  float ele1_eRegrInput_isEBEtaGap;
+  float ele1_eRegrInput_isEBPhiGap;
+  float ele1_eRegrInput_eSubClusters;
+  float ele1_eRegrInput_subClusterEnergy_1;
+  float ele1_eRegrInput_subClusterEnergy_2;
+  float ele1_eRegrInput_subClusterEnergy_3;
+  float ele1_eRegrInput_subClusterEta_1;
+  float ele1_eRegrInput_subClusterEta_2;
+  float ele1_eRegrInput_subClusterEta_3;
+  float ele1_eRegrInput_subClusterPhi_1;
+  float ele1_eRegrInput_subClusterPhi_2;
+  float ele1_eRegrInput_subClusterPhi_3;
+  float ele1_eRegrInput_subClusterEmax_1;
+  float ele1_eRegrInput_subClusterEmax_2;
+  float ele1_eRegrInput_subClusterEmax_3;
+  float ele1_eRegrInput_subClusterE3x3_1;
+  float ele1_eRegrInput_subClusterE3x3_2;
+  float ele1_eRegrInput_subClusterE3x3_3;
+  float ele1_eRegrInput_eESClusters;
+  float ele1_eRegrInput_eESClusterEnergy_1;
+  float ele1_eRegrInput_eESClusterEnergy_2;
+  float ele1_eRegrInput_eESClusterEnergy_3;
+  float ele1_eRegrInput_eESClusterEta_1;
+  float ele1_eRegrInput_eESClusterEta_2;
+  float ele1_eRegrInput_eESClusterEta_3;
+  float ele1_eRegrInput_eESClusterPhi_1;
+  float ele1_eRegrInput_eESClusterPhi_2;
+  float ele1_eRegrInput_eESClusterPhi_3;
+  float ele1_eRegrInput_pt;
+  float ele1_eRegrInput_trackMomentumAtVtxR;
+  float ele1_eRegrInput_fbrem;
+  float ele1_eRegrInput_charge;
+  float ele1_eRegrInput_eSuperClusterOverP;
 
-  float ele1_inner_p;
-  float ele1_inner_x;
-  float ele1_inner_y;
-  float ele1_inner_z;
-  float ele1_outer_p;
-  float ele1_outer_x;
-  float ele1_outer_y;
-  float ele1_outer_z;
-  int   ele1_tangent_n;
-  std::vector<float> ele1_tangent_p;
-  std::vector<float> ele1_tangent_x;
-  std::vector<float> ele1_tangent_y;
-  std::vector<float> ele1_tangent_z;
-  std::vector<float> ele1_tangent_dP;
-  std::vector<float> ele1_tangent_dPerr;
+  int ele1_nGgsfTrackHits;
+  int ele1_numberOfLostHits;
+  int ele1_nAmbiguousGsfTrack;    
 
   // ele2 variables
   ROOT::Math::XYZTVector ele2;
@@ -489,17 +488,6 @@ class AnalyzerEle : public edm::EDAnalyzer {
   std::vector<float> ele2_recHit_ICConstant;
   int ele2_nRecHits;
 
-  std::vector<float> ele2_recHitMatrix_E;
-  std::vector<int>   ele2_recHitMatrix_flag;
-  std::vector<int>   ele2_recHitMatrix_hashedIndex;
-  std::vector<int>   ele2_recHitMatrix_ietaORix;
-  std::vector<int>   ele2_recHitMatrix_iphiORiy;
-  std::vector<int>   ele2_recHitMatrix_zside;
-  std::vector<float> ele2_recHitMatrix_laserCorrection;
-  std::vector<float> ele2_recHitMatrix_ICConstant;
-  std::vector<float> ele2_recHitMatrix_samples;
-
-
   int ele2_isEB;
   int ele2_isEBEEGap;
   int ele2_isEBEtaGap;
@@ -512,61 +500,75 @@ class AnalyzerEle : public edm::EDAnalyzer {
   float ele2_eRegrInput_r9;
   float ele2_eRegrInput_eta;
   float ele2_eRegrInput_phi;
-  float ele2_eRegrInput_r25;
-  float ele2_eRegrInput_hoe;
   float ele2_eRegrInput_etaW;
   float ele2_eRegrInput_phiW;
-  float ele2_eRegrInput_rho;
-  float ele2_eRegrInput_Deta_bC_sC;
-  float ele2_eRegrInput_Dphi_bC_sC;
-  float ele2_eRegrInput_bCE_Over_sCE;
-  float ele2_eRegrInput_e3x3_Over_bCE;
-  float ele2_eRegrInput_e5x5_Over_bCE;
-  float ele2_eRegrInput_sigietaieta_bC1;
-  float ele2_eRegrInput_sigiphiiphi_bC1;
-  float ele2_eRegrInput_sigietaiphi_bC1;
-  float ele2_eRegrInput_bEMax_Over_bCE;
-  float ele2_eRegrInput_bE2nd_Over_bCE;
-  float ele2_eRegrInput_bEtop_Over_bCE;
-  float ele2_eRegrInput_bEbot_Over_bCE;
-
-  float ele2_eRegrInput_bEleft_Over_bCE;
-  float ele2_eRegrInput_bEright_Over_bCE;
-  float ele2_eRegrInput_be2x5max_Over_bCE;
-  float ele2_eRegrInput_be2x5top_Over_bCE;
-  float ele2_eRegrInput_be2x5bottom_Over_bCE;
-  float ele2_eRegrInput_be2x5left_Over_bCE;
-  float ele2_eRegrInput_be2x5right_Over_bCE;
-
-  float ele2_eRegrInput_seedbC_eta;
-  float ele2_eRegrInput_seedbC_phi;
-  float ele2_eRegrInput_seedbC_eta_p5;
-  float ele2_eRegrInput_seedbC_phi_p2;
-  float ele2_eRegrInput_seedbC_bieta;
-  float ele2_eRegrInput_seedbC_phi_p20;
-  float ele2_eRegrInput_seedbC_etacry;
-  float ele2_eRegrInput_seedbC_phicry;
-
- 
-  float ele2_eRegrInput_ESoSC;
-  float ele2_eRegrInput_nPV;
   float ele2_eRegrInput_SCsize;
- 
-  float ele2_inner_p;
-  float ele2_inner_x;
-  float ele2_inner_y;
-  float ele2_inner_z;
-  float ele2_outer_p;
-  float ele2_outer_x;
-  float ele2_outer_y;
-  float ele2_outer_z;
-  int   ele2_tangent_n;
-  std::vector<float> ele2_tangent_p;
-  std::vector<float> ele2_tangent_x;
-  std::vector<float> ele2_tangent_y;
-  std::vector<float> ele2_tangent_z;
-  std::vector<float> ele2_tangent_dP;
-  std::vector<float> ele2_tangent_dPerr;
+  float ele2_eRegrInput_rho;
+  float ele2_eRegrInput_hoe;
+  float ele2_eRegrInput_nPV;
+  float ele2_eRegrInput_seed_eta;
+  float ele2_eRegrInput_seed_phi;
+  float ele2_eRegrInput_seed_E;
+  float ele2_eRegrInput_seed_e3x3;
+  float ele2_eRegrInput_seed_e5x5;
+  float ele2_eRegrInput_sigietaieta;
+  float ele2_eRegrInput_sigiphiiphi;
+  float ele2_eRegrInput_sigietaiphi;
+  float ele2_eRegrInput_eMax;
+  float ele2_eRegrInput_e2nd;
+  float ele2_eRegrInput_eTop;
+  float ele2_eRegrInput_eBottom;
+  float ele2_eRegrInput_eLeft;
+  float ele2_eRegrInput_eRight;
+  float ele2_eRegrInput_e2x5Max;
+  float ele2_eRegrInput_e2x5Top;
+  float ele2_eRegrInput_e2x5Bottom;
+  float ele2_eRegrInput_e2x5Left;
+  float ele2_eRegrInput_e2x5Right;
+  float ele2_eRegrInput_seed_ieta;
+  float ele2_eRegrInput_seed_iphi;
+  float ele2_eRegrInput_seed_etaCrySeed;
+  float ele2_eRegrInput_seed_phiCrySeed;
+  float ele2_eRegrInput_preshowerEnergyOverRaw;
+  float ele2_eRegrInput_ecalDrivenSeed;
+  float ele2_eRegrInput_isEBEtaGap;
+  float ele2_eRegrInput_isEBPhiGap;
+  float ele2_eRegrInput_eSubClusters;
+  float ele2_eRegrInput_subClusterEnergy_1;
+  float ele2_eRegrInput_subClusterEnergy_2;
+  float ele2_eRegrInput_subClusterEnergy_3;
+  float ele2_eRegrInput_subClusterEta_1;
+  float ele2_eRegrInput_subClusterEta_2;
+  float ele2_eRegrInput_subClusterEta_3;
+  float ele2_eRegrInput_subClusterPhi_1;
+  float ele2_eRegrInput_subClusterPhi_2;
+  float ele2_eRegrInput_subClusterPhi_3;
+  float ele2_eRegrInput_subClusterEmax_1;
+  float ele2_eRegrInput_subClusterEmax_2;
+  float ele2_eRegrInput_subClusterEmax_3;
+  float ele2_eRegrInput_subClusterE3x3_1;
+  float ele2_eRegrInput_subClusterE3x3_2;
+  float ele2_eRegrInput_subClusterE3x3_3;
+  float ele2_eRegrInput_eESClusters;
+  float ele2_eRegrInput_eESClusterEnergy_1;
+  float ele2_eRegrInput_eESClusterEnergy_2;
+  float ele2_eRegrInput_eESClusterEnergy_3;
+  float ele2_eRegrInput_eESClusterEta_1;
+  float ele2_eRegrInput_eESClusterEta_2;
+  float ele2_eRegrInput_eESClusterEta_3;
+  float ele2_eRegrInput_eESClusterPhi_1;
+  float ele2_eRegrInput_eESClusterPhi_2;
+  float ele2_eRegrInput_eESClusterPhi_3;
+  float ele2_eRegrInput_pt;
+  float ele2_eRegrInput_trackMomentumAtVtxR;
+  float ele2_eRegrInput_fbrem;
+  float ele2_eRegrInput_charge;
+  float ele2_eRegrInput_eSuperClusterOverP;
+
+  int ele2_nGgsfTrackHits;
+  int ele2_numberOfLostHits;
+  int ele2_nAmbiguousGsfTrack;    
+
 
   // met variables
   ROOT::Math::XYZTVector met;

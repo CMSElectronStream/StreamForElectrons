@@ -4,14 +4,11 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig){
 
  std::cout << ">>> AnalyzerEle::AnalyzerEle begin <<<" << std::endl;
 
+ // parse input informations
  dataRun_             = iConfig.getParameter<std::string>("dataRun");
- digiCollection_EB_   = iConfig.getParameter<edm::InputTag>("digiCollection_EB");
- digiCollection_EE_   = iConfig.getParameter<edm::InputTag>("digiCollection_EE");
  recHitCollection_EB_ = iConfig.getParameter<edm::InputTag>("recHitCollection_EB");
  recHitCollection_EE_ = iConfig.getParameter<edm::InputTag>("recHitCollection_EE");
  BSTag_               = iConfig.getParameter<edm::InputTag>("theBeamSpotTag");
- SRFlagCollection_EB_ = iConfig.getParameter<edm::InputTag>("SRFlagCollection_EB");
- SRFlagCollection_EE_ = iConfig.getParameter<edm::InputTag>("SRFlagCollection_EE");
  PVTag_               = iConfig.getParameter<edm::InputTag>("PVTag");
  rhoTag_              = iConfig.getParameter<edm::InputTag>("rhoTag");
  EleTag_              = iConfig.getParameter<edm::InputTag>("EleTag");
@@ -26,13 +23,12 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig){
  doWZSelection_      = iConfig.getUntrackedParameter<bool>("doWZSelection", false);
  applyCorrections_   = iConfig.getUntrackedParameter<bool>("applyCorrections",false);
  dataFlag_           = iConfig.getUntrackedParameter<bool>("dataFlag", true);
- saveRecHitMatrix_   = iConfig.getUntrackedParameter<bool>("saveRecHitMatrix",false);
- saveFbrem_          = iConfig.getUntrackedParameter<bool>("saveFbrem", false);
  saveMCInfo_         = iConfig.getUntrackedParameter<bool>("saveMCInfo", false);
 
  eventNaiveId_ = 0;
-
- EcalClusterCrackCorrection = EcalClusterFunctionFactory::get()->create("EcalClusterCrackCorrection", iConfig);
+ 
+ //////////////////////////
+ EcalClusterCrackCorrection     = EcalClusterFunctionFactory::get()->create("EcalClusterCrackCorrection", iConfig);
  EcalClusterLocalContCorrection = EcalClusterFunctionFactory::get()->create("EcalClusterLocalContCorrection", iConfig);
 
 }
@@ -61,6 +57,8 @@ void AnalyzerEle::beginJob(){
  myTree_ -> Branch("PV_d0", &PV_d0_, "PV_d0/F");
  myTree_ -> Branch("rho", &rho_, "rho/F");
  myTree_ -> Branch("nele", &nele_, "nele/I");
+
+ myTree_ -> Branch("HLTResult","std::map<std::string,bool>",&HLTResults_);
 
  if(saveMCInfo_){
 
@@ -96,6 +94,7 @@ void AnalyzerEle::beginJob(){
   myTree_ -> Branch("mcF2_fromV_M", &mcF2_fromV_M, "mcF2_fromV_M/F");
   myTree_ -> Branch("mcF2_fromV_Charge",&mcF2_fromV_Charge,"mcF2_fromV_Charge/I");
   myTree_ -> Branch("mcF2_fromV_PdgId", &mcF2_fromV_PdgId, "mcF2_fromV_PdgId/I");
+
  }
  
  // ele1 variables
@@ -137,7 +136,6 @@ void AnalyzerEle::beginJob(){
  myTree_ -> Branch("ele1_scEtRaw", &ele1_scEtRaw, "ele1_scEtRaw/F");
  myTree_ -> Branch("ele1_scE", &ele1_scE, "ele1_scE/F");
  myTree_ -> Branch("ele1_scEt", &ele1_scEt, "ele1_scEt/F");
- myTree_ -> Branch("ele1_scERaw_PUcleaned", &ele1_scERaw_PUcleaned, "ele1_scERaw_PUcleaned/F");
  myTree_ -> Branch("ele1_es", &ele1_es, "ele1_es/F");
  myTree_ -> Branch("ele1_scLaserCorr", &ele1_scLaserCorr, "ele1_scLaserCorr/F");
  myTree_ -> Branch("ele1_scCrackCorr", &ele1_scCrackCorr, "ele1_scCrackCorr/F");
@@ -149,10 +147,7 @@ void AnalyzerEle::beginJob(){
  myTree_ -> Branch("ele1_scLocalPhi", &ele1_scLocalPhi, "ele1_scLocalPhi/F");
  myTree_ -> Branch("ele1_scEtaWidth", &ele1_scEtaWidth, "ele1_scEtaWidth/F");
  myTree_ -> Branch("ele1_scPhiWidth", &ele1_scPhiWidth, "ele1_scPhiWidth/F");
- myTree_ -> Branch("ele1_scEtaWidth_PUcleaned", &ele1_scEtaWidth_PUcleaned, "ele1_scEtaWidth_PUcleaned/F");
- myTree_ -> Branch("ele1_scPhiWidth_PUcleaned", &ele1_scPhiWidth_PUcleaned, "ele1_scPhiWidth_PUcleaned/F");
- myTree_ -> Branch("ele1_fCorrection_PUcleaned", &ele1_fCorrection_PUcleaned, "ele1_fCorrection_PUcleaned/F");
-  
+
  myTree_ -> Branch("ele1_fEta", &ele1_fEta, "ele1_fEta/F");
  myTree_ -> Branch("ele1_fEtaCorr", &ele1_fEtaCorr, "ele1_fEtaCorr/F");
  myTree_ -> Branch("ele1_tkP", &ele1_tkP, "ele1_tkP/F");
@@ -193,17 +188,80 @@ void AnalyzerEle::beginJob(){
  myTree_ -> Branch("ele1_recHit_Alpha", "std::vector<float>",&ele1_recHit_Alpha);
  myTree_ -> Branch("ele1_recHit_ICConstant", "std::vector<float>",&ele1_recHit_ICConstant);
 
- if(saveRecHitMatrix_) {
-  myTree_ -> Branch("ele1_recHitMatrix_E", "std::vector<float>",&ele1_recHitMatrix_E);
-  myTree_ -> Branch("ele1_recHitMatrix_flag", "std::vector<int>", &ele1_recHitMatrix_flag);
-  myTree_ -> Branch("ele1_recHitMatrix_hashedIndex", "std::vector<int>", &ele1_recHitMatrix_hashedIndex);
-  myTree_ -> Branch("ele1_recHitMatrix_ietaORix", "std::vector<int>", &ele1_recHitMatrix_ietaORix);
-  myTree_ -> Branch("ele1_recHitMatrix_iphiORiy", "std::vector<int>", &ele1_recHitMatrix_iphiORiy);
-  myTree_ -> Branch("ele1_recHitMatrix_zside", "std::vector<int>", &ele1_recHitMatrix_zside);
-  myTree_ -> Branch("ele1_recHitMatrix_laserCorrection","std::vector<float>",&ele1_recHitMatrix_laserCorrection);
-  myTree_ -> Branch("ele1_recHitMatrix_ICConstant", "std::vector<float>",&ele1_recHitMatrix_ICConstant);
-  myTree_ -> Branch("ele1_recHitMatrix_samples", "std::vector<float>",&ele1_recHitMatrix_samples);
- }
+
+ // Regression V3 variables                                                                                                                                                               
+ myTree_ -> Branch("ele1_eRegrInput_rawE",&ele1_eRegrInput_rawE,"ele1_eRegrInput_rawE/F");
+ myTree_ -> Branch("ele1_eRegrInput_r9",&ele1_eRegrInput_r9,"ele1_eRegrInput_r9/F");
+ myTree_ -> Branch("ele1_eRegrInput_eta",&ele1_eRegrInput_eta,"ele1_eRegrInput_eta/F");
+ myTree_ -> Branch("ele1_eRegrInput_phi",&ele1_eRegrInput_phi,"ele1_eRegrInput_phi/F");
+ myTree_ -> Branch("ele1_eRegrInput_etaW",&ele1_eRegrInput_etaW,"ele1_eRegrInput_etaW/F");
+ myTree_ -> Branch("ele1_eRegrInput_phiW",&ele1_eRegrInput_phiW,"ele1_eRegrInput_phiW/F");
+ myTree_ -> Branch("ele1_eRegrInput_SCsize",&ele1_eRegrInput_SCsize,"ele1_eRegrInput_SCsize/F");
+ myTree_ -> Branch("ele1_eRegrInput_rho",&ele1_eRegrInput_rho,"ele1_eRegrInput_rho/F");
+ myTree_ -> Branch("ele1_eRegrInput_hoe",&ele1_eRegrInput_hoe,"ele1_eRegrInput_hoe/F");
+ myTree_ -> Branch("ele1_eRegrInput_nPV",&ele1_eRegrInput_nPV,"ele1_eRegrInput_nPV/F");
+ myTree_ -> Branch("ele1_eRegrInput_seed_eta",&ele1_eRegrInput_seed_eta,"ele1_eRegrInput_seed_eta/F");
+ myTree_ -> Branch("ele1_eRegrInput_seed_phi",&ele1_eRegrInput_seed_phi,"ele1_eRegrInput_seed_phi/F");
+ myTree_ -> Branch("ele1_eRegrInput_seed_E",&ele1_eRegrInput_seed_E,"ele1_eRegrInput_seed_E/F");
+ myTree_ -> Branch("ele1_eRegrInput_seed_e3x3",&ele1_eRegrInput_seed_e3x3,"ele1_eRegrInput_seed_e3x3/F");
+ myTree_ -> Branch("ele1_eRegrInput_seed_e5x5",&ele1_eRegrInput_seed_e5x5,"ele1_eRegrInput_seed_e5x5/F");
+ myTree_ -> Branch("ele1_eRegrInput_sigietaieta",&ele1_eRegrInput_sigietaieta,"ele1_eRegrInput_sigietaieta/F");
+ myTree_ -> Branch("ele1_eRegrInput_sigiphiiphi",&ele1_eRegrInput_sigiphiiphi,"ele1_eRegrInput_sigiphiiphi/F");
+ myTree_ -> Branch("ele1_eRegrInput_sigietaiphi",&ele1_eRegrInput_sigietaiphi,"ele1_eRegrInput_sigietaiphi/F");
+ myTree_ -> Branch("ele1_eRegrInput_eMax",&ele1_eRegrInput_eMax,"ele1_eRegrInput_eMax/F");
+ myTree_ -> Branch("ele1_eRegrInput_e2nd",&ele1_eRegrInput_e2nd,"ele1_eRegrInput_e2nd/F");
+ myTree_ -> Branch("ele1_eRegrInput_eTop",&ele1_eRegrInput_eTop,"ele1_eRegrInput_eTop/F");
+ myTree_ -> Branch("ele1_eRegrInput_eBottom",&ele1_eRegrInput_eBottom,"ele1_eRegrInput_eBottom/F");
+ myTree_ -> Branch("ele1_eRegrInput_eLeft",&ele1_eRegrInput_eLeft,"ele1_eRegrInput_eLeft/F");
+ myTree_ -> Branch("ele1_eRegrInput_eRight",&ele1_eRegrInput_eRight,"ele1_eRegrInput_eRight/F");
+ myTree_ -> Branch("ele1_eRegrInput_e2x5Max",&ele1_eRegrInput_e2x5Max,"ele1_eRegrInput_e2x5Max/F");
+ myTree_ -> Branch("ele1_eRegrInput_e2x5Top",&ele1_eRegrInput_e2x5Top,"ele1_eRegrInput_e2x5Top/F");
+ myTree_ -> Branch("ele1_eRegrInput_e2x5Bottom",&ele1_eRegrInput_e2x5Bottom,"ele1_eRegrInput_e2x5Bottom/F");
+ myTree_ -> Branch("ele1_eRegrInput_e2x5Left",&ele1_eRegrInput_e2x5Left,"ele1_eRegrInput_e2x5Left/F");
+ myTree_ -> Branch("ele1_eRegrInput_e2x5Right",&ele1_eRegrInput_e2x5Right,"ele1_eRegrInput_e2x5Right/F");
+ myTree_ -> Branch("ele1_eRegrInput_seed_ieta",&ele1_eRegrInput_seed_ieta,"ele1_eRegrInput_seed_ieta/F");
+ myTree_ -> Branch("ele1_eRegrInput_seed_iphi",&ele1_eRegrInput_seed_iphi,"ele1_eRegrInput_seed_iphi/F");
+ myTree_ -> Branch("ele1_eRegrInput_seed_etaCrySeed",&ele1_eRegrInput_seed_etaCrySeed,"ele1_eRegrInput_seed_etaCrySeed/F");
+ myTree_ -> Branch("ele1_eRegrInput_seed_phiCrySeed",&ele1_eRegrInput_seed_phiCrySeed,"ele1_eRegrInput_seed_phiCrySeed/F");
+ myTree_ -> Branch("ele1_eRegrInput_preshowerEnergyOverRaw",&ele1_eRegrInput_preshowerEnergyOverRaw,"ele1_eRegrInput_preshowerEnergyOverRaw/F");
+ myTree_ -> Branch("ele1_eRegrInput_ecalDrivenSeed",&ele1_eRegrInput_ecalDrivenSeed,"ele1_eRegrInput_ecalDrivenSeed/F");
+ myTree_ -> Branch("ele1_eRegrInput_isEBEtaGap",&ele1_eRegrInput_isEBEtaGap,"ele1_eRegrInput_isEBEtaGap/F");
+ myTree_ -> Branch("ele1_eRegrInput_isEBPhiGap",&ele1_eRegrInput_isEBPhiGap,"ele1_eRegrInput_isEBPhiGap/F");
+ myTree_ -> Branch("ele1_eRegrInput_eSubClusters",&ele1_eRegrInput_eSubClusters,"ele1_eRegrInput_eSubClusters/F");
+ myTree_ -> Branch("ele1_eRegrInput_subClusterEnergy_1",&ele1_eRegrInput_subClusterEnergy_1,"ele1_eRegrInput_subClusterEnergy_1/F");
+ myTree_ -> Branch("ele1_eRegrInput_subClusterEnergy_2",&ele1_eRegrInput_subClusterEnergy_2,"ele1_eRegrInput_subClusterEnergy_2/F");
+ myTree_ -> Branch("ele1_eRegrInput_subClusterEnergy_3",&ele1_eRegrInput_subClusterEnergy_3,"ele1_eRegrInput_subClusterEnergy_3/F");
+ myTree_ -> Branch("ele1_eRegrInput_subClusterEta_1",&ele1_eRegrInput_subClusterEta_1,"ele1_eRegrInput_subClusterEta_1/F");
+ myTree_ -> Branch("ele1_eRegrInput_subClusterEta_2",&ele1_eRegrInput_subClusterEta_2,"ele1_eRegrInput_subClusterEta_2/F");
+ myTree_ -> Branch("ele1_eRegrInput_subClusterEta_3",&ele1_eRegrInput_subClusterEta_3,"ele1_eRegrInput_subClusterEta_3/F");
+ myTree_ -> Branch("ele1_eRegrInput_subClusterPhi_1",&ele1_eRegrInput_subClusterPhi_1,"ele1_eRegrInput_subClusterPhi_1/F");
+ myTree_ -> Branch("ele1_eRegrInput_subClusterPhi_2",&ele1_eRegrInput_subClusterPhi_2,"ele1_eRegrInput_subClusterPhi_2/F");
+ myTree_ -> Branch("ele1_eRegrInput_subClusterPhi_3",&ele1_eRegrInput_subClusterPhi_3,"ele1_eRegrInput_subClusterPhi_3/F");
+ myTree_ -> Branch("ele1_eRegrInput_subClusterEmax_1",&ele1_eRegrInput_subClusterEmax_1,"ele1_eRegrInput_subClusterEmax_1/F");
+ myTree_ -> Branch("ele1_eRegrInput_subClusterEmax_2",&ele1_eRegrInput_subClusterEmax_2,"ele1_eRegrInput_subClusterEmax_2/F");
+ myTree_ -> Branch("ele1_eRegrInput_subClusterEmax_3",&ele1_eRegrInput_subClusterEmax_3,"ele1_eRegrInput_subClusterEmax_3/F");
+ myTree_ -> Branch("ele1_eRegrInput_subClusterE3x3_1",&ele1_eRegrInput_subClusterE3x3_1,"ele1_eRegrInput_subClusterE3x3_1/F");
+ myTree_ -> Branch("ele1_eRegrInput_subClusterE3x3_2",&ele1_eRegrInput_subClusterE3x3_2,"ele1_eRegrInput_subClusterE3x3_2/F");
+ myTree_ -> Branch("ele1_eRegrInput_subClusterE3x3_3",&ele1_eRegrInput_subClusterE3x3_3,"ele1_eRegrInput_subClusterE3x3_3/F");
+ myTree_ -> Branch("ele1_eRegrInput_eESClusters",&ele1_eRegrInput_eESClusters,"ele1_eRegrInput_eESClusters/F");
+ myTree_ -> Branch("ele1_eRegrInput_eESClusterEnergy_1",&ele1_eRegrInput_eESClusterEnergy_1,"ele1_eRegrInput_eESClusterEnergy_1/F");
+ myTree_ -> Branch("ele1_eRegrInput_eESClusterEnergy_2",&ele1_eRegrInput_eESClusterEnergy_2,"ele1_eRegrInput_eESClusterEnergy_2/F");
+ myTree_ -> Branch("ele1_eRegrInput_eESClusterEnergy_3",&ele1_eRegrInput_eESClusterEnergy_3,"ele1_eRegrInput_eESClusterEnergy_3/F");
+ myTree_ -> Branch("ele1_eRegrInput_eESClusterEta_1",&ele1_eRegrInput_eESClusterEta_1,"ele1_eRegrInput_eESClusterEta_1/F");
+ myTree_ -> Branch("ele1_eRegrInput_eESClusterEta_2",&ele1_eRegrInput_eESClusterEta_2,"ele1_eRegrInput_eESClusterEta_2/F");
+ myTree_ -> Branch("ele1_eRegrInput_eESClusterEta_3",&ele1_eRegrInput_eESClusterEta_3,"ele1_eRegrInput_eESClusterEta_3/F");
+ myTree_ -> Branch("ele1_eRegrInput_eESClusterPhi_1",&ele1_eRegrInput_eESClusterPhi_1,"ele1_eRegrInput_eESClusterPhi_1/F");
+ myTree_ -> Branch("ele1_eRegrInput_eESClusterPhi_2",&ele1_eRegrInput_eESClusterPhi_2,"ele1_eRegrInput_eESClusterPhi_2/F");
+ myTree_ -> Branch("ele1_eRegrInput_eESClusterPhi_3",&ele1_eRegrInput_eESClusterPhi_3,"ele1_eRegrInput_eESClusterPhi_3/F");
+ myTree_ -> Branch("ele1_eRegrInput_pt",&ele1_eRegrInput_pt,"ele1_eRegrInput_pt/F");
+ myTree_ -> Branch("ele1_eRegrInput_trackMomentumAtVtxR",&ele1_eRegrInput_trackMomentumAtVtxR,"ele1_eRegrInput_trackMomentumAtVtxR/F");
+ myTree_ -> Branch("ele1_eRegrInput_fbrem",&ele1_eRegrInput_fbrem,"ele1_eRegrInput_fbrem/F");
+ myTree_ -> Branch("ele1_eRegrInput_charge",&ele1_eRegrInput_charge,"ele1_eRegrInput_charge/F");
+ myTree_ -> Branch("ele1_eRegrInput_eSuperClusterOverP",&ele1_eRegrInput_eSuperClusterOverP,"ele1_eRegrInput_eSuperClusterOverP/F");
+
+ myTree_ -> Branch("ele1_nGgsfTrackHits",&ele1_nGgsfTrackHits,"ele1_nGgsfTrackHits/I");
+ myTree_ -> Branch("ele1_numberOfLostHits",&ele1_numberOfLostHits,"ele1_numberOfLostHits/I");
+ myTree_ -> Branch("ele1_nAmbiguousGsfTrack",&ele1_nAmbiguousGsfTrack,"ele1_nAmbiguousGsfTrack/I");
 
 
  // ele2 variables
@@ -249,7 +307,6 @@ void AnalyzerEle::beginJob(){
  myTree_ -> Branch("ele2_scEtRaw", &ele2_scEtRaw, "ele2_scEtRaw/F");
  myTree_ -> Branch("ele2_scE", &ele2_scE, "ele2_scE/F");
  myTree_ -> Branch("ele2_scEt", &ele2_scEt, "ele2_scEt/F");
- myTree_ -> Branch("ele2_scERaw_PUcleaned", &ele2_scERaw_PUcleaned, "ele2_scERaw_PUcleaned/F");
  myTree_ -> Branch("ele2_es", &ele2_es, "ele2_es/F");
  myTree_ -> Branch("ele2_scLaserCorr", &ele2_scLaserCorr, "ele2_scLaserCorr/F");
  myTree_ -> Branch("ele2_scCrackCorr", &ele2_scCrackCorr, "ele2_scCrackCorr/F");
@@ -261,9 +318,6 @@ void AnalyzerEle::beginJob(){
  myTree_ -> Branch("ele2_scLocalPhi", &ele2_scLocalPhi, "ele2_scLocalPhi/F");
  myTree_ -> Branch("ele2_scEtaWidth", &ele2_scEtaWidth, "ele2_scEtaWidth/F");
  myTree_ -> Branch("ele2_scPhiWidth", &ele2_scPhiWidth, "ele2_scPhiWidth/F");
- myTree_ -> Branch("ele2_scEtaWidth_PUcleaned", &ele2_scEtaWidth_PUcleaned, "ele2_scEtaWidth_PUcleaned/F");
- myTree_ -> Branch("ele2_scPhiWidth_PUcleaned", &ele2_scPhiWidth_PUcleaned, "ele2_scPhiWidth_PUcleaned/F");
- myTree_ -> Branch("ele2_fCorrection_PUcleaned", &ele2_fCorrection_PUcleaned, "ele2_fCorrection_PUcleaned/F");
   
  myTree_ -> Branch("ele2_fEta", &ele2_fEta, "ele2_fEta/F");
  myTree_ -> Branch("ele2_fEtaCorr", &ele2_fEtaCorr, "ele2_fEtaCorr/F");
@@ -301,17 +355,81 @@ void AnalyzerEle::beginJob(){
  myTree_ -> Branch("ele2_recHit_Alpha", "std::vector<float>",&ele2_recHit_Alpha);
  myTree_ -> Branch("ele2_recHit_ICConstant", "std::vector<float>",&ele2_recHit_ICConstant);
 
- if(saveRecHitMatrix_) {
-  myTree_ -> Branch("ele2_recHitMatrix_E", "std::vector<float>",&ele2_recHitMatrix_E);
-  myTree_ -> Branch("ele2_recHitMatrix_flag", "std::vector<int>", &ele2_recHitMatrix_flag);
-  myTree_ -> Branch("ele2_recHitMatrix_hashedIndex", "std::vector<int>", &ele2_recHitMatrix_hashedIndex);
-  myTree_ -> Branch("ele2_recHitMatrix_ietaORix", "std::vector<int>", &ele2_recHitMatrix_ietaORix);
-  myTree_ -> Branch("ele2_recHitMatrix_iphiORiy", "std::vector<int>", &ele2_recHitMatrix_iphiORiy);
-  myTree_ -> Branch("ele2_recHitMatrix_zside", "std::vector<int>", &ele2_recHitMatrix_zside);
-  myTree_ -> Branch("ele2_recHitMatrix_laserCorrection","std::vector<float>",&ele2_recHitMatrix_laserCorrection);
-  myTree_ -> Branch("ele2_recHitMatrix_ICConstant", "std::vector<float>",&ele2_recHitMatrix_ICConstant);
-  myTree_ -> Branch("ele2_recHitMatrix_samples", "std::vector<float>",&ele2_recHitMatrix_samples);
- }
+
+ // Regression V3 variables                                                                                                                                                               
+ myTree_ -> Branch("ele2_eRegrInput_rawE",&ele2_eRegrInput_rawE,"ele2_eRegrInput_rawE/F");
+ myTree_ -> Branch("ele2_eRegrInput_r9",&ele2_eRegrInput_r9,"ele2_eRegrInput_r9/F");
+ myTree_ -> Branch("ele2_eRegrInput_eta",&ele2_eRegrInput_eta,"ele2_eRegrInput_eta/F");
+ myTree_ -> Branch("ele2_eRegrInput_phi",&ele2_eRegrInput_phi,"ele2_eRegrInput_phi/F");
+ myTree_ -> Branch("ele2_eRegrInput_etaW",&ele2_eRegrInput_etaW,"ele2_eRegrInput_etaW/F");
+ myTree_ -> Branch("ele2_eRegrInput_phiW",&ele2_eRegrInput_phiW,"ele2_eRegrInput_phiW/F");
+ myTree_ -> Branch("ele2_eRegrInput_SCsize",&ele2_eRegrInput_SCsize,"ele2_eRegrInput_SCsize/F");
+ myTree_ -> Branch("ele2_eRegrInput_rho",&ele2_eRegrInput_rho,"ele2_eRegrInput_rho/F");
+ myTree_ -> Branch("ele2_eRegrInput_hoe",&ele2_eRegrInput_hoe,"ele2_eRegrInput_hoe/F");
+ myTree_ -> Branch("ele2_eRegrInput_nPV",&ele2_eRegrInput_nPV,"ele2_eRegrInput_nPV/F");
+ myTree_ -> Branch("ele2_eRegrInput_seed_eta",&ele2_eRegrInput_seed_eta,"ele2_eRegrInput_seed_eta/F");
+ myTree_ -> Branch("ele2_eRegrInput_seed_phi",&ele2_eRegrInput_seed_phi,"ele2_eRegrInput_seed_phi/F");
+ myTree_ -> Branch("ele2_eRegrInput_seed_E",&ele2_eRegrInput_seed_E,"ele2_eRegrInput_seed_E/F");
+ myTree_ -> Branch("ele2_eRegrInput_seed_e3x3",&ele2_eRegrInput_seed_e3x3,"ele2_eRegrInput_seed_e3x3/F");
+ myTree_ -> Branch("ele2_eRegrInput_seed_e5x5",&ele2_eRegrInput_seed_e5x5,"ele2_eRegrInput_seed_e5x5/F");
+ myTree_ -> Branch("ele2_eRegrInput_sigietaieta",&ele2_eRegrInput_sigietaieta,"ele2_eRegrInput_sigietaieta/F");
+ myTree_ -> Branch("ele2_eRegrInput_sigiphiiphi",&ele2_eRegrInput_sigiphiiphi,"ele2_eRegrInput_sigiphiiphi/F");
+ myTree_ -> Branch("ele2_eRegrInput_sigietaiphi",&ele2_eRegrInput_sigietaiphi,"ele2_eRegrInput_sigietaiphi/F");
+ myTree_ -> Branch("ele2_eRegrInput_eMax",&ele2_eRegrInput_eMax,"ele2_eRegrInput_eMax/F");
+ myTree_ -> Branch("ele2_eRegrInput_e2nd",&ele2_eRegrInput_e2nd,"ele2_eRegrInput_e2nd/F");
+ myTree_ -> Branch("ele2_eRegrInput_eTop",&ele2_eRegrInput_eTop,"ele2_eRegrInput_eTop/F");
+ myTree_ -> Branch("ele2_eRegrInput_eBottom",&ele2_eRegrInput_eBottom,"ele2_eRegrInput_eBottom/F");
+ myTree_ -> Branch("ele2_eRegrInput_eLeft",&ele2_eRegrInput_eLeft,"ele2_eRegrInput_eLeft/F");
+ myTree_ -> Branch("ele2_eRegrInput_eRight",&ele2_eRegrInput_eRight,"ele2_eRegrInput_eRight/F");
+ myTree_ -> Branch("ele2_eRegrInput_e2x5Max",&ele2_eRegrInput_e2x5Max,"ele2_eRegrInput_e2x5Max/F");
+ myTree_ -> Branch("ele2_eRegrInput_e2x5Top",&ele2_eRegrInput_e2x5Top,"ele2_eRegrInput_e2x5Top/F");
+ myTree_ -> Branch("ele2_eRegrInput_e2x5Bottom",&ele2_eRegrInput_e2x5Bottom,"ele2_eRegrInput_e2x5Bottom/F");
+ myTree_ -> Branch("ele2_eRegrInput_e2x5Left",&ele2_eRegrInput_e2x5Left,"ele2_eRegrInput_e2x5Left/F");
+ myTree_ -> Branch("ele2_eRegrInput_e2x5Right",&ele2_eRegrInput_e2x5Right,"ele2_eRegrInput_e2x5Right/F");
+ myTree_ -> Branch("ele2_eRegrInput_seed_ieta",&ele2_eRegrInput_seed_ieta,"ele2_eRegrInput_seed_ieta/F");
+ myTree_ -> Branch("ele2_eRegrInput_seed_iphi",&ele2_eRegrInput_seed_iphi,"ele2_eRegrInput_seed_iphi/F");
+ myTree_ -> Branch("ele2_eRegrInput_seed_etaCrySeed",&ele2_eRegrInput_seed_etaCrySeed,"ele2_eRegrInput_seed_etaCrySeed/F");
+ myTree_ -> Branch("ele2_eRegrInput_seed_phiCrySeed",&ele2_eRegrInput_seed_phiCrySeed,"ele2_eRegrInput_seed_phiCrySeed/F");
+ myTree_ -> Branch("ele2_eRegrInput_preshowerEnergyOverRaw",&ele2_eRegrInput_preshowerEnergyOverRaw,"ele2_eRegrInput_preshowerEnergyOverRaw/F");
+ myTree_ -> Branch("ele2_eRegrInput_ecalDrivenSeed",&ele2_eRegrInput_ecalDrivenSeed,"ele2_eRegrInput_ecalDrivenSeed/F");
+ myTree_ -> Branch("ele2_eRegrInput_isEBEtaGap",&ele2_eRegrInput_isEBEtaGap,"ele2_eRegrInput_isEBEtaGap/F");
+ myTree_ -> Branch("ele2_eRegrInput_isEBPhiGap",&ele2_eRegrInput_isEBPhiGap,"ele2_eRegrInput_isEBPhiGap/F");
+ myTree_ -> Branch("ele2_eRegrInput_eSubClusters",&ele2_eRegrInput_eSubClusters,"ele2_eRegrInput_eSubClusters/F");
+ myTree_ -> Branch("ele2_eRegrInput_subClusterEnergy_1",&ele2_eRegrInput_subClusterEnergy_1,"ele2_eRegrInput_subClusterEnergy_1/F");
+ myTree_ -> Branch("ele2_eRegrInput_subClusterEnergy_2",&ele2_eRegrInput_subClusterEnergy_2,"ele2_eRegrInput_subClusterEnergy_2/F");
+ myTree_ -> Branch("ele2_eRegrInput_subClusterEnergy_3",&ele2_eRegrInput_subClusterEnergy_3,"ele2_eRegrInput_subClusterEnergy_3/F");
+ myTree_ -> Branch("ele2_eRegrInput_subClusterEta_1",&ele2_eRegrInput_subClusterEta_1,"ele2_eRegrInput_subClusterEta_1/F");
+ myTree_ -> Branch("ele2_eRegrInput_subClusterEta_2",&ele2_eRegrInput_subClusterEta_2,"ele2_eRegrInput_subClusterEta_2/F");
+ myTree_ -> Branch("ele2_eRegrInput_subClusterEta_3",&ele2_eRegrInput_subClusterEta_3,"ele2_eRegrInput_subClusterEta_3/F");
+ myTree_ -> Branch("ele2_eRegrInput_subClusterPhi_1",&ele2_eRegrInput_subClusterPhi_1,"ele2_eRegrInput_subClusterPhi_1/F");
+ myTree_ -> Branch("ele2_eRegrInput_subClusterPhi_2",&ele2_eRegrInput_subClusterPhi_2,"ele2_eRegrInput_subClusterPhi_2/F");
+ myTree_ -> Branch("ele2_eRegrInput_subClusterPhi_3",&ele2_eRegrInput_subClusterPhi_3,"ele2_eRegrInput_subClusterPhi_3/F");
+ myTree_ -> Branch("ele2_eRegrInput_subClusterEmax_1",&ele2_eRegrInput_subClusterEmax_1,"ele2_eRegrInput_subClusterEmax_1/F");
+ myTree_ -> Branch("ele2_eRegrInput_subClusterEmax_2",&ele2_eRegrInput_subClusterEmax_2,"ele2_eRegrInput_subClusterEmax_2/F");
+ myTree_ -> Branch("ele2_eRegrInput_subClusterEmax_3",&ele2_eRegrInput_subClusterEmax_3,"ele2_eRegrInput_subClusterEmax_3/F");
+ myTree_ -> Branch("ele2_eRegrInput_subClusterE3x3_1",&ele2_eRegrInput_subClusterE3x3_1,"ele2_eRegrInput_subClusterE3x3_1/F");
+ myTree_ -> Branch("ele2_eRegrInput_subClusterE3x3_2",&ele2_eRegrInput_subClusterE3x3_2,"ele2_eRegrInput_subClusterE3x3_2/F");
+ myTree_ -> Branch("ele2_eRegrInput_subClusterE3x3_3",&ele2_eRegrInput_subClusterE3x3_3,"ele2_eRegrInput_subClusterE3x3_3/F");
+ myTree_ -> Branch("ele2_eRegrInput_eESClusters",&ele2_eRegrInput_eESClusters,"ele2_eRegrInput_eESClusters/F");
+ myTree_ -> Branch("ele2_eRegrInput_eESClusterEnergy_1",&ele2_eRegrInput_eESClusterEnergy_1,"ele2_eRegrInput_eESClusterEnergy_1/F");
+ myTree_ -> Branch("ele2_eRegrInput_eESClusterEnergy_2",&ele2_eRegrInput_eESClusterEnergy_2,"ele2_eRegrInput_eESClusterEnergy_2/F");
+ myTree_ -> Branch("ele2_eRegrInput_eESClusterEnergy_3",&ele2_eRegrInput_eESClusterEnergy_3,"ele2_eRegrInput_eESClusterEnergy_3/F");
+ myTree_ -> Branch("ele2_eRegrInput_eESClusterEta_1",&ele2_eRegrInput_eESClusterEta_1,"ele2_eRegrInput_eESClusterEta_1/F");
+ myTree_ -> Branch("ele2_eRegrInput_eESClusterEta_2",&ele2_eRegrInput_eESClusterEta_2,"ele2_eRegrInput_eESClusterEta_2/F");
+ myTree_ -> Branch("ele2_eRegrInput_eESClusterEta_3",&ele2_eRegrInput_eESClusterEta_3,"ele2_eRegrInput_eESClusterEta_3/F");
+ myTree_ -> Branch("ele2_eRegrInput_eESClusterPhi_1",&ele2_eRegrInput_eESClusterPhi_1,"ele2_eRegrInput_eESClusterPhi_1/F");
+ myTree_ -> Branch("ele2_eRegrInput_eESClusterPhi_2",&ele2_eRegrInput_eESClusterPhi_2,"ele2_eRegrInput_eESClusterPhi_2/F");
+ myTree_ -> Branch("ele2_eRegrInput_eESClusterPhi_3",&ele2_eRegrInput_eESClusterPhi_3,"ele2_eRegrInput_eESClusterPhi_3/F");
+ myTree_ -> Branch("ele2_eRegrInput_pt",&ele2_eRegrInput_pt,"ele2_eRegrInput_pt/F");
+ myTree_ -> Branch("ele2_eRegrInput_trackMomentumAtVtxR",&ele2_eRegrInput_trackMomentumAtVtxR,"ele2_eRegrInput_trackMomentumAtVtxR/F");
+ myTree_ -> Branch("ele2_eRegrInput_fbrem",&ele2_eRegrInput_fbrem,"ele2_eRegrInput_fbrem/F");
+ myTree_ -> Branch("ele2_eRegrInput_charge",&ele2_eRegrInput_charge,"ele2_eRegrInput_charge/F");
+ myTree_ -> Branch("ele2_eRegrInput_eSuperClusterOverP",&ele2_eRegrInput_eSuperClusterOverP,"ele2_eRegrInput_eSuperClusterOverP/F");
+
+ myTree_ -> Branch("ele2_nGgsfTrackHits",&ele2_nGgsfTrackHits,"ele2_nGgsfTrackHits/I");
+ myTree_ -> Branch("ele2_numberOfLostHits",&ele2_numberOfLostHits,"ele2_numberOfLostHits/I");
+ myTree_ -> Branch("ele2_nAmbiguousGsfTrack",&ele2_nAmbiguousGsfTrack,"ele2_nAmbiguousGsfTrack/I");
+
 
  // met variables
  std::cout << ">>>>>> AnalyzerEle::AnalyzerEle::set met branches <<<" << std::endl;
@@ -325,67 +443,25 @@ void AnalyzerEle::beginJob(){
  myTree_ -> Branch("ele1ele2_m", &ele1ele2_m, "ele1ele2_m/F");
  myTree_ -> Branch("ele1ele2_scM", &ele1ele2_scM, "ele1ele2_scM/F");
 
- // fbrem variables
- if(saveFbrem_) {
-
-  std::cout << ">>>>>> AnalyzerEle::AnalyzerEle::set fBrem branches <<<" << std::endl;
-
-  myTree_ -> Branch("ele1_inner_p", &ele1_inner_p, "ele1_inner_p/F");
-  myTree_ -> Branch("ele1_inner_x", &ele1_inner_x, "ele1_inner_x/F");
-  myTree_ -> Branch("ele1_inner_y", &ele1_inner_y, "ele1_inner_y/F");
-  myTree_ -> Branch("ele1_inner_z", &ele1_inner_z, "ele1_inner_z/F");
-  myTree_ -> Branch("ele1_outer_p", &ele1_outer_p, "ele1_outer_p/F");
-  myTree_ -> Branch("ele1_outer_x", &ele1_outer_x, "ele1_outer_x/F");
-  myTree_ -> Branch("ele1_outer_y", &ele1_outer_y, "ele1_outer_y/F");
-  myTree_ -> Branch("ele1_outer_z", &ele1_outer_z, "ele1_outer_z/F");
-  myTree_ -> Branch("ele1_tangent_n",&ele1_tangent_n, "ele1_tangent_n/I");
-  myTree_ -> Branch("ele1_tangent_p", "std::vector<float>",&ele1_tangent_p);
-  myTree_ -> Branch("ele1_tangent_x", "std::vector<float>",&ele1_tangent_x);
-  myTree_ -> Branch("ele1_tangent_y", "std::vector<float>",&ele1_tangent_y);
-  myTree_ -> Branch("ele1_tangent_z", "std::vector<float>",&ele1_tangent_z);
-  myTree_ -> Branch("ele1_tangent_dP", "std::vector<float>",&ele1_tangent_dP);
-  myTree_ -> Branch("ele1_tangent_dPerr","std::vector<float>",&ele1_tangent_dPerr);
-
-  myTree_ -> Branch("ele2_inner_p", &ele2_inner_p, "ele2_inner_p/F");
-  myTree_ -> Branch("ele2_inner_x", &ele2_inner_x, "ele2_inner_x/F");
-  myTree_ -> Branch("ele2_inner_y", &ele2_inner_y, "ele2_inner_y/F");
-  myTree_ -> Branch("ele2_inner_z", &ele2_inner_z, "ele2_inner_z/F");
-  myTree_ -> Branch("ele2_outer_p", &ele2_outer_p, "ele2_outer_p/F");
-  myTree_ -> Branch("ele2_outer_x", &ele2_outer_x, "ele2_outer_x/F");
-  myTree_ -> Branch("ele2_outer_y", &ele2_outer_y, "ele2_outer_y/F");
-  myTree_ -> Branch("ele2_outer_z", &ele2_outer_z, "ele2_outer_z/F");
-  myTree_ -> Branch("ele2_tangent_n",&ele2_tangent_n,"ele2_tangent_n/I");
-  myTree_ -> Branch("ele2_tangent_p", "std::vector<float>",&ele2_tangent_p);
-  myTree_ -> Branch("ele2_tangent_x", "std::vector<float>",&ele2_tangent_x);
-  myTree_ -> Branch("ele2_tangent_y", "std::vector<float>",&ele2_tangent_y);
-  myTree_ -> Branch("ele2_tangent_z", "std::vector<float>",&ele2_tangent_z);
-  myTree_ -> Branch("ele2_tangent_dP", "std::vector<float>",&ele2_tangent_dP);
-  myTree_ -> Branch("ele2_tangent_dPerr","std::vector<float>",&ele2_tangent_dPerr);
- }
-
  std::cout << ">>> AnalyzerEle::AnalyzerEle end <<<" << std::endl;
 
 }
 
 // ------------ method called once each job just after ending the event loop ------------
 void AnalyzerEle::endJob(){
-
-  if(myTree_->GetEntries()>0){
-    myTree_->BuildIndex("runId","eventId");
-  }
-
+  if(myTree_->GetEntries()>0) myTree_->BuildIndex("runId","eventId");  
 }
 
 // -----------------------------------------------------------------------------------------
 void AnalyzerEle::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
- if( verbosity_ )
-  std::cout << ">>> AnalyzerEle::analyze begin <<<" << std::endl;
+ if(verbosity_) std::cout << ">>> AnalyzerEle::analyze begin <<<" << std::endl;
 
  ++eventNaiveId_;
 
  bool isGoodEvent = false;
- initialize();
+ 
+ initialize(); // set all the branch variables to the default
 
  // event variables
  bxId_          = iEvent.bunchCrossing();
@@ -417,59 +493,63 @@ void AnalyzerEle::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
  ///---- get the number of the electron in the event to know if it's a W or a Z ----
  nele_ = electrons.size();
+ // make selection for W and Z topology
  if(doWZSelection_){
 
-   std::map<float,int> eleIts_ ; 
-   eleIts_.clear();
+   std::map<float,int> eleIts_ ; //map to take track of the electron inside the collection 1/pt and position 
+   eleIts_.clear(); // clear the list in every event
 
    int nWP70 = 0; //only WP70
    int nWP90 = 0; //only WP90
 
-   for( unsigned int iEle = 0 ; iEle < electrons.size(); iEle++){
-     if(electrons.at(iEle).electronID("cIso70") or electrons.at(iEle).electronID("relIso70")){
+   for( unsigned int iEle = 0 ; iEle < electrons.size(); iEle++){ // Loop on the electron 
+     if(electrons.at(iEle).electronID("cIso70") or electrons.at(iEle).electronID("relIso70")){ //if the electron is WP70 combined or absolute isolation 
           ++nWP70; ++nWP90;
-          eleIts_[1./electrons.at(iEle).pt()] = iEle;
+          eleIts_[1./electrons.at(iEle).pt()] = iEle; // fill the map and this is both a WP70 and WP90
 	  continue;
      }
-     if(electrons.at(iEle).electronID("cIso90") or electrons.at(iEle).electronID("relIso90")){
+
+     if(electrons.at(iEle).electronID("cIso90") or electrons.at(iEle).electronID("relIso90")){ // if the electron is WP90 combined or absolute isolation
 	  ++nWP90;
-          eleIts_[1./electrons.at(iEle).pt()] = iEle;
+          eleIts_[1./electrons.at(iEle).pt()] = iEle; 
 	  continue;
       }
    }
 
-   if( nWP70 < 1 ) return;
-   if( nWP90 > 2 ) return;
+   if( nWP70 < 1 or nWP90 > 2) return; // less than one WP70 or more than two WP90 -> skip the event
 
-  ///---- check if the event is good----
-  if( (nWP70 == 1) && (nWP90 < 2) ){
-   isW_=1; isZ_=0;
-   std::map<float,int>::const_iterator mapIt = eleIts_.begin();
-   fillEleInfo ( iEvent, iSetup, mapIt->second, "ele1" );
-   fillMetInfo (iEvent, iSetup);
-   isGoodEvent = myWselection ( iEvent, iSetup);
-   if ( isGoodEvent ) myTree_ -> Fill();
+   if( (nWP70 == 1) && (nWP90 < 2) ){ // less than two WP90 and one WP70 -> W candidate
+
+    isW_ = 1; isZ_ = 0;
+    std::map<float,int>::const_iterator mapIt = eleIts_.begin();
+    fillEleInfo ( iEvent, iSetup, mapIt->second, "ele1" ); //fill the electron variables for ele1
+    fillMetInfo (iEvent, iSetup); // fill the met
+    isGoodEvent = myWselection ( iEvent, iSetup); // make the W selection
+    if (isGoodEvent) myTree_->Fill();  // Fill the tree
   }
 
-  if( nWP70 == 2 or nWP90 == 2 or (nWP70 == 1 and nWP90 == 2 ) ){
-   isW_=0; isZ_=1;
+  if( nWP70 == 2 or nWP90 == 2 or (nWP70 == 1 and nWP90 == 2 ) ){ // if two  WP70 or two WP90 
+
+   isW_ = 0; isZ_ = 1;
+
    std::map<float,int>::const_iterator mapIt = eleIts_.begin();
-   fillEleInfo ( iEvent, iSetup, mapIt->second, "ele1" );
+   fillEleInfo ( iEvent, iSetup, mapIt->second, "ele1" ); // fill electron 1 info
    mapIt++;
-   fillEleInfo ( iEvent, iSetup, mapIt->second, "ele2" );
-   fillDoubleEleInfo (iEvent, iSetup);
-   fillMetInfo (iEvent, iSetup);
-   isGoodEvent = myZselection ( iEvent, iSetup);
-   if ( isGoodEvent ) myTree_ -> Fill();
+   fillEleInfo ( iEvent, iSetup, mapIt->second, "ele2" ); // fill electron 2 info
+   fillDoubleEleInfo (iEvent, iSetup); // fill double ele info
+   fillMetInfo (iEvent, iSetup); // fill met info
+   isGoodEvent = myZselection ( iEvent, iSetup); // make the Z selections
+   if (isGoodEvent) myTree_ -> Fill(); // fill the tree
   }
  }
+ // without doing W/Z selections
  else {
    
   int nEle = electrons.size();      
-  if ( nEle == 1 ) { isW_ = 1; isZ_ = 0; }
-  if ( nEle >= 2 ) { isW_ = 0; isZ_ = 1; }
-  if ( isW_ == 1 ) fillEleInfo ( iEvent, iSetup, 0, "ele1" );
-  if ( isZ_ == 1 ) {
+  if(nEle == 1) { isW_ = 1; isZ_ = 0; }
+  if(nEle >= 2) { isW_ = 0; isZ_ = 1; }
+  if(isW_ == 1) fillEleInfo ( iEvent, iSetup, 0, "ele1" );
+  if(isZ_ == 1) {
    fillEleInfo ( iEvent, iSetup, 0, "ele1" );
    fillEleInfo ( iEvent, iSetup, 1, "ele2" );
    fillDoubleEleInfo (iEvent, iSetup);
@@ -478,12 +558,11 @@ void AnalyzerEle::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   if (isW_ == 1 || isZ_ == 1) myTree_ -> Fill();
 
  }
-
  if( verbosity_ ) std::cout << ">>> AnalyzerEle::analyze end <<<" << std::endl;
 }
 
 
-// -----------------------------------------------------------------------------------------
+// ----------------------------- Selection for W events
 bool AnalyzerEle::myWselection (const edm::Event & iEvent, const edm::EventSetup & iSetup){
   
  if( ele1_pt < 30. )       return false;         
@@ -495,7 +574,7 @@ bool AnalyzerEle::myWselection (const edm::Event & iEvent, const edm::EventSetup
   
 }
 
-// -----------------------------------------------------------------------------------------
+// -------------------------- Selection for Z events
 bool AnalyzerEle::myZselection (const edm::Event & iEvent, const edm::EventSetup & iSetup){
 
  if( met_et > 40. )      return false;
@@ -507,15 +586,17 @@ bool AnalyzerEle::myZselection (const edm::Event & iEvent, const edm::EventSetup
   
 }
 
-// -----------------------------------------------------------------------------------------
+// --------------------- Add primary vertex collection information
 void AnalyzerEle::fillPVInfo (const edm::Event & iEvent, const edm::EventSetup & iESetup){
 
  edm::Handle<reco::VertexCollection> vertexes;
  iEvent.getByLabel(PVTag_, vertexes);
- PV_n_ = vertexes -> size();
 
+ PV_n_ = vertexes -> size();
  reco::Vertex PV;
+
  bool PVfound = (vertexes -> size() != 0);
+
  if(PVfound){    
   PV = vertexes->at(0);
   PV_z_ = PV.z();
@@ -531,7 +612,7 @@ void AnalyzerEle::fillPVInfo (const edm::Event & iEvent, const edm::EventSetup &
 
 }
 
-//------------------------------------------------------------------------------------------------------------
+//----------------------------------- Rho info for PU subtraction 
 void AnalyzerEle::fillRhoInfo(const edm::Event & iEvent, const edm::EventSetup & iSetup){
   
  edm::Handle< double > rhoHandle;
@@ -539,18 +620,19 @@ void AnalyzerEle::fillRhoInfo(const edm::Event & iEvent, const edm::EventSetup &
  rho_ = *rhoHandle;
 }
 
-//------------------------------------------------------------------------------------------------------------
+//----------------------------------- Dumpm HLT information
 void AnalyzerEle::fillHLTInfo(const edm::Event & iEvent, const edm::EventSetup & iSetup){
 
- //------------------------------ HLT
  edm::Handle<edm::TriggerResults> triggerResultsHandle;
  iEvent.getByLabel(triggerResultsCollection_, triggerResultsHandle);
 
  edm::TriggerNames HLTNames = iEvent.triggerNames(*triggerResultsHandle);
  int hltCount = triggerResultsHandle->size();
+
  HLTNames_.clear();
  HLTBits_.clear();
  HLTResults_.clear();
+
  for (int i = 0 ; i != hltCount; ++i) {
    std::string hltName_str(HLTNames.triggerName(i));
    HLTNames_.push_back(hltName_str);
@@ -560,20 +642,20 @@ void AnalyzerEle::fillHLTInfo(const edm::Event & iEvent, const edm::EventSetup &
 
 }
 
-//--------------------------------------------------------------------------------------------------------------
+//----------------------------------- Dump Pile Up info only for MC
 void AnalyzerEle::fillPileUpInfo (const edm::Event & iEvent, const edm::EventSetup & iSetup){
 
  edm::Handle<std::vector< PileupSummaryInfo > > PupInfo;
  iEvent.getByLabel(edm::InputTag("addPileupInfo"), PupInfo);
  std::vector<PileupSummaryInfo>::const_iterator PVI;
  
- for(PVI = PupInfo->begin(); PVI != PupInfo->end(); ++PVI) {
+ for(PVI = PupInfo->begin(); PVI != PupInfo->end(); ++PVI)
    nPU_ = PVI->getTrueNumInteractions();
- }
+ 
  
 }
 
-//------------------------------------------------------------------------------------------------------------
+//--------------------------------------- Dump Generator information 
 void AnalyzerEle::fillGeneratorInfo(const edm::Event & iEvent, const edm::EventSetup & iSetup){
 
  edm::Handle<reco::GenParticleCollection> genParticles; // take the genParticle collection from the event
@@ -586,6 +668,7 @@ void AnalyzerEle::fillGeneratorInfo(const edm::Event & iEvent, const edm::EventS
  std::vector<const reco::Candidate*> mcV_p;
 
  for(reco::GenParticleCollection::const_iterator p = genParticles -> begin(); p != genParticles -> end(); ++p){
+
     // take the current element in the list and his mother
     const reco::Candidate* pCurrent = &(*p);
     const reco::Candidate* pMother = 0;
@@ -615,7 +698,6 @@ void AnalyzerEle::fillGeneratorInfo(const edm::Event & iEvent, const edm::EventS
       std::cerr << ">>> MCDumperZW::Analyze::Warning: no W/Z in the event" << std::endl;    
       return;
  }
-
  if(mcV_p.size() > 1 ){
     if(verbosity_)
       std::cerr << ">>> MCDumperZW::Analyze::Warning: more than one W/Z in the event" << std::endl;    
@@ -624,7 +706,6 @@ void AnalyzerEle::fillGeneratorInfo(const edm::Event & iEvent, const edm::EventS
 
  // find fermions from vector boson decay
  std::vector<const reco::Candidate*> fFromVBuffer;
-
  for(unsigned int i = 0; i < mcV_p.size() ; ++i){
    for( unsigned int j = 0; j < mcV_p.at(i)->numberOfDaughters() ; ++j){
      if(mcV_p.at(i)->daughter(j)-> pdgId() != mcV_p.at(i)->pdgId())
@@ -691,13 +772,11 @@ void AnalyzerEle::fillGeneratorInfo(const edm::Event & iEvent, const edm::EventS
 }
   
   
-  
-  
-
-// ------------------------------------------------------------------------------------------------------------
+ 
+// --------------------------------------------------------- Dump two leading electron variables from event 
 void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup & iSetup, const int iEle, const std::string eleName) {
 
- if( verbosity_ )std::cout << ">>> AnalyzerEle::fillEleInfo start <<<" << std::endl;
+ if(verbosity_) std::cout << ">>> AnalyzerEle::fillEleInfo start <<<" << std::endl;
   
  //*********** TRACKER GEOMETRY
  edm::ESHandle<TrackerGeometry> pDD ;
@@ -711,6 +790,11 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
  edm::ESHandle<CaloTopology> pTopology;
  iSetup.get<CaloTopologyRecord>().get(pTopology);
  const CaloTopology *topology = pTopology.product();
+
+ //*********** CALO GEOMETRY
+ edm::ESHandle<CaloGeometry> theCaloGeometry;
+ iSetup.get<CaloGeometryRecord>().get(theCaloGeometry);
+ const CaloGeometry* calogeometry = & (*theCaloGeometry);
   
  //*********** IC CONSTANTS
  edm::ESHandle<EcalIntercalibConstants> theICConstants;
@@ -730,24 +814,6 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
  edm::ESHandle<EcalLaserDbService> theLaser;
  iSetup.get<EcalLaserDbRecord>().get(theLaser);
   
- //*********** EB DIGI HITS
- edm::Handle<EBDigiCollection> ebDigis;
- if(saveRecHitMatrix_){
-  iEvent.getByLabel (digiCollection_EB_, ebDigis) ;
-  if (! (ebDigis.isValid ()) ) {
-   std::cerr << "EcalValidation::analyze --> ebDigis not found" << std::endl;
-  }
- }
-
- //*********** EE DIGI HITS
- edm::Handle<EEDigiCollection> eeDigis;
- if(saveRecHitMatrix_){
-  iEvent.getByLabel (digiCollection_EE_, eeDigis) ;
-  if (! (eeDigis.isValid ()) ) {
-   std::cerr << "EcalValidation::analyze --> eeDigis not found" << std::endl;
-  }
- }
-
  //*********** EB REC HITS
  edm::Handle<EcalRecHitCollection> recHitsEB;
  iEvent.getByLabel( recHitCollection_EB_, recHitsEB );
@@ -764,34 +830,6 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   std::cerr << "AnalyzerEle::analyze --> recHitsEE not found" << std::endl;
  }
   
- //*********** EB SR FLAGS
- edm::Handle<EBSrFlagCollection> SRFlagsEB;
- std::vector<EcalTrigTowerDetId> TTIdList;
-  
- if( saveRecHitMatrix_ ){
-  iEvent.getByLabel(SRFlagCollection_EB_, SRFlagsEB );
-  for(EBSrFlagCollection::const_iterator it = SRFlagsEB->begin(); it != SRFlagsEB->end(); ++it){
-   const int flag = it->value();
-   if( flag != EcalSrFlag::SRF_FULL ) continue;
-   const EcalTrigTowerDetId TTId = it->id();
-   TTIdList.push_back(TTId);
-  }
- }
-  
- //*********** EE SR FLAGS
- edm::Handle<EESrFlagCollection> SRFlagsEE;
- std::vector<EcalScDetId> SCIdList;
- if( saveRecHitMatrix_ ){
-
-  iEvent.getByLabel(SRFlagCollection_EE_, SRFlagsEE );
-  for(EESrFlagCollection::const_iterator it = SRFlagsEE->begin(); it != SRFlagsEE->end(); ++it){
-   const int flag = it->value();
-   if( flag != EcalSrFlag::SRF_FULL ) continue;
-   const EcalScDetId SCId = it->id();
-   SCIdList.push_back(SCId);
-  }
- }
-  
  //************* ELECTRONS
  edm::Handle<edm::View<pat::Electron> > electronHandle;
  iEvent.getByLabel(EleTag_,electronHandle);
@@ -805,12 +843,17 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
  EcalClusterLazyTools lazyTools(iEvent,iSetup,recHitCollection_EB_,recHitCollection_EE_);
  EcalClusterPUCleaningTools cleaningTools(iEvent, iSetup, recHitCollection_EB_, recHitCollection_EE_);
 
-
  // Take the correct ele
  bool printOut = false;
- pat::Electron electron = electrons.at(iEle);
+ const pat::Electron electron = electrons.at(iEle);
+ 
+ // Take SC helper for regression input
+ if (electron.isEB())
+   mySCHelper_ = new SuperClusterHelper(&electron,theBarrelEcalRecHits,topology,calogeometry);
+ else
+   mySCHelper_ = new SuperClusterHelper(&electron,theEndcapEcalRecHits,topology,calogeometry);
 
- if ( eleName == "ele1") {
+ if(eleName == "ele1") {
 
   ele1        = electron.p4();
   ele1_charge = electron.charge();
@@ -819,11 +862,11 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   ele1_eta    = ele1.eta();
   ele1_phi    = ele1.phi();
 
-  ele1_isEB       = electron.isEB();
-  ele1_isEBEEGap  = electron.isEBEEGap();
-  ele1_isEBEtaGap = electron.isEBEtaGap();
-  ele1_isEBPhiGap = electron.isEBPhiGap();
-  ele1_isEEDeeGap = electron.isEEDeeGap();
+  ele1_isEB        = electron.isEB();
+  ele1_isEBEEGap   = electron.isEBEEGap();
+  ele1_isEBEtaGap  = electron.isEBEtaGap();
+  ele1_isEBPhiGap  = electron.isEBPhiGap();
+  ele1_isEEDeeGap  = electron.isEEDeeGap();
   ele1_isEERingGap = electron.isEERingGap();
  
   ele1_idtype.assign(7,0);
@@ -841,13 +884,13 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   ele1_DphiIn          = electron.deltaPhiSuperClusterTrackAtVtx();
   ele1_DetaIn          = electron.deltaEtaSuperClusterTrackAtVtx();
 
-  ele1_deltaEtaEleClusterTrackAtCalo = electron.deltaEtaEleClusterTrackAtCalo();
-  ele1_deltaEtaPhiClusterTrackAtCalo = electron.deltaPhiEleClusterTrackAtCalo();
+  ele1_deltaEtaEleClusterTrackAtCalo  = electron.deltaEtaEleClusterTrackAtCalo();
+  ele1_deltaEtaPhiClusterTrackAtCalo  = electron.deltaPhiEleClusterTrackAtCalo();
   ele1_deltaEtaSeedClusterTrackAtCalo = electron.deltaEtaSeedClusterTrackAtCalo();
   ele1_deltaPhiSeedClusterTrackAtCalo = electron.deltaPhiSeedClusterTrackAtCalo();
 
   ele1_HOverE  = electron.hadronicOverEm();
-  ele1_ooemoop = (1.0/electron.ecalEnergy() - electron.eSuperClusterOverP()/electron.ecalEnergy());
+  ele1_ooemoop = (1.0/electron.ecalEnergy()-electron.eSuperClusterOverP()/electron.ecalEnergy());
   ele1_tkIso   = electron.dr03TkSumPt();
   ele1_emIso   = electron.dr03EcalRecHitSumEt();
   ele1_hadIso  = electron.dr03HcalDepth1TowerSumEt()+electron.dr03HcalDepth2TowerSumEt();
@@ -902,25 +945,7 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   localContCorr = EcalClusterLocalContCorrection->getValue(*electron.superCluster(), 1) ;
     
   ele1_scCrackCorr     = crackcor;
-  ele1_scLocalContCorr = localContCorr;
-    
-    
-  reco::SuperCluster cleanedSC = cleaningTools.CleanedSuperCluster(0.02, *scRef, iEvent );
-  reco::CaloClusterPtr myseed = (*scRef).seed();
-
-  if ( !((myseed->seed()).rawId()) || (myseed->seed()).rawId()==0 ) {
-   ele1_scERaw_PUcleaned      = -9999.;
-   ele1_scEtaWidth_PUcleaned  = -9999.;
-   ele1_scPhiWidth_PUcleaned  = -9999.;
-   ele1_fCorrection_PUcleaned = -9999.;
-  }
-  else  {
-   ele1_scERaw_PUcleaned     = cleanedSC.energy();
-   ele1_scEtaWidth_PUcleaned = cleanedSC.etaWidth();
-   ele1_scPhiWidth_PUcleaned = cleanedSC.phiWidth();
-  }
-
-
+  ele1_scLocalContCorr = localContCorr;        
   ele1_fEta    = scRef->energy()/scRef->rawEnergy();
   ele1_tkP     = electron.trackMomentumAtVtx().R();
   ele1_tkPt    = electron.trackMomentumAtVtx().Rho();
@@ -953,8 +978,8 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   float seedLaserCorrection = -1.;
     
   if(electron.isEB()) {
-   if( printOut )
-    std::cout << "*** EB ***" << std::endl;
+
+   if(printOut) std::cout << "*** EB ***" << std::endl;
 
    std::pair<DetId, float> id = EcalClusterTools::getMaximum(seedCluster->hitsAndFractions(), theBarrelEcalRecHits);
    EcalRecHitCollection::const_iterator it = theBarrelEcalRecHits->find(id.first);
@@ -981,11 +1006,11 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
       
       // laser correction
    seedLaserCorrection = theLaser->getLaserCorrection(EBDetId(id.first), iEvent.time());
-  }
-    
+  }    
   else {
-   if( printOut )
-    std::cout << "*** EE ***" << std::endl;      
+
+   if(printOut) std::cout << "*** EE ***" << std::endl;      
+
    std::pair<DetId, float> id = EcalClusterTools::getMaximum(seedCluster->hitsAndFractions(), theEndcapEcalRecHits);
       
    EcalRecHitCollection::const_iterator it = theEndcapEcalRecHits->find(id.first);
@@ -1043,103 +1068,6 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
      << " electron phi: " << std::setprecision(2) << std::setw(5) << electron.phi()
      << " SC energy: " << std::setprecision(2) << std::setw(6) << scRef -> energy()
      << std::endl;
-  }
-
-
-  if(saveRecHitMatrix_) {
-   float theLaserCorrection = -1.;
-   float theICCorrection = -1.;
-      
-   if(electron.isEB()){
-    DetId seedId = EcalClusterTools::getMaximum( scRef->hitsAndFractions(), theBarrelEcalRecHits ).first;
-    //save the matrix in case of eleSeed
-    std::vector<DetId> rectangle = EcalClusterTools::matrixDetId(topology, seedId, -9, 9, -9, 9);
-
-    int it = 0;
-    for(std::vector<DetId>::const_iterator itr = rectangle.begin(); itr != rectangle.end(); ++itr){
-     ++it;
-     EcalRecHitCollection::const_iterator itrRecHit = theBarrelEcalRecHits->find(*itr) ;
-     if(itrRecHit == theBarrelEcalRecHits->end()) continue;
-          
-          // fill recHit variables
-     EBDetId barrelId(*itr);
-     EcalTrigTowerDetId towerId = barrelId.tower();
-          
-          // laser correction
-     theLaserCorrection = theLaser->getLaserCorrection(barrelId, iEvent.time());
-          // IC correction
-     EcalIntercalibConstantMap::const_iterator ICMapIt = ICMap.find(barrelId);
-     theICCorrection = *ICMapIt;
-          
-     int SRFlag = 3;
-     std::vector<EcalTrigTowerDetId>::iterator TTIdListIt = std::find(TTIdList.begin(),TTIdList.end(),towerId);
-     if( TTIdListIt == TTIdList.end() ) SRFlag = 1;
-          
-     bool digiFound = false;
-     for(EBDigiCollection::const_iterator digiItr = ebDigis->begin(); digiItr != ebDigis->end(); ++digiItr)
-     {
-      if(digiItr->id() != barrelId )continue;
-      digiFound = true;
-      EcalDataFrame df = *digiItr;
-      for(int iSample = 0; iSample < 10; ++iSample)
-       ele1_recHitMatrix_samples.push_back(df.sample(iSample).adc());
-     }
-     if( digiFound == false ) continue;
-                    
-     ele1_recHitMatrix_E.push_back(itrRecHit->energy());
-     ele1_recHitMatrix_flag.push_back(SRFlag*1000+itrRecHit->recoFlag());
-     ele1_recHitMatrix_hashedIndex.push_back(barrelId.hashedIndex());
-     ele1_recHitMatrix_ietaORix.push_back(barrelId.ieta());
-     ele1_recHitMatrix_iphiORiy.push_back(barrelId.iphi());
-     ele1_recHitMatrix_zside.push_back(0);
-     ele1_recHitMatrix_laserCorrection.push_back(theLaserCorrection);
-     ele1_recHitMatrix_ICConstant.push_back(theICCorrection);
-    }
-   }
-      
-   else {
-    DetId seedId = EcalClusterTools::getMaximum( scRef->hitsAndFractions(), theEndcapEcalRecHits ).first;
-//save the matrix in case of eleSeed
-    std::vector<DetId> rectangle = EcalClusterTools::matrixDetId(topology, seedId, -9, 9, -9, 9);
-
-    for(std::vector<DetId>::const_iterator itr = rectangle.begin(); itr != rectangle.end(); ++itr) {
-     EcalRecHitCollection::const_iterator itrRecHit = theEndcapEcalRecHits->find(*itr) ;
-     if(itrRecHit == theEndcapEcalRecHits->end()) continue;
-          
-          // fill recHit variables
-     EEDetId endcapId(*itr);
-     EcalScDetId scId = endcapId.sc();
-
-          // laser correction
-     theLaserCorrection = theLaser->getLaserCorrection(endcapId, iEvent.time());
-          // IC correction
-     EcalIntercalibConstantMap::const_iterator ICMapIt = ICMap.find(endcapId);
-     theICCorrection = *ICMapIt;
-          
-     int SRFlag = 3;
-     std::vector<EcalScDetId>::iterator SCIdListIt = std::find(SCIdList.begin(),SCIdList.end(),scId);
-     if( SCIdListIt == SCIdList.end() ) SRFlag = 1;
-          
-     bool digiFound = false;
-     for(EEDigiCollection::const_iterator digiItr = eeDigis->begin(); digiItr != eeDigis->end(); ++digiItr) {
-      if(digiItr->id() != endcapId) continue;
-      digiFound = true;
-      EcalDataFrame df = *digiItr;
-      for(int iSample = 0; iSample < 10; ++iSample)
-       ele1_recHitMatrix_samples.push_back(df.sample(iSample).adc());
-     }
-     if( digiFound == false ) continue;
-          
-     ele1_recHitMatrix_E.push_back(itrRecHit->energy());
-     ele1_recHitMatrix_flag.push_back(SRFlag*1000+itrRecHit->recoFlag());
-     ele1_recHitMatrix_hashedIndex.push_back(endcapId.hashedIndex());
-     ele1_recHitMatrix_ietaORix.push_back(endcapId.ix());
-     ele1_recHitMatrix_iphiORiy.push_back(endcapId.iy());
-     ele1_recHitMatrix_zside.push_back(0);
-     ele1_recHitMatrix_laserCorrection.push_back(theLaserCorrection);
-     ele1_recHitMatrix_ICConstant.push_back(theICCorrection);
-    }
-   }
   }
     
   for(std::vector<std::pair<DetId,float> >::const_iterator rh = hits.begin(); rh!=hits.end(); ++rh) {
@@ -1251,143 +1179,82 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
     
   ele1_5x5LaserCorr = sumLaserCorrectionRecHitE5x5/sumRecHitE5x5;    
   ele1_3x3LaserCorr = sumLaserCorrectionRecHitE3x3/sumRecHitE3x3;
-    
-  /// add regression input variables
-  reco::SuperClusterRef s = electron.superCluster();
-  reco::CaloClusterPtr b = s->seed(); //seed basic cluster
-  reco::CaloClusterPtr b2;
-  reco::CaloClusterPtr bclast;
-  reco::CaloClusterPtr bclast2;
-  bool isbarrel = b->hitsAndFractions().at(0).first.subdetId()==EcalBarrel;
-    
-    
-  ele1_eRegrInput_rawE = s->rawEnergy();
-  ele1_eRegrInput_r9 = lazyTools.e3x3(*b)/s->rawEnergy();
-  ele1_eRegrInput_eta = s->eta();
-  ele1_eRegrInput_phi = s->phi();
-  ele1_eRegrInput_r25 = lazyTools.e5x5(*b)/s->rawEnergy();
-  ele1_eRegrInput_hoe = electron.hcalOverEcal();
-  ele1_eRegrInput_etaW = s->etaWidth() ;
-  ele1_eRegrInput_phiW = s->phiWidth() ;
-  ele1_eRegrInput_SCsize = s->clustersSize() ;
-  ele1_eRegrInput_rho = *rhoHandle;
-  ele1_eRegrInput_nPV = hVertexProduct->size();
-    
-  //seed basic cluster variables
-  double bemax = lazyTools.eMax(*b);
-  double be2nd = lazyTools.e2nd(*b);
-  double betop = lazyTools.eTop(*b);
-  double bebottom = lazyTools.eBottom(*b);
-  double beleft = lazyTools.eLeft(*b);
-  double beright = lazyTools.eRight(*b);
-    
-  double be2x5max = lazyTools.e2x5Max(*b);
-  double be2x5top = lazyTools.e2x5Top(*b);
-  double be2x5bottom = lazyTools.e2x5Bottom(*b);
-  double be2x5left = lazyTools.e2x5Left(*b);
-  double be2x5right = lazyTools.e2x5Right(*b);
-     
-  ele1_eRegrInput_Deta_bC_sC     = b->eta()-s->eta();
-  ele1_eRegrInput_Dphi_bC_sC     = reco::deltaPhi(b->phi(),s->phi());
-  ele1_eRegrInput_bCE_Over_sCE   = b->energy()/b->energy();
-  ele1_eRegrInput_e3x3_Over_bCE  = lazyTools.e3x3(*b)/b->energy();
-  ele1_eRegrInput_e5x5_Over_bCE  = lazyTools.e5x5(*b)/b->energy();
-  ele1_eRegrInput_sigietaieta_bC1   = sqrt(lazyTools.localCovariances(*b)[0]);
-  ele1_eRegrInput_sigiphiiphi_bC1   = sqrt(lazyTools.localCovariances(*b)[2]);
-  ele1_eRegrInput_sigietaiphi_bC1   = lazyTools.localCovariances(*b)[1];
-  ele1_eRegrInput_bEMax_Over_bCE    = bemax/b->energy();
-  ele1_eRegrInput_bE2nd_Over_bCE    = be2nd/b->energy();
-  ele1_eRegrInput_bEtop_Over_bCE    = betop/b->energy();
-  ele1_eRegrInput_bEbot_Over_bCE    = bebottom/b->energy();
-  ele1_eRegrInput_bEleft_Over_bCE   = beleft/b->energy();
-  ele1_eRegrInput_bEright_Over_bCE  = beright/b->energy();
-  ele1_eRegrInput_be2x5max_Over_bCE = be2x5max/b->energy();
-  ele1_eRegrInput_be2x5top_Over_bCE = be2x5top/b->energy();
-  ele1_eRegrInput_be2x5bottom_Over_bCE = be2x5bottom/b->energy();
-  ele1_eRegrInput_be2x5left_Over_bCE   = be2x5left/b->energy();
-  ele1_eRegrInput_be2x5right_Over_bCE  = be2x5right/b->energy();
-    
-    
-    
-  if( isbarrel ) {
-      // seed cluster
-   float betacry, bphicry, bthetatilt, bphitilt;
-   int bieta, biphi;
-   EcalClusterLocal _ecalLocal;
-   _ecalLocal.localCoordsEB(*b,iSetup,betacry,bphicry,bieta,biphi,bthetatilt,bphitilt);
-      
-   ele1_eRegrInput_seedbC_eta = bieta;
-   ele1_eRegrInput_seedbC_phi = biphi;
-   ele1_eRegrInput_seedbC_eta_p5 = bieta%5;
-   ele1_eRegrInput_seedbC_phi_p2 = biphi%2;
-   ele1_eRegrInput_seedbC_bieta = (TMath::Abs(bieta)<=25)*(bieta%25) + (TMath::Abs(bieta)>25)*((bieta-25*TMath::Abs(bieta)/bieta)%20);
-   ele1_eRegrInput_seedbC_phi_p20 = biphi%20;
-   ele1_eRegrInput_seedbC_etacry = betacry;
-   ele1_eRegrInput_seedbC_phicry = bphicry;
-   ele1_eRegrInput_ESoSC = -99. ;
-  }
-  else {
-   ele1_eRegrInput_ESoSC = s->preshowerEnergy()/s->rawEnergy();
-   ele1_eRegrInput_seedbC_eta = -99.;
-   ele1_eRegrInput_seedbC_phi = -99.;
-   ele1_eRegrInput_seedbC_eta_p5 = -99.;
-   ele1_eRegrInput_seedbC_phi_p2 = -99.;
-   ele1_eRegrInput_seedbC_bieta = -99.;
-   ele1_eRegrInput_seedbC_phi_p20 = -99.;
-   ele1_eRegrInput_seedbC_etacry = -99.;
-   ele1_eRegrInput_seedbC_phicry =-99.;
-  }
 
-  if(saveFbrem_) {
+  // Regression V3 variables                                                                                                                                                         
+  ele1_eRegrInput_rawE   = mySCHelper_->rawEnergy();
+  ele1_eRegrInput_r9     = mySCHelper_->r9(); 
+  ele1_eRegrInput_eta    = mySCHelper_->eta();
+  ele1_eRegrInput_phi    = mySCHelper_->phi();
+  ele1_eRegrInput_etaW   = mySCHelper_->etaWidth();
+  ele1_eRegrInput_phiW   = mySCHelper_->phiWidth();
+  ele1_eRegrInput_SCsize = mySCHelper_->clustersSize();
+  ele1_eRegrInput_rho    = rho_; 
+  ele1_eRegrInput_hoe    = mySCHelper_->hadronicOverEm(); 
+  ele1_eRegrInput_nPV    = PV_n_;
+  ele1_eRegrInput_seed_eta = mySCHelper_->seedEta();
+  ele1_eRegrInput_seed_phi = mySCHelper_->seedPhi();
+  ele1_eRegrInput_seed_E   = mySCHelper_->seedEnergy();
+  ele1_eRegrInput_seed_e3x3 = mySCHelper_->e3x3();
+  ele1_eRegrInput_seed_e5x5 = mySCHelper_->e5x5();
+  ele1_eRegrInput_sigietaieta = mySCHelper_->sigmaIetaIeta();
+  ele1_eRegrInput_sigiphiiphi = mySCHelper_->spp();
+  ele1_eRegrInput_sigietaiphi = mySCHelper_->sep();
+  ele1_eRegrInput_eMax        = mySCHelper_->eMax();
+  ele1_eRegrInput_e2nd        = mySCHelper_->e2nd();
+  ele1_eRegrInput_eTop        = mySCHelper_->eTop();
+  ele1_eRegrInput_eBottom     = mySCHelper_->eBottom();
+  ele1_eRegrInput_eLeft   = mySCHelper_->eLeft();
+  ele1_eRegrInput_eRight  = mySCHelper_->eRight();
+  ele1_eRegrInput_e2x5Max = mySCHelper_->e2x5Max();
+  ele1_eRegrInput_e2x5Top = mySCHelper_->e2x5Top();
+  ele1_eRegrInput_e2x5Bottom = mySCHelper_->e2x5Bottom();
+  ele1_eRegrInput_e2x5Left   = mySCHelper_->e2x5Left();
+  ele1_eRegrInput_e2x5Right  = mySCHelper_->e2x5Right();
+  ele1_eRegrInput_seed_ieta  = mySCHelper_->ietaSeed();
+  ele1_eRegrInput_seed_iphi  = mySCHelper_->iphiSeed();
+  ele1_eRegrInput_seed_etaCrySeed = mySCHelper_->etaCrySeed();
+  ele1_eRegrInput_seed_phiCrySeed = mySCHelper_->phiCrySeed();
+  ele1_eRegrInput_preshowerEnergyOverRaw = mySCHelper_->preshowerEnergyOverRaw();
+  ele1_eRegrInput_ecalDrivenSeed = electron.ecalDrivenSeed();
+  ele1_eRegrInput_isEBEtaGap = electron.isEBEtaGap();
+  ele1_eRegrInput_isEBPhiGap = electron.isEBPhiGap();
+  ele1_eRegrInput_eSubClusters = mySCHelper_->eSubClusters();
+  ele1_eRegrInput_subClusterEnergy_1 = mySCHelper_->subClusterEnergy(1);
+  ele1_eRegrInput_subClusterEnergy_2 = mySCHelper_->subClusterEnergy(2);
+  ele1_eRegrInput_subClusterEnergy_3 = mySCHelper_->subClusterEnergy(3);
+  ele1_eRegrInput_subClusterEta_1 = mySCHelper_->subClusterEta(1);
+  ele1_eRegrInput_subClusterEta_2 = mySCHelper_->subClusterEta(2);
+  ele1_eRegrInput_subClusterEta_3 = mySCHelper_->subClusterEta(3);
+  ele1_eRegrInput_subClusterPhi_1 = mySCHelper_->subClusterPhi(1);
+  ele1_eRegrInput_subClusterPhi_2 = mySCHelper_->subClusterPhi(2);
+  ele1_eRegrInput_subClusterPhi_3 = mySCHelper_->subClusterPhi(3);
+  ele1_eRegrInput_subClusterEmax_1 = mySCHelper_->subClusterEmax(1);
+  ele1_eRegrInput_subClusterEmax_2 = mySCHelper_->subClusterEmax(2);
+  ele1_eRegrInput_subClusterEmax_3 = mySCHelper_->subClusterEmax(3);
+  ele1_eRegrInput_subClusterE3x3_1 = mySCHelper_->subClusterE3x3(1);
+  ele1_eRegrInput_subClusterE3x3_2 = mySCHelper_->subClusterE3x3(2);
+  ele1_eRegrInput_subClusterE3x3_3 = mySCHelper_->subClusterE3x3(3);
+  ele1_eRegrInput_eESClusters = mySCHelper_->eESClusters();
+  ele1_eRegrInput_eESClusterEnergy_1 = mySCHelper_->esClusterEnergy(0);
+  ele1_eRegrInput_eESClusterEnergy_2 = mySCHelper_->esClusterEnergy(1);
+  ele1_eRegrInput_eESClusterEnergy_3 = mySCHelper_->esClusterEnergy(2);
+  ele1_eRegrInput_eESClusterEta_1 = mySCHelper_->esClusterEta(0);
+  ele1_eRegrInput_eESClusterEta_2 = mySCHelper_->esClusterEta(1);
+  ele1_eRegrInput_subClusterEta_3 = mySCHelper_->esClusterEta(2);
+  ele1_eRegrInput_subClusterPhi_1 = mySCHelper_->esClusterPhi(0);
+  ele1_eRegrInput_subClusterPhi_2 = mySCHelper_->esClusterPhi(1);
+  ele1_eRegrInput_subClusterPhi_3 = mySCHelper_->esClusterPhi(2);
+  ele1_eRegrInput_pt = electron.pt();
+  ele1_eRegrInput_trackMomentumAtVtxR = electron.trackMomentumAtVtx().R();
+  ele1_eRegrInput_fbrem = electron.fbrem();
+  ele1_eRegrInput_charge = electron.charge();
+  ele1_eRegrInput_eSuperClusterOverP = electron.eSuperClusterOverP();
 
-   reco::GsfTrackRef eleTrack = electron.gsfTrack();
-   reco::TrackRef eleNTrack = electron.closestTrack();
-   GlobalPoint outPos(eleTrack->extra()->outerPosition().x(), eleTrack->extra()->outerPosition().y(), eleTrack->extra()->outerPosition().z());
-   GlobalPoint innPos(eleTrack->extra()->innerPosition().x(), eleTrack->extra()->innerPosition().y(), eleTrack->extra()->innerPosition().z());
-   std::vector<reco::GsfTangent> eleTangent = eleTrack->gsfExtra()->tangents();
-   int numberOfValidHits_Trk = 0;
-   if(!eleNTrack.isNull())
-    for(unsigned int trkNH = 0; trkNH < eleNTrack->extra()->recHitsSize(); ++trkNH){
-    if(!eleNTrack->extra()->recHit(trkNH)->isValid()) continue;
-    DetId id = eleNTrack->extra()->recHit(trkNH)->geographicalId();
-    const GeomDet* det = pDD->idToDet(id);
+  ele1_nGgsfTrackHits = eleTrack->recHitsSize();
+  ele1_numberOfLostHits = eleTrack->trackerExpectedHitsInner().numberOfLostHits();
+  ele1_nAmbiguousGsfTrack = electron.ambiguousGsfTracksSize();
 
-    if(eleTrack->extra()->seedRef().isNull()) continue;
-    edm::RefToBase<TrajectorySeed> seed = eleTrack->extra()->seedRef();
-    reco::ElectronSeedRef elseed = seed.castTo<reco::ElectronSeedRef>();
-    TrajectoryStateOnSurface t = trajectoryStateTransform::transientState(elseed->startingState(), &(det->surface()), &(*theMagField));
-    if(!t.isValid()) continue;
-
-    GlobalPoint hitPos = t.globalPosition();
-    if(hitPos.x() == ele1_inner_x && hitPos.y() == ele1_inner_y && hitPos.z() == ele1_inner_z){
-     ele1_inner_p = (sqrt(eleTrack->extra()->innerMomentum().Mag2()) );
-     ele1_inner_x = innPos.x();
-     ele1_inner_y = innPos.y();
-     ele1_inner_z = innPos.z();
-    }
-    if(hitPos.x() == ele1_outer_x && hitPos.y() == ele1_outer_y && hitPos.z() == ele1_outer_z){
-     ele1_outer_p = (sqrt(eleTrack->extra()->outerMomentum().Mag2()) );
-     ele1_outer_x = outPos.x();
-     ele1_outer_y = outPos.y();
-     ele1_outer_z = outPos.z();
-    }
-    for(unsigned int pp=0; pp<eleTangent.size(); ++pp ){
-     GlobalPoint tangPos( eleTangent.at(pp).position().x(),
-                          eleTangent.at(pp).position().y(),
-                          eleTangent.at(pp).position().z() );
-     if(hitPos.x() != tangPos.x() && hitPos.y() != tangPos.y() && hitPos.z() != tangPos.z()) continue;
-     float tangMom = sqrt(eleTangent.at(pp).momentum().Mag2());
-     ele1_tangent_p.push_back(tangMom);
-     ele1_tangent_x.push_back(tangPos.x());
-     ele1_tangent_y.push_back(tangPos.y());
-     ele1_tangent_z.push_back(tangPos.z());
-     ele1_tangent_dP.push_back(eleTangent.at(pp).deltaP().value());
-     ele1_tangent_dPerr.push_back(eleTangent.at(pp).deltaP().error());
-     ++numberOfValidHits_Trk;
-    }
-    }
-    ele1_tangent_n = numberOfValidHits_Trk;
-  }
+    
  }
 
  if ( eleName == "ele2" ){
@@ -1439,8 +1306,7 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   ele2_dxy_PV = eleTrack->dxy (PVPoint_);
   ele2_dz_PV  = eleTrack->dz (PVPoint_);
   ele2_sigmaP = electron.corrections().trackMomentumError;
-    
-    
+        
   reco::SuperClusterRef scRef = electron.superCluster();
   const edm::Ptr<reco::CaloCluster>& seedCluster = scRef->seed();
     
@@ -1488,23 +1354,7 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
     
   ele2_scCrackCorr     = crackcor;
   ele2_scLocalContCorr = localContCorr;
-        
-  reco::SuperCluster cleanedSC = cleaningTools.CleanedSuperCluster(0.02, *scRef, iEvent );
-  reco::CaloClusterPtr myseed = (*scRef).seed();
-  if ( !((myseed->seed()).rawId()) || (myseed->seed()).rawId()==0 ){
-   ele2_scERaw_PUcleaned      = -9999.;
-   ele2_scEtaWidth_PUcleaned  = -9999.;
-   ele2_scPhiWidth_PUcleaned  = -9999.;
-   ele2_fCorrection_PUcleaned = -9999.;
-  }
-  else
-  {
-   ele2_scERaw_PUcleaned     = cleanedSC.energy();
-   ele2_scEtaWidth_PUcleaned = cleanedSC.etaWidth();
-   ele2_scPhiWidth_PUcleaned = cleanedSC.phiWidth();
-  }
-    
-    
+            
   ele2_fEta  = scRef->energy()/scRef->rawEnergy();
   ele2_tkP   = electron.trackMomentumAtVtx().R();
   ele2_tkPt  = electron.trackMomentumAtVtx().Rho();
@@ -1623,100 +1473,6 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
      << " SC energy: " << std::setprecision(2) << std::setw(6) << scRef -> energy()
      << std::endl;
   }
-
-  if(saveRecHitMatrix_){
-   float theLaserCorrection = -1.;
-   float theICCorrection = -1.;
-      
-   if(electron.isEB()){
-    DetId seedId = EcalClusterTools::getMaximum( scRef->hitsAndFractions(), theBarrelEcalRecHits ).first;
-    std::vector<DetId> rectangle = EcalClusterTools::matrixDetId(topology, seedId, -9, 9, -9, 9);
-
-    for(std::vector<DetId>::const_iterator itr = rectangle.begin(); itr != rectangle.end(); ++itr){
-     EcalRecHitCollection::const_iterator itrRecHit = theBarrelEcalRecHits->find(*itr) ;
-     if(itrRecHit == theBarrelEcalRecHits->end()) continue;
-          
-     // fill recHit variables
-     EBDetId barrelId(*itr);
-     EcalTrigTowerDetId towerId = barrelId.tower();
-          
-     // laser correction
-     theLaserCorrection = theLaser->getLaserCorrection(barrelId, iEvent.time());
-     // IC correction
-     EcalIntercalibConstantMap::const_iterator ICMapIt = ICMap.find(barrelId);
-     theICCorrection = *ICMapIt;
-          
-     int SRFlag = 3;
-     std::vector<EcalTrigTowerDetId>::iterator TTIdListIt = std::find(TTIdList.begin(),TTIdList.end(),towerId);
-     if( TTIdListIt == TTIdList.end() ) SRFlag = 1;
-          
-     bool digiFound = false;
-     for(EBDigiCollection::const_iterator digiItr = ebDigis->begin(); digiItr != ebDigis->end(); ++digiItr){
-      if(digiItr->id() != barrelId )continue;
-      digiFound = true;
-      EcalDataFrame df = *digiItr;
-      for(int iSample = 0; iSample < 10; ++iSample)
-       ele2_recHitMatrix_samples.push_back(df.sample(iSample).adc());
-     }
-     if( digiFound == false ) continue;
-          
-     ele2_recHitMatrix_E.push_back(itrRecHit->energy());
-     ele2_recHitMatrix_flag.push_back(SRFlag*1000+itrRecHit->recoFlag());
-     ele2_recHitMatrix_hashedIndex.push_back(barrelId.hashedIndex());
-     ele2_recHitMatrix_ietaORix.push_back(barrelId.ieta());
-     ele2_recHitMatrix_iphiORiy.push_back(barrelId.iphi());
-     ele2_recHitMatrix_zside.push_back(0);
-     ele2_recHitMatrix_laserCorrection.push_back(theLaserCorrection);
-     ele2_recHitMatrix_ICConstant.push_back(theICCorrection);
-          
-    }
-   }
-      
-   else{
-    DetId seedId = EcalClusterTools::getMaximum( scRef->hitsAndFractions(), theEndcapEcalRecHits ).first;
-    std::vector<DetId> rectangle = EcalClusterTools::matrixDetId(topology, seedId, -9, 9, -9, 9);
-
-    for(std::vector<DetId>::const_iterator itr = rectangle.begin(); itr != rectangle.end(); ++itr){
-     EcalRecHitCollection::const_iterator itrRecHit = theEndcapEcalRecHits->find(*itr) ;
-     if(itrRecHit == theEndcapEcalRecHits->end()) continue;
-          
-     // fill recHit variables
-     EEDetId endcapId(*itr);
-     EcalScDetId scId = endcapId.sc();
-          
-     // laser correction
-     theLaserCorrection = theLaser->getLaserCorrection(endcapId, iEvent.time());
-     // IC correction
-     EcalIntercalibConstantMap::const_iterator ICMapIt = ICMap.find(endcapId);
-     theICCorrection = *ICMapIt;
-          
-     int SRFlag = 3;
-     std::vector<EcalScDetId>::iterator SCIdListIt = std::find(SCIdList.begin(),SCIdList.end(),scId);
-     if( SCIdListIt == SCIdList.end() ) SRFlag = 1;
-          
-     bool digiFound = false;
-     for(EEDigiCollection::const_iterator digiItr = eeDigis->begin(); digiItr != eeDigis->end(); ++digiItr)
-     {
-      if(digiItr->id() != endcapId) continue;
-      digiFound = true;
-      EcalDataFrame df = *digiItr;
-      for(int iSample = 0; iSample < 10; ++iSample)
-       ele2_recHitMatrix_samples.push_back(df.sample(iSample).adc());
-     }
-     if( digiFound == false ) continue;
-          
-     ele2_recHitMatrix_E.push_back(itrRecHit->energy());
-     ele2_recHitMatrix_flag.push_back(SRFlag*1000+itrRecHit->recoFlag());
-     ele2_recHitMatrix_hashedIndex.push_back(endcapId.hashedIndex());
-     ele2_recHitMatrix_ietaORix.push_back(endcapId.ix());
-     ele2_recHitMatrix_iphiORiy.push_back(endcapId.iy());
-     ele2_recHitMatrix_zside.push_back(0);
-     ele2_recHitMatrix_laserCorrection.push_back(theLaserCorrection);
-     ele2_recHitMatrix_ICConstant.push_back(theICCorrection);
-          
-    }
-   }
-  }   
     
   for(std::vector<std::pair<DetId,float> >::const_iterator rh = hits.begin(); rh!=hits.end(); ++rh){
    float rhLaserCorrection = 1.;
@@ -1828,148 +1584,85 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   
   ele2_3x3LaserCorr = sumLaserCorrectionRecHitE3x3/sumRecHitE3x3;
 
-  /// add regression input variables
-  reco::SuperClusterRef s = electron.superCluster();
-  reco::CaloClusterPtr b = s->seed(); //seed basic cluster
-  reco::CaloClusterPtr b2;
-  reco::CaloClusterPtr bclast;
-  reco::CaloClusterPtr bclast2;
-  bool isbarrel = b->hitsAndFractions().at(0).first.subdetId()==EcalBarrel;
+  // Regression V3 variables                                                                                                                                                         
+  ele2_eRegrInput_rawE   = mySCHelper_->rawEnergy();
+  ele2_eRegrInput_r9     = mySCHelper_->r9(); 
+  ele2_eRegrInput_eta    = mySCHelper_->eta();
+  ele2_eRegrInput_phi    = mySCHelper_->phi();
+  ele2_eRegrInput_etaW   = mySCHelper_->etaWidth();
+  ele2_eRegrInput_phiW   = mySCHelper_->phiWidth();
+  ele2_eRegrInput_SCsize = mySCHelper_->clustersSize();
+  ele2_eRegrInput_rho    = rho_; 
+  ele2_eRegrInput_hoe    = mySCHelper_->hadronicOverEm(); 
+  ele2_eRegrInput_nPV    = PV_n_;
+  ele2_eRegrInput_seed_eta = mySCHelper_->seedEta();
+  ele2_eRegrInput_seed_phi = mySCHelper_->seedPhi();
+  ele2_eRegrInput_seed_E   = mySCHelper_->seedEnergy();
+  ele2_eRegrInput_seed_e3x3 = mySCHelper_->e3x3();
+  ele2_eRegrInput_seed_e5x5 = mySCHelper_->e5x5();
+  ele2_eRegrInput_sigietaieta = mySCHelper_->sigmaIetaIeta();
+  ele2_eRegrInput_sigiphiiphi = mySCHelper_->spp();
+  ele2_eRegrInput_sigietaiphi = mySCHelper_->sep();
+  ele2_eRegrInput_eMax        = mySCHelper_->eMax();
+  ele2_eRegrInput_e2nd        = mySCHelper_->e2nd();
+  ele2_eRegrInput_eTop        = mySCHelper_->eTop();
+  ele2_eRegrInput_eBottom     = mySCHelper_->eBottom();
+  ele2_eRegrInput_eLeft   = mySCHelper_->eLeft();
+  ele2_eRegrInput_eRight  = mySCHelper_->eRight();
+  ele2_eRegrInput_e2x5Max = mySCHelper_->e2x5Max();
+  ele2_eRegrInput_e2x5Top = mySCHelper_->e2x5Top();
+  ele2_eRegrInput_e2x5Bottom = mySCHelper_->e2x5Bottom();
+  ele2_eRegrInput_e2x5Left   = mySCHelper_->e2x5Left();
+  ele2_eRegrInput_e2x5Right  = mySCHelper_->e2x5Right();
+  ele2_eRegrInput_seed_ieta  = mySCHelper_->ietaSeed();
+  ele2_eRegrInput_seed_iphi  = mySCHelper_->iphiSeed();
+  ele2_eRegrInput_seed_etaCrySeed = mySCHelper_->etaCrySeed();
+  ele2_eRegrInput_seed_phiCrySeed = mySCHelper_->phiCrySeed();
+  ele2_eRegrInput_preshowerEnergyOverRaw = mySCHelper_->preshowerEnergyOverRaw();
+  ele2_eRegrInput_ecalDrivenSeed = electron.ecalDrivenSeed();
+  ele2_eRegrInput_isEBEtaGap = electron.isEBEtaGap();
+  ele2_eRegrInput_isEBPhiGap = electron.isEBPhiGap();
+  ele2_eRegrInput_eSubClusters = mySCHelper_->eSubClusters();
+  ele2_eRegrInput_subClusterEnergy_1 = mySCHelper_->subClusterEnergy(1);
+  ele2_eRegrInput_subClusterEnergy_2 = mySCHelper_->subClusterEnergy(2);
+  ele2_eRegrInput_subClusterEnergy_3 = mySCHelper_->subClusterEnergy(3);
+  ele2_eRegrInput_subClusterEta_1 = mySCHelper_->subClusterEta(1);
+  ele2_eRegrInput_subClusterEta_2 = mySCHelper_->subClusterEta(2);
+  ele2_eRegrInput_subClusterEta_3 = mySCHelper_->subClusterEta(3);
+  ele2_eRegrInput_subClusterPhi_1 = mySCHelper_->subClusterPhi(1);
+  ele2_eRegrInput_subClusterPhi_2 = mySCHelper_->subClusterPhi(2);
+  ele2_eRegrInput_subClusterPhi_3 = mySCHelper_->subClusterPhi(3);
+  ele2_eRegrInput_subClusterEmax_1 = mySCHelper_->subClusterEmax(1);
+  ele2_eRegrInput_subClusterEmax_2 = mySCHelper_->subClusterEmax(2);
+  ele2_eRegrInput_subClusterEmax_3 = mySCHelper_->subClusterEmax(3);
+  ele2_eRegrInput_subClusterE3x3_1 = mySCHelper_->subClusterE3x3(1);
+  ele2_eRegrInput_subClusterE3x3_2 = mySCHelper_->subClusterE3x3(2);
+  ele2_eRegrInput_subClusterE3x3_3 = mySCHelper_->subClusterE3x3(3);
+  ele2_eRegrInput_eESClusters = mySCHelper_->eESClusters();
+  ele2_eRegrInput_eESClusterEnergy_1 = mySCHelper_->esClusterEnergy(0);
+  ele2_eRegrInput_eESClusterEnergy_2 = mySCHelper_->esClusterEnergy(1);
+  ele2_eRegrInput_eESClusterEnergy_3 = mySCHelper_->esClusterEnergy(2);
+  ele2_eRegrInput_eESClusterEta_1 = mySCHelper_->esClusterEta(0);
+  ele2_eRegrInput_eESClusterEta_2 = mySCHelper_->esClusterEta(1);
+  ele2_eRegrInput_subClusterEta_3 = mySCHelper_->esClusterEta(2);
+  ele2_eRegrInput_subClusterPhi_1 = mySCHelper_->esClusterPhi(0);
+  ele2_eRegrInput_subClusterPhi_2 = mySCHelper_->esClusterPhi(1);
+  ele2_eRegrInput_subClusterPhi_3 = mySCHelper_->esClusterPhi(2);
+  ele2_eRegrInput_pt = electron.pt();
+  ele2_eRegrInput_trackMomentumAtVtxR = electron.trackMomentumAtVtx().R();
+  ele2_eRegrInput_fbrem = electron.fbrem();
+  ele2_eRegrInput_charge = electron.charge();
+  ele2_eRegrInput_eSuperClusterOverP = electron.eSuperClusterOverP();
+
+  ele2_nGgsfTrackHits = eleTrack->recHitsSize();
+  ele2_numberOfLostHits = eleTrack->trackerExpectedHitsInner().numberOfLostHits();
+  ele2_nAmbiguousGsfTrack = electron.ambiguousGsfTracksSize();
 
 
-  ele2_eRegrInput_rawE = s->rawEnergy();
-  ele2_eRegrInput_r9   = lazyTools.e3x3(*b)/s->rawEnergy();
-  ele2_eRegrInput_eta  = s->eta();
-  ele2_eRegrInput_phi  = s->phi();
-  ele2_eRegrInput_r25  = lazyTools.e5x5(*b)/s->rawEnergy();
-  ele2_eRegrInput_hoe  = electron.hcalOverEcal();
-  ele2_eRegrInput_etaW = s->etaWidth() ;
-  ele2_eRegrInput_phiW = s->phiWidth() ;
-  ele2_eRegrInput_SCsize = s->clustersSize() ;
-  ele2_eRegrInput_rho  = *rhoHandle;
-  ele2_eRegrInput_nPV  = hVertexProduct->size();
-   
-  //seed basic cluster variables
-  double bemax    = lazyTools.eMax(*b);
-  double be2nd    = lazyTools.e2nd(*b);
-  double betop    = lazyTools.eTop(*b);
-  double bebottom = lazyTools.eBottom(*b);
-  double beleft   = lazyTools.eLeft(*b);
-  double beright  = lazyTools.eRight(*b);
-
-  double be2x5max    = lazyTools.e2x5Max(*b);
-  double be2x5top    = lazyTools.e2x5Top(*b);
-  double be2x5bottom = lazyTools.e2x5Bottom(*b);
-  double be2x5left  = lazyTools.e2x5Left(*b);
-  double be2x5right = lazyTools.e2x5Right(*b);
- 
-  ele2_eRegrInput_Deta_bC_sC = b->eta()-s->eta();
-  ele2_eRegrInput_Dphi_bC_sC = reco::deltaPhi(b->phi(),s->phi());
-  ele2_eRegrInput_bCE_Over_sCE = b->energy()/b->energy();
-  ele2_eRegrInput_e3x3_Over_bCE = lazyTools.e3x3(*b)/b->energy();
-  ele2_eRegrInput_e5x5_Over_bCE = lazyTools.e5x5(*b)/b->energy();
-  ele2_eRegrInput_sigietaieta_bC1 = sqrt(lazyTools.localCovariances(*b)[0]);
-  ele2_eRegrInput_sigiphiiphi_bC1 = sqrt(lazyTools.localCovariances(*b)[2]);
-  ele2_eRegrInput_sigietaiphi_bC1 = lazyTools.localCovariances(*b)[1];
-  ele2_eRegrInput_bEMax_Over_bCE = bemax/b->energy();
-  ele2_eRegrInput_bE2nd_Over_bCE = be2nd/b->energy();
-  ele2_eRegrInput_bEtop_Over_bCE = betop/b->energy();
-  ele2_eRegrInput_bEbot_Over_bCE = bebottom/b->energy();
-  ele2_eRegrInput_bEleft_Over_bCE = beleft/b->energy();
-  ele2_eRegrInput_bEright_Over_bCE = beright/b->energy();
-  ele2_eRegrInput_be2x5max_Over_bCE = be2x5max/b->energy();
-  ele2_eRegrInput_be2x5top_Over_bCE = be2x5top/b->energy();
-  ele2_eRegrInput_be2x5bottom_Over_bCE = be2x5bottom/b->energy();
-  ele2_eRegrInput_be2x5left_Over_bCE = be2x5left/b->energy();
-  ele2_eRegrInput_be2x5right_Over_bCE = be2x5right/b->energy();
-   
-      
-  if( isbarrel){
-
-   // seed cluster
-   float betacry, bphicry, bthetatilt, bphitilt;
-   int bieta, biphi;
-   EcalClusterLocal _ecalLocal;
-   _ecalLocal.localCoordsEB(*b,iSetup,betacry,bphicry,bieta,biphi,bthetatilt,bphitilt);
-     
-   ele2_eRegrInput_seedbC_eta = bieta;
-   ele2_eRegrInput_seedbC_phi = biphi;
-   ele2_eRegrInput_seedbC_eta_p5 = bieta%5;
-   ele2_eRegrInput_seedbC_phi_p2 = biphi%2;
-   ele2_eRegrInput_seedbC_bieta = (TMath::Abs(bieta)<=25)*(bieta%25) + (TMath::Abs(bieta)>25)*((bieta-25*TMath::Abs(bieta)/bieta)%20);
-   ele2_eRegrInput_seedbC_phi_p20 = biphi%20;
-   ele2_eRegrInput_seedbC_etacry = betacry;
-   ele2_eRegrInput_seedbC_phicry = bphicry;
-   ele2_eRegrInput_ESoSC = -99. ;
-  }
-
-  else{
-   ele2_eRegrInput_ESoSC = s->preshowerEnergy()/s->rawEnergy();
-   ele2_eRegrInput_seedbC_eta = -99.;
-   ele2_eRegrInput_seedbC_phi = -99.;
-   ele2_eRegrInput_seedbC_eta_p5 = -99.;
-   ele2_eRegrInput_seedbC_phi_p2 = -99.;
-   ele2_eRegrInput_seedbC_bieta = -99.;
-   ele2_eRegrInput_seedbC_phi_p20 = -99.;
-   ele2_eRegrInput_seedbC_etacry = -99.;
-   ele2_eRegrInput_seedbC_phicry =-99.;
-  }
-
-  if(saveFbrem_){
-   reco::GsfTrackRef eleTrack = electron.gsfTrack();
-   reco::TrackRef eleNTrack = electron.closestTrack();
-   GlobalPoint outPos(eleTrack->extra()->outerPosition().x(), eleTrack->extra()->outerPosition().y(), eleTrack->extra()->outerPosition().z());
-   GlobalPoint innPos(eleTrack->extra()->innerPosition().x(), eleTrack->extra()->innerPosition().y(), eleTrack->extra()->innerPosition().z());
-   std::vector<reco::GsfTangent> eleTangent = eleTrack->gsfExtra()->tangents();
-   int numberOfValidHits_Trk = 0;
-   if(!eleNTrack.isNull())
-    for(unsigned int trkNH = 0; trkNH < eleNTrack->extra()->recHitsSize(); ++trkNH){
-    if(!eleNTrack->extra()->recHit(trkNH)->isValid()) continue;
-    DetId id = eleNTrack->extra()->recHit(trkNH)->geographicalId();
-    const GeomDet* det = pDD->idToDet(id);
-    if(eleTrack->extra()->seedRef().isNull()) continue;
-    edm::RefToBase<TrajectorySeed> seed = eleTrack->extra()->seedRef();
-    reco::ElectronSeedRef elseed = seed.castTo<reco::ElectronSeedRef>();
-    TrajectoryStateOnSurface t = trajectoryStateTransform::transientState(elseed->startingState(), &(det->surface()), &(*theMagField));
-    if(!t.isValid()) continue;
-
-    GlobalPoint hitPos = t.globalPosition();
-
-    if(hitPos.x() == ele2_inner_x && hitPos.y() == ele2_inner_y && hitPos.z() == ele2_inner_z){
-     ele2_inner_p = (sqrt(eleTrack->extra()->innerMomentum().Mag2()) );
-     ele2_inner_x = innPos.x();
-     ele2_inner_y = innPos.y();
-     ele2_inner_z = innPos.z();
-    }
-    if(hitPos.x() == ele2_outer_x && hitPos.y() == ele2_outer_y && hitPos.z() == ele2_outer_z){
-     ele2_outer_p = (sqrt(eleTrack->extra()->outerMomentum().Mag2()) );
-     ele2_outer_x = outPos.x();
-     ele2_outer_y = outPos.y();
-     ele2_outer_z = outPos.z();
-    }
-
-    for(unsigned int pp=0; pp<eleTangent.size(); ++pp ){
-     GlobalPoint tangPos( eleTangent.at(pp).position().x(),
-                          eleTangent.at(pp).position().y(),
-                          eleTangent.at(pp).position().z() );
-
-     if(hitPos.x() != tangPos.x() && hitPos.y() != tangPos.y() && hitPos.z() != tangPos.z()) continue;
-     float tangMom = sqrt(eleTangent.at(pp).momentum().Mag2());
-     ele2_tangent_p.push_back(tangMom);
-     ele2_tangent_x.push_back(tangPos.x());
-     ele2_tangent_y.push_back(tangPos.y());
-     ele2_tangent_z.push_back(tangPos.z());
-     ele2_tangent_dP.push_back(eleTangent.at(pp).deltaP().value());
-     ele2_tangent_dPerr.push_back(eleTangent.at(pp).deltaP().error());
-     ++numberOfValidHits_Trk;
-    }
-    }
-    ele2_tangent_n = numberOfValidHits_Trk;
-  }
  }
-  
-  
+    
  if( verbosity_ ) std::cout << ">>> AnalyzerEle::fillEleInfo end <<<" << std::endl;
+
 }
 
 // -----------------------------------------------------------------------------------------
@@ -2011,8 +1704,8 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   p_met   = &met;
   met_et  = p_met->Et();
   met_phi = p_met->phi();  
-  ele1Met_mt   = sqrt( 2. * ele1_pt * met_et * ( 1. - cos( deltaPhi(ele1_phi,met_phi) ) ) );
-  ele1Met_Dphi = deltaPhi(ele1_phi,met_phi);
+  ele1Met_mt   = sqrt( 2. * ele2_pt * met_et * ( 1. - cos( deltaPhi(ele1_phi,met_phi) ) ) );
+  ele1Met_Dphi = deltaPhi(ele2_phi,met_phi);
 
 
  }
@@ -2029,6 +1722,8 @@ void AnalyzerEle::fillDoubleEleInfo(const edm::Event & iEvent, const edm::EventS
 
  }
 
+
+//----------------------------------------------------------------------------------------------
 
 double AnalyzerEle::deltaPhi(const double& phi1, const double& phi2){
   double deltaphi = fabs(phi1 - phi2);
@@ -2084,10 +1779,6 @@ void AnalyzerEle::initialize(){
  ele1_scEta =-99.;
  ele1_scPhi =-99.;
  ele1_scLaserCorr =-99.;
- ele1_scERaw_PUcleaned=-99.;
- ele1_scEtaWidth_PUcleaned=-99.;
- ele1_scPhiWidth_PUcleaned=-99.;
- ele1_fCorrection_PUcleaned=-99.;
 
  ele1_fEta=-99.;
  ele1_fEtaCorr=-99.;
@@ -2126,16 +1817,6 @@ void AnalyzerEle::initialize(){
  ele1_recHit_ICConstant.clear();
  ele1_nRecHits = -9999;
 
- ele1_recHitMatrix_E.clear();
- ele1_recHitMatrix_flag.clear();
- ele1_recHitMatrix_hashedIndex.clear();
- ele1_recHitMatrix_ietaORix.clear();
- ele1_recHitMatrix_iphiORiy.clear();
- ele1_recHitMatrix_zside.clear();
- ele1_recHitMatrix_laserCorrection.clear();
- ele1_recHitMatrix_ICConstant.clear();
- ele1_recHitMatrix_samples.clear();
-  
  ele1_isEB= -9999;
  ele1_isEBEEGap= -9999;
  ele1_isEBEtaGap= -9999;
@@ -2143,47 +1824,78 @@ void AnalyzerEle::initialize(){
  ele1_isEEDeeGap= -9999;
  ele1_isEERingGap= -9999;
 
- ele1_eRegrInput_rawE = -99.;
- ele1_eRegrInput_r9 = -99.;
- ele1_eRegrInput_eta = -99.;
- ele1_eRegrInput_phi= -99.;
- ele1_eRegrInput_r25= -99.;
- ele1_eRegrInput_etaW= -99.;
- ele1_eRegrInput_phiW= -99.;
- ele1_eRegrInput_rho= -99.;
- ele1_eRegrInput_Deta_bC_sC= -99.;
- ele1_eRegrInput_Dphi_bC_sC= -99.;
- ele1_eRegrInput_bCE_Over_sCE= -99.;
- ele1_eRegrInput_e3x3_Over_bCE= -99.;
- ele1_eRegrInput_e5x5_Over_bCE= -99.;
- ele1_eRegrInput_sigietaieta_bC1= -99.;
- ele1_eRegrInput_sigiphiiphi_bC1= -99.;
- ele1_eRegrInput_sigietaiphi_bC1= -99.;
- ele1_eRegrInput_bEMax_Over_bCE= -99.;
- ele1_eRegrInput_bE2nd_Over_bCE= -99.;
- ele1_eRegrInput_bEtop_Over_bCE= -99.;
- ele1_eRegrInput_bEbot_Over_bCE= -99.;
+ // Regression V3 variables                                                                                                                                                               
+ ele1_eRegrInput_rawE = -999.;
+ ele1_eRegrInput_r9   = -999.;
+ ele1_eRegrInput_eta  = -999.;
+ ele1_eRegrInput_phi  = -999.;
+ ele1_eRegrInput_etaW = -999.;
+ ele1_eRegrInput_phiW = -999.;
+ ele1_eRegrInput_SCsize  = -999;
+ ele1_eRegrInput_rho  = -999.;
+ ele1_eRegrInput_hoe  = -999.;
+ ele1_eRegrInput_nPV  = -999;
+ ele1_eRegrInput_seed_eta  = -999.;
+ ele1_eRegrInput_seed_phi  = -999.;
+ ele1_eRegrInput_seed_E    = -999.;
+ ele1_eRegrInput_seed_e3x3  = -999.;
+ ele1_eRegrInput_seed_e5x5  = -999.;
+ ele1_eRegrInput_sigietaieta = -999.;
+ ele1_eRegrInput_sigiphiiphi = -999.;
+ ele1_eRegrInput_sigietaiphi = -999. ;
+ ele1_eRegrInput_eMax = -999.;
+ ele1_eRegrInput_e2nd = -999.;
+ ele1_eRegrInput_eTop = -999.;
+ ele1_eRegrInput_eBottom = -999.;
+ ele1_eRegrInput_eLeft   = -999.;
+ ele1_eRegrInput_eRight  = -999.;
+ ele1_eRegrInput_e2x5Max = -999.;
+ ele1_eRegrInput_e2x5Top = -999.;
+ ele1_eRegrInput_e2x5Bottom = -999.;
+ ele1_eRegrInput_e2x5Left   = -999.;
+ ele1_eRegrInput_e2x5Right = -999.;
+ ele1_eRegrInput_seed_ieta = -999;
+ ele1_eRegrInput_seed_iphi = -999;
+ ele1_eRegrInput_seed_etaCrySeed = -999.;
+ ele1_eRegrInput_seed_phiCrySeed = -999.;
+ ele1_eRegrInput_preshowerEnergyOverRaw = -999.;
+ ele1_eRegrInput_ecalDrivenSeed = -999;
+ ele1_eRegrInput_isEBEtaGap = -999;
+ ele1_eRegrInput_isEBPhiGap = -999;
+ ele1_eRegrInput_eSubClusters = -999.;
+ ele1_eRegrInput_subClusterEnergy_1 = -999.;
+ ele1_eRegrInput_subClusterEnergy_2 = -999.;
+ ele1_eRegrInput_subClusterEnergy_3 = -999.;
+ ele1_eRegrInput_subClusterEta_1 = -999.;
+ ele1_eRegrInput_subClusterEta_2 = -999.;
+ ele1_eRegrInput_subClusterEta_3 = -999.;
+ ele1_eRegrInput_subClusterPhi_1 = -999.;
+ ele1_eRegrInput_subClusterPhi_2 = -999.;
+ ele1_eRegrInput_subClusterPhi_3 = -999.;
+ ele1_eRegrInput_subClusterEmax_1 = -999.;
+ ele1_eRegrInput_subClusterEmax_2 = -999.;
+ ele1_eRegrInput_subClusterEmax_3 = -999.;
+ ele1_eRegrInput_subClusterE3x3_1 = -999.;
+ ele1_eRegrInput_subClusterE3x3_2 = -999.;
+ ele1_eRegrInput_subClusterE3x3_3 = -999.;
+ ele1_eRegrInput_eESClusters = -999.;
+ ele1_eRegrInput_eESClusterEnergy_1 = -999.;
+ ele1_eRegrInput_eESClusterEnergy_2 = -999.;
+ ele1_eRegrInput_eESClusterEnergy_3 = -999.;
+ ele1_eRegrInput_eESClusterEta_1 = -999.;
+ ele1_eRegrInput_eESClusterEta_2 = -999.;
+ ele1_eRegrInput_eESClusterEta_3 = -999.;
+ ele1_eRegrInput_eESClusterPhi_1 = -999.;
+ ele1_eRegrInput_eESClusterPhi_2 = -999.;
+ ele1_eRegrInput_pt  = -999.;
+ ele1_eRegrInput_trackMomentumAtVtxR = -999.;
+ ele1_eRegrInput_fbrem = -999.;
+ ele1_eRegrInput_charge = -999.;
+ ele1_eRegrInput_eSuperClusterOverP = -999.;
 
- ele1_eRegrInput_bEleft_Over_bCE= -99.;
- ele1_eRegrInput_bEright_Over_bCE= -99.;
- ele1_eRegrInput_be2x5max_Over_bCE= -99.;
- ele1_eRegrInput_be2x5top_Over_bCE= -99.;
- ele1_eRegrInput_be2x5bottom_Over_bCE= -99.;
- ele1_eRegrInput_be2x5left_Over_bCE= -99.;
- ele1_eRegrInput_be2x5right_Over_bCE= -99.;
-
- ele1_eRegrInput_seedbC_eta= -99.;
- ele1_eRegrInput_seedbC_phi= -99.;
- ele1_eRegrInput_seedbC_eta_p5= -99.;
- ele1_eRegrInput_seedbC_phi_p2= -99.;
- ele1_eRegrInput_seedbC_bieta= -99.;
- ele1_eRegrInput_seedbC_phi_p20= -99.;
- ele1_eRegrInput_seedbC_etacry= -99.;
- ele1_eRegrInput_seedbC_phicry= -99.;
-
- ele1_eRegrInput_ESoSC= -99.;
- ele1_eRegrInput_nPV= -99.;
- ele1_eRegrInput_SCsize= -99.;
+ ele1_nGgsfTrackHits     = -999;
+ ele1_numberOfLostHits   = -999;
+ ele1_nAmbiguousGsfTrack = -999;
 
 
  ele2_charge =-99.;
@@ -2225,10 +1937,6 @@ void AnalyzerEle::initialize(){
  ele2_scEta =-99.;
  ele2_scPhi =-99.;
  ele2_scLaserCorr =-99.;
- ele2_scERaw_PUcleaned=-99.;
- ele2_scEtaWidth_PUcleaned=-99.;
- ele2_scPhiWidth_PUcleaned=-99.;
- ele2_fCorrection_PUcleaned=-99.;
 
  ele2_fEta=-99.;
  ele2_fEtaCorr=-99.;
@@ -2267,16 +1975,6 @@ void AnalyzerEle::initialize(){
  ele2_recHit_ICConstant.clear();
  ele2_nRecHits = -9999;
 
- ele2_recHitMatrix_E.clear();
- ele2_recHitMatrix_flag.clear();
- ele2_recHitMatrix_hashedIndex.clear();
- ele2_recHitMatrix_ietaORix.clear();
- ele2_recHitMatrix_iphiORiy.clear();
- ele2_recHitMatrix_zside.clear();
- ele2_recHitMatrix_laserCorrection.clear();
- ele2_recHitMatrix_ICConstant.clear();
- ele2_recHitMatrix_samples.clear();
-  
  ele2_isEB= -9999;
  ele2_isEBEEGap= -9999;
  ele2_isEBEtaGap= -9999;
@@ -2284,49 +1982,80 @@ void AnalyzerEle::initialize(){
  ele2_isEEDeeGap= -9999;
  ele2_isEERingGap= -9999;
 
- ele2_eRegrInput_rawE = -99.;
- ele2_eRegrInput_r9 = -99.;
- ele2_eRegrInput_eta = -99.;
- ele2_eRegrInput_phi= -99.;
- ele2_eRegrInput_r25= -99.;
- ele2_eRegrInput_etaW= -99.;
- ele2_eRegrInput_phiW= -99.;
- ele2_eRegrInput_rho= -99.;
- ele2_eRegrInput_Deta_bC_sC= -99.;
- ele2_eRegrInput_Dphi_bC_sC= -99.;
- ele2_eRegrInput_bCE_Over_sCE= -99.;
- ele2_eRegrInput_e3x3_Over_bCE= -99.;
- ele2_eRegrInput_e5x5_Over_bCE= -99.;
- ele2_eRegrInput_sigietaieta_bC1= -99.;
- ele2_eRegrInput_sigiphiiphi_bC1= -99.;
- ele2_eRegrInput_sigietaiphi_bC1= -99.;
- ele2_eRegrInput_bEMax_Over_bCE= -99.;
- ele2_eRegrInput_bE2nd_Over_bCE= -99.;
- ele2_eRegrInput_bEtop_Over_bCE= -99.;
- ele2_eRegrInput_bEbot_Over_bCE= -99.;
+ ele2_eRegrInput_rawE = -999.;
+ ele2_eRegrInput_r9   = -999.;
+ ele2_eRegrInput_eta  = -999.;
+ ele2_eRegrInput_phi  = -999.;
+ ele2_eRegrInput_etaW = -999.;
+ ele2_eRegrInput_phiW = -999.;
+ ele2_eRegrInput_SCsize  = -999;
+ ele2_eRegrInput_rho  = -999.;
+ ele2_eRegrInput_hoe  = -999.;
+ ele2_eRegrInput_nPV  = -999;
+ ele2_eRegrInput_seed_eta  = -999.;
+ ele2_eRegrInput_seed_phi  = -999.;
+ ele2_eRegrInput_seed_E    = -999.;
+ ele2_eRegrInput_seed_e3x3  = -999.;
+ ele2_eRegrInput_seed_e5x5  = -999.;
+ ele2_eRegrInput_sigietaieta = -999.;
+ ele2_eRegrInput_sigiphiiphi = -999.;
+ ele2_eRegrInput_sigietaiphi = -999. ;
+ ele2_eRegrInput_eMax = -999.;
+ ele2_eRegrInput_e2nd = -999.;
+ ele2_eRegrInput_eTop = -999.;
+ ele2_eRegrInput_eBottom = -999.;
+ ele2_eRegrInput_eLeft   = -999.;
+ ele2_eRegrInput_eRight  = -999.;
+ ele2_eRegrInput_e2x5Max = -999.;
+ ele2_eRegrInput_e2x5Top = -999.;
+ ele2_eRegrInput_e2x5Bottom = -999.;
+ ele2_eRegrInput_e2x5Left   = -999.;
+ ele2_eRegrInput_e2x5Right = -999.;
+ ele2_eRegrInput_seed_ieta = -999;
+ ele2_eRegrInput_seed_iphi = -999;
+ ele2_eRegrInput_seed_etaCrySeed = -999.;
+ ele2_eRegrInput_seed_phiCrySeed = -999.;
+ ele2_eRegrInput_preshowerEnergyOverRaw = -999.;
+ ele2_eRegrInput_ecalDrivenSeed = -999;
+ ele2_eRegrInput_isEBEtaGap = -999;
+ ele2_eRegrInput_isEBPhiGap = -999;
+ ele2_eRegrInput_eSubClusters = -999.;
+ ele2_eRegrInput_subClusterEnergy_1 = -999.;
+ ele2_eRegrInput_subClusterEnergy_2 = -999.;
+ ele2_eRegrInput_subClusterEnergy_3 = -999.;
+ ele2_eRegrInput_subClusterEta_1 = -999.;
+ ele2_eRegrInput_subClusterEta_2 = -999.;
+ ele2_eRegrInput_subClusterEta_3 = -999.;
+ ele2_eRegrInput_subClusterPhi_1 = -999.;
+ ele2_eRegrInput_subClusterPhi_2 = -999.;
+ ele2_eRegrInput_subClusterPhi_3 = -999.;
+ ele2_eRegrInput_subClusterEmax_1 = -999.;
+ ele2_eRegrInput_subClusterEmax_2 = -999.;
+ ele2_eRegrInput_subClusterEmax_3 = -999.;
+ ele2_eRegrInput_subClusterE3x3_1 = -999.;
+ ele2_eRegrInput_subClusterE3x3_2 = -999.;
+ ele2_eRegrInput_subClusterE3x3_3 = -999.;
+ ele2_eRegrInput_eESClusters = -999.;
+ ele2_eRegrInput_eESClusterEnergy_1 = -999.;
+ ele2_eRegrInput_eESClusterEnergy_2 = -999.;
+ ele2_eRegrInput_eESClusterEnergy_3 = -999.;
+ ele2_eRegrInput_eESClusterEta_1 = -999.;
+ ele2_eRegrInput_eESClusterEta_2 = -999.;
+ ele2_eRegrInput_eESClusterEta_3 = -999.;
+ ele2_eRegrInput_eESClusterPhi_1 = -999.;
+ ele2_eRegrInput_eESClusterPhi_2 = -999.;
+ ele2_eRegrInput_pt  = -999.;
+ ele2_eRegrInput_trackMomentumAtVtxR = -999.;
+ ele2_eRegrInput_fbrem = -999.;
+ ele2_eRegrInput_charge = -999.;
+ ele2_eRegrInput_eSuperClusterOverP = -999.;
 
- ele2_eRegrInput_bEleft_Over_bCE= -99.;
- ele2_eRegrInput_bEright_Over_bCE= -99.;
- ele2_eRegrInput_be2x5max_Over_bCE= -99.;
- ele2_eRegrInput_be2x5top_Over_bCE= -99.;
- ele2_eRegrInput_be2x5bottom_Over_bCE= -99.;
- ele2_eRegrInput_be2x5left_Over_bCE= -99.;
- ele2_eRegrInput_be2x5right_Over_bCE= -99.;
-
- ele2_eRegrInput_seedbC_eta= -99.;
- ele2_eRegrInput_seedbC_phi= -99.;
- ele2_eRegrInput_seedbC_eta_p5= -99.;
- ele2_eRegrInput_seedbC_phi_p2= -99.;
- ele2_eRegrInput_seedbC_bieta= -99.;
- ele2_eRegrInput_seedbC_phi_p20= -99.;
- ele2_eRegrInput_seedbC_etacry= -99.;
- ele2_eRegrInput_seedbC_phicry= -99.;
-
- ele2_eRegrInput_ESoSC= -99.;
- ele2_eRegrInput_nPV= -99.;
- ele2_eRegrInput_SCsize= -99.;
+ ele2_nGgsfTrackHits     = -999;
+ ele2_numberOfLostHits   = -999;
+ ele2_nAmbiguousGsfTrack = -999;
 
  if(saveMCInfo_){
+
    nPU_ = 0 ;
    mcV_E = -9999.;
    mcV_Px = -9999.;
@@ -2359,47 +2088,12 @@ void AnalyzerEle::initialize(){
    mcF2_fromV_PdgId = -99;
  }
 
- if(saveFbrem_){
-  ele1_inner_p = -9999.;
-  ele1_inner_x = -9999.;
-  ele1_inner_y = -9999.;
-  ele1_inner_z = -9999.;
-  ele1_outer_p = -9999.;
-  ele1_outer_x = -9999.;
-  ele1_outer_y = -9999.;
-  ele1_outer_z = -9999.;
-  ele1_tangent_n = -1;
-  ele1_tangent_p.clear();
-  ele1_tangent_x.clear();
-  ele1_tangent_y.clear();
-  ele1_tangent_z.clear();
-  ele1_tangent_dP.clear();
-  ele1_tangent_dPerr.clear();
-
-  ele2_inner_p = -9999.;
-  ele2_inner_x = -9999.;
-  ele2_inner_y = -9999.;
-  ele2_inner_z = -9999.;
-  ele2_outer_p = -9999.;
-  ele2_outer_x = -9999.;
-  ele2_outer_y = -9999.;
-  ele2_outer_z = -9999.;
-  ele2_tangent_n = -1;
-  ele2_tangent_p.clear();
-  ele2_tangent_x.clear();
-  ele2_tangent_y.clear();
-  ele2_tangent_z.clear();
-  ele2_tangent_dP.clear();
-  ele2_tangent_dPerr.clear();
- }
-
  met_et=-99.;
  met_phi=-99.;
 
  ele1Met_mt = -99.;
  ele1Met_Dphi = -99.;
-  
-  
+    
  // di-electron variables
  ele1ele2_m=-99.;
  ele1ele2_scM=-99.;
