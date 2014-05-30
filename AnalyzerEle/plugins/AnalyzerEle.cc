@@ -545,9 +545,13 @@ void AnalyzerEle::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
  // without doing W/Z selections
  else {
    
-  int nEle = electrons.size();      
-  if(nEle == 1) { isW_ = 1; isZ_ = 0; }
-  if(nEle >= 2) { isW_ = 0; isZ_ = 1; }
+  int nWP90 = 0 ;
+  for( unsigned int iEle = 0 ; iEle < electrons.size(); iEle++){ // Loop on the electron 
+     if(electrons.at(iEle).electronID("cIso90") or electrons.at(iEle).electronID("relIso90"))  ++nWP90;
+  }
+
+  if(nWP90 == 1) { isW_ = 1; isZ_ = 0; }
+  if(nWP90 == 2) { isW_ = 0; isZ_ = 1; }
   if(isW_ == 1) fillEleInfo ( iEvent, iSetup, 0, "ele1" );
   if(isZ_ == 1) {
    fillEleInfo ( iEvent, iSetup, 0, "ele1" );
