@@ -207,6 +207,7 @@ int main (int argc, char** argv){
    DistributionRecoMap["ele1_dxy_PV"]->Fill(ele1_dxy_PV_r);
    DifferenceMap["ele1_dxy_PV"]->Fill(ele1_dxy_PV_s-ele1_dxy_PV_r);
 
+<<<<<<< Updated upstream
    DistributionStreamMap["ele1_tkP"]->Fill(ele1_tkP_s);       
    DistributionRecoMap["ele1_tkP"]->Fill(ele1_tkP_r);
    DifferenceMap["ele1_tkP"]->Fill(ele1_tkP_s-ele1_tkP_r);
@@ -214,6 +215,11 @@ int main (int argc, char** argv){
    DistributionStreamMap["ele1_dz_PV"]->Fill(ele1_dz_PV_s);       
    DistributionRecoMap["ele1_dz_PV"]->Fill(ele1_dz_PV_r);
    DifferenceMap["ele1_dz_PV"]->Fill(ele1_dz_PV_s-ele1_dz_PV_r);
+=======
+     DistributionStreamMap["ele1_dz_PV"]->Fill(ele1_dz_PV_s);       
+     DistributionRecoMap["ele1_dz_PV"]->Fill(ele1_dz_PV_r);
+     RatioMap["ele1_dz_PV"]->Fill(ele1_dz_PV_s-ele1_dz_PV_r);
+>>>>>>> Stashed changes
 
    DistributionStreamMap["ele1_e5x5"]->Fill(ele1_e5x5_s);       
    DistributionRecoMap["ele1_e5x5"]->Fill(ele1_e5x5_r);
