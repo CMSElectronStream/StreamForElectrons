@@ -516,9 +516,9 @@ void AnalyzerEle::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
       }
    }
 
-   if( nWP70 < 1 or nWP90 > 2) return; // less than one WP70 or more than two WP90 -> skip the event
+   if(nWP90 > 2) return; // less than one WP70 or more than two WP90 -> skip the event
 
-   if( (nWP70 == 1) && (nWP90 < 2) ){ // less than two WP90 and one WP70 -> W candidate
+   if((nWP70 == 1) && (nWP90 < 2)){ // less than two WP90 and one WP70 -> W candidate
 
     isW_ = 1; isZ_ = 0;
     std::map<float,int>::const_iterator mapIt = eleIts_.begin();
@@ -545,13 +545,9 @@ void AnalyzerEle::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
  // without doing W/Z selections
  else {
    
-  int nWP90 = 0 ;
-  for( unsigned int iEle = 0 ; iEle < electrons.size(); iEle++){ // Loop on the electron 
-     if(electrons.at(iEle).electronID("cIso90") or electrons.at(iEle).electronID("relIso90"))  ++nWP90;
-  }
-
-  if(nWP90 == 1) { isW_ = 1; isZ_ = 0; }
-  if(nWP90 == 2) { isW_ = 0; isZ_ = 1; }
+  int nele = electrons.size();
+  if(nele == 1) { isW_ = 1; isZ_ = 0; }
+  if(nele == 2) { isW_ = 0; isZ_ = 1; }
   if(isW_ == 1) fillEleInfo ( iEvent, iSetup, 0, "ele1" );
   if(isZ_ == 1) {
    fillEleInfo ( iEvent, iSetup, 0, "ele1" );
