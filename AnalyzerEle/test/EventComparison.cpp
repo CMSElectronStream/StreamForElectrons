@@ -16,23 +16,59 @@
 
 #include "TStyle.h"
 
+// stream integer variables
+Int_t runId_s,lumiId_s,isW_s,isZ_s,PV_n_s,nele_s,ele1_nRecHits_s,ele1_nGgsfTrackHits_s,ele1_numberOfLostHits_s,ele1_nAmbiguousGsfTrack_s,ele1_isEB_s;
+Int_t ele1_seedIeta_s,ele1_seedIphi_s,ele1_seedIx_s,ele1_seedIy_s,ele1_seedZside_s;
 
-Int_t runId_s,lumiId_s, runId_r,lumiId_r, isW_s, isW_r, isZ_s, isZ_r, PV_n_s, PV_n_r, nele_s, nele_r,ele1_isEB_s,ele1_isEB_r;
-Int_t ele1_seedIeta_s,ele1_seedIeta_r,ele1_seedIphi_s,ele1_seedIphi_r,ele1_seedIx_s,ele1_seedIx_r,ele1_seedIy_s,ele1_seedIy_r,ele1_seedZside_r,ele1_seedZside_s,ele1_scNxtal_s,ele1_scNxtal_r;
+// recco integer variables
+Int_t runId_r,lumiId_r,isW_r,isZ_r,PV_n_r,nele_r,ele1_nRecHits_r,ele1_nGgsfTrackHits_r,ele1_numberOfLostHits_r,ele1_nAmbiguousGsfTrack_r,ele1_isEB_r;
+Int_t ele1_seedIeta_r,ele1_seedIphi_r,ele1_seedIx_r,ele1_seedIy_r,ele1_seedZside_r;
 
 Long64_t eventId_s, eventId_r ;
 
-Float_t rho_s, rho_r,ele1_pt_s,ele1_pt_r,ele1_eta_s,ele1_eta_r,ele1_phi_s,ele1_phi_r,ele1_sigmaIetaIeta_s, ele1_sigmaIetaIeta_r;
-Float_t ele1_DphiIn_s,ele1_DphiIn_r,ele1_DetaIn_s,ele1_DetaIn_r,ele1_HOverE_s,ele1_HOverE_r,ele1_tkIso_s,ele1_tkIso_r,ele1_emIso_s,ele1_emIso_r,ele1_hadIso_s,ele1_hadIso_r;
-Float_t ele1_scERaw_s,ele1_scERaw_r,ele1_scE_s,ele1_scE_r,ele1_es_r,ele1_es_s,ele1_scLaserCorr_s,ele1_scLaserCorr_r,ele1_scEta_r,ele1_scEta_s,ele1_scPhi_s,ele1_scPhi_r;
-Float_t ele1_scEtaWidth_s,ele1_scEtaWidth_r,ele1_scPhiWidth_s,ele1_scPhiWidth_r,ele1_fEta_s,ele1_fEta_r,ele1_tkP_s,ele1_tkP_r,ele1_fbrem_s,ele1_fbrem_r;
-Float_t ele1_dxy_PV_s,ele1_dxy_PV_r,ele1_dz_PV_s,ele1_dz_PV_r,ele1_e5x5_s,ele1_e5x5_r,ele1_e3x3_s,ele1_e3x3_r,ele1_seedE_s,ele1_seedE_r;
-Float_t met_s, met_r, met_phi_s, met_phi_r, ele1Met_mt_s, ele1Met_mt_r;
+// stream float
+Float_t rho_s,ele1_pt_s,ele1_eta_s,ele1_phi_s,ele1_sigmaIetaIeta_s,ele1_DphiIn_s,ele1_DetaIn_s,ele1_HOverE_s,ele1_tkIso_s,ele1_emIso_s,ele1_hadIso_s;
+Float_t ele1_scERaw_s,ele1_scE_s,ele1_es_s,ele1_scEta_s,ele1_scPhi_s,ele1_scEtaWidth_s,ele1_scPhiWidth_s,ele1_tkP_s,ele1_fbrem_s,ele1_dxy_PV_s,ele1_dz_PV_s,ele1_e5x5_s,ele1_e3x3_s,ele1_seedE_s,ele1_scNxtal_s;
+Float_t met_s,met_phi_s,ele1Met_mt_s;
 
+// reco float
+Float_t rho_r,ele1_pt_r,ele1_eta_r,ele1_phi_r,ele1_sigmaIetaIeta_r,ele1_DphiIn_r,ele1_DetaIn_r,ele1_HOverE_r,ele1_tkIso_r,ele1_emIso_r,ele1_hadIso_r;
+Float_t ele1_scERaw_r,ele1_scE_r,ele1_es_r,ele1_scEta_r,ele1_scPhi_r,ele1_scEtaWidth_r,ele1_scPhiWidth_r,ele1_tkP_r,ele1_fbrem_r,ele1_dxy_PV_r,ele1_dz_PV_r,ele1_e5x5_r,ele1_e3x3_r,ele1_seedE_r,ele1_scNxtal_r;
+Float_t met_r,met_phi_r,ele1Met_mt_r;
+
+// stream regression inputs 
+Float_t ele1_eRegrInput_rawE_s,ele1_eRegrInput_r9_s,ele1_eRegrInput_eta_s,ele1_eRegrInput_phi_s,ele1_eRegrInput_etaW_s,ele1_eRegrInput_phiW_s,ele1_eRegrInput_SCsize_s,ele1_eRegrInput_rho_s;
+Float_t ele1_eRegrInput_hoe_s,ele1_eRegrInput_nPV_s,ele1_eRegrInput_seed_eta_s,ele1_eRegrInput_seed_phi_s,ele1_eRegrInput_seed_E_s,ele1_eRegrInput_seed_e3x3_s,ele1_eRegrInput_seed_e5x5_s;
+Float_t ele1_eRegrInput_sigietaieta_s,ele1_eRegrInput_sigiphiiphi_s,ele1_eRegrInput_sigietaiphi_s,ele1_eRegrInput_eMax_s,ele1_eRegrInput_e2nd_s,ele1_eRegrInput_eTop_s,ele1_eRegrInput_eBottom_s;
+Float_t ele1_eRegrInput_eLeft_s,ele1_eRegrInput_eRight_s,ele1_eRegrInput_e2x5Max_s,ele1_eRegrInput_e2x5Top_s,ele1_eRegrInput_e2x5Bottom_s,ele1_eRegrInput_e2x5Left_s,ele1_eRegrInput_e2x5Right_s;
+Float_t ele1_eRegrInput_seed_ieta_s,ele1_eRegrInput_seed_iphi_s,ele1_eRegrInput_seed_etaCrySeed_s,ele1_eRegrInput_seed_phiCrySeed_s,ele1_eRegrInput_preshowerEnergyOverRaw_s,ele1_eRegrInput_ecalDrivenSeed_s;
+Float_t ele1_eRegrInput_isEBEtaGap_s,ele1_eRegrInput_isEBPhiGap_s,ele1_eRegrInput_eSubClusters_s,ele1_eRegrInput_subClusterEnergy_1_s,ele1_eRegrInput_subClusterEnergy_2_s;
+Float_t ele1_eRegrInput_subClusterEnergy_3_s,ele1_eRegrInput_subClusterEta_1_s,ele1_eRegrInput_subClusterEta_2_s,ele1_eRegrInput_subClusterEta_3_s,ele1_eRegrInput_subClusterPhi_1_s;
+Float_t ele1_eRegrInput_subClusterPhi_2_s,ele1_eRegrInput_subClusterPhi_3_s,ele1_eRegrInput_subClusterEmax_1_s,ele1_eRegrInput_subClusterEmax_2_s,ele1_eRegrInput_subClusterEmax_3_s;
+Float_t ele1_eRegrInput_subClusterE3x3_1_s,ele1_eRegrInput_subClusterE3x3_2_s,ele1_eRegrInput_subClusterE3x3_3_s,ele1_eRegrInput_eESClusters_s,ele1_eRegrInput_eESClusterEnergy_1_s;
+Float_t ele1_eRegrInput_eESClusterEnergy_2_s,ele1_eRegrInput_eESClusterEnergy_3_s,ele1_eRegrInput_eESClusterEta_1_s,ele1_eRegrInput_eESClusterEta_2_s,ele1_eRegrInput_eESClusterEta_3_s;
+Float_t ele1_eRegrInput_eESClusterPhi_1_s,ele1_eRegrInput_eESClusterPhi_2_s,ele1_eRegrInput_eESClusterPhi_3_s,ele1_eRegrInput_pt_s,ele1_eRegrInput_trackMomentumAtVtxR_s,ele1_eRegrInput_fbrem_s;
+Float_t ele1_eRegrInput_charge_s,ele1_eRegrInput_eSuperClusterOverP_s;
+
+
+// reco regression inputs 
+Float_t ele1_eRegrInput_rawE_r,ele1_eRegrInput_r9_r,ele1_eRegrInput_eta_r,ele1_eRegrInput_phi_r,ele1_eRegrInput_etaW_r,ele1_eRegrInput_phiW_r,ele1_eRegrInput_SCsize_r,ele1_eRegrInput_rho_r;
+Float_t ele1_eRegrInput_hoe_r,ele1_eRegrInput_nPV_r,ele1_eRegrInput_seed_eta_r,ele1_eRegrInput_seed_phi_r,ele1_eRegrInput_seed_E_r,ele1_eRegrInput_seed_e3x3_r,ele1_eRegrInput_seed_e5x5_r;
+Float_t ele1_eRegrInput_sigietaieta_r,ele1_eRegrInput_sigiphiiphi_r,ele1_eRegrInput_sigietaiphi_r,ele1_eRegrInput_eMax_r,ele1_eRegrInput_e2nd_r,ele1_eRegrInput_eTop_r,ele1_eRegrInput_eBottom_r;
+Float_t ele1_eRegrInput_eLeft_r,ele1_eRegrInput_eRight_r,ele1_eRegrInput_e2x5Max_r,ele1_eRegrInput_e2x5Top_r,ele1_eRegrInput_e2x5Bottom_r,ele1_eRegrInput_e2x5Left_r,ele1_eRegrInput_e2x5Right_r;
+Float_t ele1_eRegrInput_seed_ieta_r,ele1_eRegrInput_seed_iphi_r,ele1_eRegrInput_seed_etaCrySeed_r,ele1_eRegrInput_seed_phiCrySeed_r,ele1_eRegrInput_preshowerEnergyOverRaw_r,ele1_eRegrInput_ecalDrivenSeed_r;
+Float_t ele1_eRegrInput_isEBEtaGap_r,ele1_eRegrInput_isEBPhiGap_r,ele1_eRegrInput_eSubClusters_r,ele1_eRegrInput_subClusterEnergy_1_r,ele1_eRegrInput_subClusterEnergy_2_r;
+Float_t ele1_eRegrInput_subClusterEnergy_3_r,ele1_eRegrInput_subClusterEta_1_r,ele1_eRegrInput_subClusterEta_2_r,ele1_eRegrInput_subClusterEta_3_r,ele1_eRegrInput_subClusterPhi_1_r;
+Float_t ele1_eRegrInput_subClusterPhi_2_r,ele1_eRegrInput_subClusterPhi_3_r,ele1_eRegrInput_subClusterEmax_1_r,ele1_eRegrInput_subClusterEmax_2_r,ele1_eRegrInput_subClusterEmax_3_r;
+Float_t ele1_eRegrInput_subClusterE3x3_1_r,ele1_eRegrInput_subClusterE3x3_2_r,ele1_eRegrInput_subClusterE3x3_3_r,ele1_eRegrInput_eESClusters_r,ele1_eRegrInput_eESClusterEnergy_1_r;
+Float_t ele1_eRegrInput_eESClusterEnergy_2_r,ele1_eRegrInput_eESClusterEnergy_3_r,ele1_eRegrInput_eESClusterEta_1_r,ele1_eRegrInput_eESClusterEta_2_r,ele1_eRegrInput_eESClusterEta_3_r;
+Float_t ele1_eRegrInput_eESClusterPhi_1_r,ele1_eRegrInput_eESClusterPhi_2_r,ele1_eRegrInput_eESClusterPhi_3_r,ele1_eRegrInput_pt_r,ele1_eRegrInput_trackMomentumAtVtxR_r,ele1_eRegrInput_fbrem_r;
+Float_t ele1_eRegrInput_charge_r,ele1_eRegrInput_eSuperClusterOverP_r;
+
+// vector branches
 std::vector<float>* ele1_recHit_E_s = new std::vector<float>();
 std::vector<float>* ele1_recHit_E_r = new std::vector<float>();
 TBranch* b_ele1_recHit_E_s, *b_ele1_recHit_E_r;
-
 std::vector<int>*  ele1_idtype_s = new std::vector<int>(); 
 std::vector<int>*  ele1_idtype_r = new std::vector<int>(); 
 TBranch* b_ele1_idtype_s, *b_ele1_idtype_r;
@@ -45,8 +81,6 @@ void SetVariablesMapEntry(std::map<std::string,TH1F*> &, std::map<std::string,TH
 
 int main (int argc, char** argv){
 
- gStyle->SetOptStat(0);
-
  if(argc < 3){ std::cerr<<" two few input informations --> exit from the code"<<std::endl; return -1 ; }
 
  std::string ROOTStyle;
@@ -56,11 +90,11 @@ int main (int argc, char** argv){
  }
 
  gROOT->ProcessLine("#include <vector>");
- 
+ gStyle->SetOptStat(1111);
+
  std::map<std::string,TH1F*> DifferenceMap ;
  std::map<std::string,TH1F*> DistributionStreamMap ;
  std::map<std::string,TH1F*> DistributionRecoMap ;
-
 
  TFile* inputFileStream  = new TFile(argv[1],"READ");
  TFile* inputFileStdReco = new TFile(argv[2],"READ");
@@ -83,16 +117,16 @@ int main (int argc, char** argv){
  Long64_t* indexReco         = TreeIndexStdReco->GetIndex();
 
  std::vector<Long64_t> indexValuesRecoVector; indexValuesRecoVector.insert(indexValuesRecoVector.begin(),indexValuesReco,indexValuesReco+TreeIndexStream->GetN());
- std::vector<Long64_t> indexRecoVector; indexRecoVector.insert(indexRecoVector.begin(),indexReco,indexReco+TreeIndexStream->GetN());
+ std::vector<Long64_t> indexRecoVector; indexRecoVector.insert(indexRecoVector.begin(),indexReco,indexReco+TreeIndexStdReco->GetN());
 
  std::cout<<"Events in the stream file "<<TreeIndexStream->GetN()<<std::endl;
  std::cout<<"Events in the reco   file "<<TreeIndexStdReco->GetN()<<std::endl;
 
  SetVariablesMapEntry(DistributionStreamMap,DistributionRecoMap,DifferenceMap);
 
- for( int iEvent = 0; iEvent < TreeIndexStream->GetN()/100 ; iEvent++ ) {
+ for( int iEvent = 0; iEvent < TreeIndexStream->GetN()/10 ; iEvent++ ) {
 
-  if( iEvent%1000 == 0 ) {
+  if( iEvent%10000 == 0 ) {
    std::cout << "reading saved entry " << iEvent << "::" << TreeIndexStream->GetN() << "\r" << std::flush;
   }
   
@@ -102,17 +136,12 @@ int main (int argc, char** argv){
   if(argc >= 4 ) std::cout<<"localStream "<<localStream<<" indexValues Stream "<<indexValuesStream[iEvent]<<" runId_s "<<runId_s<<" lumiId_s "<<lumiId_s<<" eventId_s "<<eventId_s<<std::endl;
     
   std::vector<Long64_t>::iterator itVal = std::find(indexValuesRecoVector.begin(),indexValuesRecoVector.end(),indexValuesStream[iEvent]);        
-  if((*itVal)){
+  if((*itVal) and int(itVal-indexValuesRecoVector.begin()) < int(indexRecoVector.size())){
    Long64_t localReco = indexRecoVector.at(int(itVal-indexValuesRecoVector.begin()));
    treeStdReco->GetEntry(localReco);
    if(argc >= 4 ) std::cout<<"localStdReco "<<localReco<<" indexValues Reco "<<(*itVal)<<" runId_r "<<runId_r<<" lumiId_r "<<lumiId_r<<" eventId_r "<<eventId_r<<std::endl;
 
    if( isW_s != 1 or isW_r != 1 ) continue;
-
-     // event properties
-   DistributionStreamMap["isW"]->Fill(isW_s);
-   DistributionRecoMap["isW"]->Fill(isW_r);
-   DifferenceMap["isW"]->Fill((isW_s-isW_r));
 
    DistributionStreamMap["PV_n"]->Fill(PV_n_s);
    DistributionRecoMap["PV_n"]->Fill(PV_n_r);
@@ -122,9 +151,9 @@ int main (int argc, char** argv){
    DistributionRecoMap["rho"]->Fill(rho_r);
    DifferenceMap["rho"]->Fill(rho_s-rho_r);
 
-   DistributionStreamMap["met_et"]->Fill(met_s);       
-   DistributionRecoMap["met_et"]->Fill(met_r);
-   DifferenceMap["met_et"]->Fill(met_s-met_r);
+   DistributionStreamMap["met"]->Fill(met_s);       
+   DistributionRecoMap["met"]->Fill(met_r);
+   DifferenceMap["met"]->Fill(met_s-met_r);
 
    DistributionStreamMap["met_phi"]->Fill(met_phi_s);       
    DistributionRecoMap["met_phi"]->Fill(met_phi_r);
@@ -134,7 +163,27 @@ int main (int argc, char** argv){
    DistributionRecoMap["ele1Met_mt"]->Fill(ele1Met_mt_r);
    DifferenceMap["ele1Met_mt"]->Fill(ele1Met_mt_s-ele1Met_mt_r);
 
-     // electron variables
+   DistributionStreamMap["ele1_scNxtal"]->Fill(ele1_scNxtal_s);       
+   DistributionRecoMap["ele1_scNxtal"]->Fill(ele1_scNxtal_r);
+   DifferenceMap["ele1_scNxtal"]->Fill(ele1_scNxtal_s-ele1_scNxtal_r);
+
+   DistributionStreamMap["ele1_nRecHits"]->Fill(ele1_nRecHits_s);       
+   DistributionRecoMap["ele1_nRecHits"]->Fill(ele1_nRecHits_r);
+   DifferenceMap["ele1_nRecHits"]->Fill(ele1_nRecHits_s-ele1_nRecHits_r);
+
+   DistributionStreamMap["ele1_nGgsfTrackHits"]->Fill(ele1_nGgsfTrackHits_s);       
+   DistributionRecoMap["ele1_nGgsfTrackHits"]->Fill(ele1_nGgsfTrackHits_r);
+   DifferenceMap["ele1_nGgsfTrackHits"]->Fill(ele1_nGgsfTrackHits_s-ele1_nGgsfTrackHits_r);
+
+   DistributionStreamMap["ele1_numberOfLostHits"]->Fill(ele1_numberOfLostHits_s);       
+   DistributionRecoMap["ele1_numberOfLostHits"]->Fill(ele1_numberOfLostHits_r);
+   DifferenceMap["ele1_numberOfLostHits"]->Fill(ele1_numberOfLostHits_s-ele1_numberOfLostHits_r);
+
+   DistributionStreamMap["ele1_nAmbiguousGsfTrack"]->Fill(ele1_nAmbiguousGsfTrack_s);       
+   DistributionRecoMap["ele1_nAmbiguousGsfTrack"]->Fill(ele1_nAmbiguousGsfTrack_r);
+   DifferenceMap["ele1_nAmbiguousGsfTrack"]->Fill(ele1_nAmbiguousGsfTrack_s-ele1_nAmbiguousGsfTrack_r);
+
+   // electron variables
    DistributionStreamMap["ele1_pt"]->Fill(ele1_pt_s);       
    DistributionRecoMap["ele1_pt"]->Fill(ele1_pt_r);
    DifferenceMap["ele1_pt"]->Fill(ele1_pt_s-ele1_pt_r);
@@ -207,7 +256,6 @@ int main (int argc, char** argv){
    DistributionRecoMap["ele1_dxy_PV"]->Fill(ele1_dxy_PV_r);
    DifferenceMap["ele1_dxy_PV"]->Fill(ele1_dxy_PV_s-ele1_dxy_PV_r);
 
-<<<<<<< Updated upstream
    DistributionStreamMap["ele1_tkP"]->Fill(ele1_tkP_s);       
    DistributionRecoMap["ele1_tkP"]->Fill(ele1_tkP_r);
    DifferenceMap["ele1_tkP"]->Fill(ele1_tkP_s-ele1_tkP_r);
@@ -215,11 +263,6 @@ int main (int argc, char** argv){
    DistributionStreamMap["ele1_dz_PV"]->Fill(ele1_dz_PV_s);       
    DistributionRecoMap["ele1_dz_PV"]->Fill(ele1_dz_PV_r);
    DifferenceMap["ele1_dz_PV"]->Fill(ele1_dz_PV_s-ele1_dz_PV_r);
-=======
-     DistributionStreamMap["ele1_dz_PV"]->Fill(ele1_dz_PV_s);       
-     DistributionRecoMap["ele1_dz_PV"]->Fill(ele1_dz_PV_r);
-     RatioMap["ele1_dz_PV"]->Fill(ele1_dz_PV_s-ele1_dz_PV_r);
->>>>>>> Stashed changes
 
    DistributionStreamMap["ele1_e5x5"]->Fill(ele1_e5x5_s);       
    DistributionRecoMap["ele1_e5x5"]->Fill(ele1_e5x5_r);
@@ -228,11 +271,6 @@ int main (int argc, char** argv){
    DistributionStreamMap["ele1_e3x3"]->Fill(ele1_e3x3_s);       
    DistributionRecoMap["ele1_e3x3"]->Fill(ele1_e3x3_r);
    DifferenceMap["ele1_e3x3"]->Fill(ele1_e3x3_s-ele1_e3x3_r);
-
-   DistributionStreamMap["ele1_scNxtal"]->Fill(ele1_scNxtal_s);       
-   DistributionRecoMap["ele1_scNxtal"]->Fill(ele1_scNxtal_r);
-   DifferenceMap["ele1_scNxtal"]->Fill(ele1_scNxtal_s-ele1_scNxtal_r);
-
 
    if(ele1_isEB_s == 1 and ele1_isEB_r == 1){
 
@@ -261,12 +299,214 @@ int main (int argc, char** argv){
 
    }
 
+   // regression variables
+    DistributionStreamMap["ele1_eRegrInput_r9"]->Fill(ele1_eRegrInput_r9_s);
+    DistributionRecoMap["ele1_eRegrInput_r9"]->Fill(ele1_eRegrInput_r9_r);
+    DifferenceMap["ele1_eRegrInput_r9"]->Fill(ele1_eRegrInput_r9_s-ele1_eRegrInput_r9_r);
+
+    DistributionStreamMap["ele1_eRegrInput_SCsize"]->Fill(ele1_eRegrInput_SCsize_s);
+    DistributionRecoMap["ele1_eRegrInput_SCsize"]->Fill(ele1_eRegrInput_SCsize_r);
+    DifferenceMap["ele1_eRegrInput_SCsize"]->Fill(ele1_eRegrInput_SCsize_s-ele1_eRegrInput_SCsize_r);
+
+    DistributionStreamMap["ele1_eRegrInput_seed_eta"]->Fill(ele1_eRegrInput_seed_eta_s);
+    DistributionRecoMap["ele1_eRegrInput_seed_eta"]->Fill(ele1_eRegrInput_seed_eta_r);
+    DifferenceMap["ele1_eRegrInput_seed_eta"]->Fill(ele1_eRegrInput_seed_eta_s-ele1_eRegrInput_seed_eta_r);
+
+    DistributionStreamMap["ele1_eRegrInput_seed_phi"]->Fill(ele1_eRegrInput_seed_phi_s);
+    DistributionRecoMap["ele1_eRegrInput_seed_phi"]->Fill(ele1_eRegrInput_seed_phi_r);
+    DifferenceMap["ele1_eRegrInput_seed_phi"]->Fill(ele1_eRegrInput_seed_phi_s-ele1_eRegrInput_seed_phi_r);
+
+    DistributionStreamMap["ele1_eRegrInput_sigiphiiphi"]->Fill(ele1_eRegrInput_sigiphiiphi_s);
+    DistributionRecoMap["ele1_eRegrInput_sigiphiiphi"]->Fill(ele1_eRegrInput_sigiphiiphi_r);
+    DifferenceMap["ele1_eRegrInput_sigiphiiphi"]->Fill(ele1_eRegrInput_sigiphiiphi_s-ele1_eRegrInput_sigiphiiphi_r);
+
+    DistributionStreamMap["ele1_eRegrInput_sigietaiphi"]->Fill(ele1_eRegrInput_sigietaiphi_s);
+    DistributionRecoMap["ele1_eRegrInput_sigietaiphi"]->Fill(ele1_eRegrInput_sigietaiphi_r);
+    DifferenceMap["ele1_eRegrInput_sigietaiphi"]->Fill(ele1_eRegrInput_sigietaiphi_s-ele1_eRegrInput_sigietaiphi_r);
+
+    DistributionStreamMap["ele1_eRegrInput_eMax"]->Fill(ele1_eRegrInput_eMax_s);
+    DistributionRecoMap["ele1_eRegrInput_eMax"]->Fill(ele1_eRegrInput_eMax_r);
+    DifferenceMap["ele1_eRegrInput_eMax"]->Fill(ele1_eRegrInput_eMax_s-ele1_eRegrInput_eMax_r);
+
+    DistributionStreamMap["ele1_eRegrInput_e2nd"]->Fill(ele1_eRegrInput_e2nd_s);
+    DistributionRecoMap["ele1_eRegrInput_e2nd"]->Fill(ele1_eRegrInput_e2nd_r);
+    DifferenceMap["ele1_eRegrInput_e2nd"]->Fill(ele1_eRegrInput_e2nd_s-ele1_eRegrInput_e2nd_r);
+
+    DistributionStreamMap["ele1_eRegrInput_eTop"]->Fill(ele1_eRegrInput_eTop_s);
+    DistributionRecoMap["ele1_eRegrInput_eTop"]->Fill(ele1_eRegrInput_eTop_r);
+    DifferenceMap["ele1_eRegrInput_eTop"]->Fill(ele1_eRegrInput_eTop_s-ele1_eRegrInput_eTop_r);
+
+    DistributionStreamMap["ele1_eRegrInput_eBottom"]->Fill(ele1_eRegrInput_eBottom_s);
+    DistributionRecoMap["ele1_eRegrInput_eBottom"]->Fill(ele1_eRegrInput_eBottom_r);
+    DifferenceMap["ele1_eRegrInput_eBottom"]->Fill(ele1_eRegrInput_eBottom_s-ele1_eRegrInput_eBottom_r);
+
+    DistributionStreamMap["ele1_eRegrInput_eLeft"]->Fill(ele1_eRegrInput_eLeft_s);
+    DistributionRecoMap["ele1_eRegrInput_eLeft"]->Fill(ele1_eRegrInput_eLeft_r);
+    DifferenceMap["ele1_eRegrInput_eLeft"]->Fill(ele1_eRegrInput_eLeft_s-ele1_eRegrInput_eLeft_r);
+
+    DistributionStreamMap["ele1_eRegrInput_eRight"]->Fill(ele1_eRegrInput_eRight_s);
+    DistributionRecoMap["ele1_eRegrInput_eRight"]->Fill(ele1_eRegrInput_eRight_r);
+    DifferenceMap["ele1_eRegrInput_eRight"]->Fill(ele1_eRegrInput_eRight_s-ele1_eRegrInput_eRight_r);
+
+    DistributionStreamMap["ele1_eRegrInput_e2x5Max"]->Fill(ele1_eRegrInput_e2x5Max_s);
+    DistributionRecoMap["ele1_eRegrInput_e2x5Max"]->Fill(ele1_eRegrInput_e2x5Max_r);
+    DifferenceMap["ele1_eRegrInput_e2x5Max"]->Fill(ele1_eRegrInput_e2x5Max_s-ele1_eRegrInput_e2x5Max_r);
+
+    DistributionStreamMap["ele1_eRegrInput_e2x5Top"]->Fill(ele1_eRegrInput_e2x5Top_s);
+    DistributionRecoMap["ele1_eRegrInput_e2x5Top"]->Fill(ele1_eRegrInput_e2x5Top_r);
+    DifferenceMap["ele1_eRegrInput_e2x5Top"]->Fill(ele1_eRegrInput_e2x5Top_s-ele1_eRegrInput_e2x5Top_r);
+
+    DistributionStreamMap["ele1_eRegrInput_e2x5Left"]->Fill(ele1_eRegrInput_e2x5Left_s);
+    DistributionRecoMap["ele1_eRegrInput_e2x5Left"]->Fill(ele1_eRegrInput_e2x5Left_r);
+    DifferenceMap["ele1_eRegrInput_e2x5Left"]->Fill(ele1_eRegrInput_e2x5Left_s-ele1_eRegrInput_e2x5Left_r);
+
+    DistributionStreamMap["ele1_eRegrInput_e2x5Right"]->Fill(ele1_eRegrInput_e2x5Right_s);
+    DistributionRecoMap["ele1_eRegrInput_e2x5Right"]->Fill(ele1_eRegrInput_e2x5Right_r);
+    DifferenceMap["ele1_eRegrInput_e2x5Right"]->Fill(ele1_eRegrInput_e2x5Right_s-ele1_eRegrInput_e2x5Right_r);
+
+    DistributionStreamMap["ele1_eRegrInput_seed_etaCrySeed"]->Fill(ele1_eRegrInput_seed_etaCrySeed_s);
+    DistributionRecoMap["ele1_eRegrInput_seed_etaCrySeed"]->Fill(ele1_eRegrInput_seed_etaCrySeed_r);
+    DifferenceMap["ele1_eRegrInput_seed_etaCrySeed"]->Fill(ele1_eRegrInput_seed_etaCrySeed_s-ele1_eRegrInput_seed_etaCrySeed_r);
+
+    DistributionStreamMap["ele1_eRegrInput_seed_phiCrySeed"]->Fill(ele1_eRegrInput_seed_phiCrySeed_s);
+    DistributionRecoMap["ele1_eRegrInput_seed_phiCrySeed"]->Fill(ele1_eRegrInput_seed_phiCrySeed_r);
+    DifferenceMap["ele1_eRegrInput_seed_phiCrySeed"]->Fill(ele1_eRegrInput_seed_phiCrySeed_s-ele1_eRegrInput_seed_phiCrySeed_r);
+
+    DistributionStreamMap["ele1_eRegrInput_preshowerEnergyOverRaw"]->Fill(ele1_eRegrInput_preshowerEnergyOverRaw_s);
+    DistributionRecoMap["ele1_eRegrInput_preshowerEnergyOverRaw"]->Fill(ele1_eRegrInput_preshowerEnergyOverRaw_r);
+    DifferenceMap["ele1_eRegrInput_preshowerEnergyOverRaw"]->Fill(ele1_eRegrInput_preshowerEnergyOverRaw_s-ele1_eRegrInput_preshowerEnergyOverRaw_r);
+
+    DistributionStreamMap["ele1_eRegrInput_eSubClusters"]->Fill(ele1_eRegrInput_eSubClusters_s);
+    DistributionRecoMap["ele1_eRegrInput_eSubClusters"]->Fill(ele1_eRegrInput_eSubClusters_r);
+    DifferenceMap["ele1_eRegrInput_eSubClusters"]->Fill(ele1_eRegrInput_eSubClusters_s-ele1_eRegrInput_eSubClusters_r);
+
+    DistributionStreamMap["ele1_eRegrInput_subClusterEnergy_1"]->Fill(ele1_eRegrInput_subClusterEnergy_1_s);
+    DistributionRecoMap["ele1_eRegrInput_subClusterEnergy_1"]->Fill(ele1_eRegrInput_subClusterEnergy_1_r);
+    DifferenceMap["ele1_eRegrInput_subClusterEnergy_1"]->Fill(ele1_eRegrInput_subClusterEnergy_1_s-ele1_eRegrInput_subClusterEnergy_1_r);
+
+    DistributionStreamMap["ele1_eRegrInput_subClusterEnergy_2"]->Fill(ele1_eRegrInput_subClusterEnergy_2_s);
+    DistributionRecoMap["ele1_eRegrInput_subClusterEnergy_2"]->Fill(ele1_eRegrInput_subClusterEnergy_2_r);
+    DifferenceMap["ele1_eRegrInput_subClusterEnergy_2"]->Fill(ele1_eRegrInput_subClusterEnergy_2_s-ele1_eRegrInput_subClusterEnergy_2_r);
+
+    DistributionStreamMap["ele1_eRegrInput_subClusterEnergy_3"]->Fill(ele1_eRegrInput_subClusterEnergy_3_s);
+    DistributionRecoMap["ele1_eRegrInput_subClusterEnergy_3"]->Fill(ele1_eRegrInput_subClusterEnergy_3_r);
+    DifferenceMap["ele1_eRegrInput_subClusterEnergy_3"]->Fill(ele1_eRegrInput_subClusterEnergy_3_s-ele1_eRegrInput_subClusterEnergy_3_r);
+
+    DistributionStreamMap["ele1_eRegrInput_subClusterEta_1"]->Fill(ele1_eRegrInput_subClusterEta_1_s);
+    DistributionRecoMap["ele1_eRegrInput_subClusterEta_1"]->Fill(ele1_eRegrInput_subClusterEta_1_r);
+    DifferenceMap["ele1_eRegrInput_subClusterEta_1"]->Fill(ele1_eRegrInput_subClusterEta_1_s-ele1_eRegrInput_subClusterEta_1_r);
+
+    DistributionStreamMap["ele1_eRegrInput_subClusterEta_2"]->Fill(ele1_eRegrInput_subClusterEta_2_s);
+    DistributionRecoMap["ele1_eRegrInput_subClusterEta_2"]->Fill(ele1_eRegrInput_subClusterEta_2_r);
+    DifferenceMap["ele1_eRegrInput_subClusterEta_2"]->Fill(ele1_eRegrInput_subClusterEta_2_s-ele1_eRegrInput_subClusterEta_2_r);
+
+    DistributionStreamMap["ele1_eRegrInput_subClusterEta_3"]->Fill(ele1_eRegrInput_subClusterEta_3_s);
+    DistributionRecoMap["ele1_eRegrInput_subClusterEta_3"]->Fill(ele1_eRegrInput_subClusterEta_3_r);
+    DifferenceMap["ele1_eRegrInput_subClusterEta_3"]->Fill(ele1_eRegrInput_subClusterEta_3_s-ele1_eRegrInput_subClusterEta_3_r);
+
+    DistributionStreamMap["ele1_eRegrInput_subClusterPhi_1"]->Fill(ele1_eRegrInput_subClusterPhi_1_s);
+    DistributionRecoMap["ele1_eRegrInput_subClusterPhi_1"]->Fill(ele1_eRegrInput_subClusterPhi_1_r);
+    DifferenceMap["ele1_eRegrInput_subClusterPhi_1"]->Fill(ele1_eRegrInput_subClusterPhi_1_s-ele1_eRegrInput_subClusterPhi_1_r);
+
+    DistributionStreamMap["ele1_eRegrInput_subClusterPhi_2"]->Fill(ele1_eRegrInput_subClusterPhi_2_s);
+    DistributionRecoMap["ele1_eRegrInput_subClusterPhi_2"]->Fill(ele1_eRegrInput_subClusterPhi_2_r);
+    DifferenceMap["ele1_eRegrInput_subClusterPhi_2"]->Fill(ele1_eRegrInput_subClusterPhi_2_s-ele1_eRegrInput_subClusterPhi_2_r);
+
+    DistributionStreamMap["ele1_eRegrInput_subClusterPhi_3"]->Fill(ele1_eRegrInput_subClusterPhi_3_s);
+    DistributionRecoMap["ele1_eRegrInput_subClusterPhi_3"]->Fill(ele1_eRegrInput_subClusterPhi_3_r);
+    DifferenceMap["ele1_eRegrInput_subClusterPhi_3"]->Fill(ele1_eRegrInput_subClusterPhi_3_s-ele1_eRegrInput_subClusterPhi_3_r);
+
+    DistributionStreamMap["ele1_eRegrInput_subClusterEmax_1"]->Fill(ele1_eRegrInput_subClusterEmax_1_s);
+    DistributionRecoMap["ele1_eRegrInput_subClusterEmax_1"]->Fill(ele1_eRegrInput_subClusterEmax_1_r);
+    DifferenceMap["ele1_eRegrInput_subClusterEmax_1"]->Fill(ele1_eRegrInput_subClusterEmax_1_s-ele1_eRegrInput_subClusterEmax_1_r);
+
+    DistributionStreamMap["ele1_eRegrInput_subClusterEmax_2"]->Fill(ele1_eRegrInput_subClusterEmax_2_s);
+    DistributionRecoMap["ele1_eRegrInput_subClusterEmax_2"]->Fill(ele1_eRegrInput_subClusterEmax_2_r);
+    DifferenceMap["ele1_eRegrInput_subClusterEmax_2"]->Fill(ele1_eRegrInput_subClusterEmax_2_s-ele1_eRegrInput_subClusterEmax_2_r);
+
+    DistributionStreamMap["ele1_eRegrInput_subClusterEmax_3"]->Fill(ele1_eRegrInput_subClusterEmax_3_s);
+    DistributionRecoMap["ele1_eRegrInput_subClusterEmax_3"]->Fill(ele1_eRegrInput_subClusterEmax_3_r);
+    DifferenceMap["ele1_eRegrInput_subClusterEmax_3"]->Fill(ele1_eRegrInput_subClusterEmax_3_s-ele1_eRegrInput_subClusterEmax_3_r);
+
+    DistributionStreamMap["ele1_eRegrInput_subClusterE3x3_1"]->Fill(ele1_eRegrInput_subClusterE3x3_1_s);
+    DistributionRecoMap["ele1_eRegrInput_subClusterE3x3_1"]->Fill(ele1_eRegrInput_subClusterE3x3_1_r);
+    DifferenceMap["ele1_eRegrInput_subClusterE3x3_1"]->Fill(ele1_eRegrInput_subClusterE3x3_1_s-ele1_eRegrInput_subClusterE3x3_1_r);
+
+    DistributionStreamMap["ele1_eRegrInput_subClusterE3x3_2"]->Fill(ele1_eRegrInput_subClusterE3x3_2_s);
+    DistributionRecoMap["ele1_eRegrInput_subClusterE3x3_2"]->Fill(ele1_eRegrInput_subClusterE3x3_2_r);
+    DifferenceMap["ele1_eRegrInput_subClusterE3x3_2"]->Fill(ele1_eRegrInput_subClusterE3x3_2_s-ele1_eRegrInput_subClusterE3x3_2_r);
+
+    DistributionStreamMap["ele1_eRegrInput_subClusterE3x3_3"]->Fill(ele1_eRegrInput_subClusterE3x3_3_s);
+    DistributionRecoMap["ele1_eRegrInput_subClusterE3x3_3"]->Fill(ele1_eRegrInput_subClusterE3x3_3_r);
+    DifferenceMap["ele1_eRegrInput_subClusterE3x3_3"]->Fill(ele1_eRegrInput_subClusterE3x3_3_s-ele1_eRegrInput_subClusterE3x3_3_r);
+
+    DistributionStreamMap["ele1_eRegrInput_eESClusterEnergy_1"]->Fill(ele1_eRegrInput_eESClusterEnergy_1_s);
+    DistributionRecoMap["ele1_eRegrInput_eESClusterEnergy_1"]->Fill(ele1_eRegrInput_eESClusterEnergy_1_r);
+    DifferenceMap["ele1_eRegrInput_eESClusterEnergy_1"]->Fill(ele1_eRegrInput_eESClusterEnergy_1_s-ele1_eRegrInput_eESClusterEnergy_1_r);
+
+    DistributionStreamMap["ele1_eRegrInput_eESClusterEnergy_2"]->Fill(ele1_eRegrInput_eESClusterEnergy_2_s);
+    DistributionRecoMap["ele1_eRegrInput_eESClusterEnergy_2"]->Fill(ele1_eRegrInput_eESClusterEnergy_2_r);
+    DifferenceMap["ele1_eRegrInput_eESClusterEnergy_2"]->Fill(ele1_eRegrInput_eESClusterEnergy_2_s-ele1_eRegrInput_eESClusterEnergy_2_r);
+
+    DistributionStreamMap["ele1_eRegrInput_eESClusterEnergy_3"]->Fill(ele1_eRegrInput_eESClusterEnergy_3_s);
+    DistributionRecoMap["ele1_eRegrInput_eESClusterEnergy_3"]->Fill(ele1_eRegrInput_eESClusterEnergy_3_r);
+    DifferenceMap["ele1_eRegrInput_eESClusterEnergy_3"]->Fill(ele1_eRegrInput_eESClusterEnergy_3_s-ele1_eRegrInput_eESClusterEnergy_3_r);
+
+    DistributionStreamMap["ele1_eRegrInput_eESClusterEta_1"]->Fill(ele1_eRegrInput_eESClusterEta_1_s);
+    DistributionRecoMap["ele1_eRegrInput_eESClusterEta_1"]->Fill(ele1_eRegrInput_eESClusterEta_1_r);
+    DifferenceMap["ele1_eRegrInput_eESClusterEta_1"]->Fill(ele1_eRegrInput_eESClusterEta_1_s-ele1_eRegrInput_eESClusterEta_1_r);
+
+    DistributionStreamMap["ele1_eRegrInput_eESClusterEta_2"]->Fill(ele1_eRegrInput_eESClusterEta_2_s);
+    DistributionRecoMap["ele1_eRegrInput_eESClusterEta_2"]->Fill(ele1_eRegrInput_eESClusterEta_2_r);
+    DifferenceMap["ele1_eRegrInput_eESClusterEta_2"]->Fill(ele1_eRegrInput_eESClusterEta_2_s-ele1_eRegrInput_eESClusterEta_2_r);
+
+    DistributionStreamMap["ele1_eRegrInput_eESClusterEta_3"]->Fill(ele1_eRegrInput_eESClusterEta_3_s);
+    DistributionRecoMap["ele1_eRegrInput_eESClusterEta_3"]->Fill(ele1_eRegrInput_eESClusterEta_3_r);
+    DifferenceMap["ele1_eRegrInput_eESClusterEta_3"]->Fill(ele1_eRegrInput_eESClusterEta_3_s-ele1_eRegrInput_eESClusterEta_3_r);
+
+    DistributionStreamMap["ele1_eRegrInput_eESClusterPhi_1"]->Fill(ele1_eRegrInput_eESClusterPhi_1_s);
+    DistributionRecoMap["ele1_eRegrInput_eESClusterPhi_1"]->Fill(ele1_eRegrInput_eESClusterPhi_1_r);
+    DifferenceMap["ele1_eRegrInput_eESClusterPhi_1"]->Fill(ele1_eRegrInput_eESClusterPhi_1_s-ele1_eRegrInput_eESClusterPhi_1_r);
+
+    DistributionStreamMap["ele1_eRegrInput_eESClusterPhi_2"]->Fill(ele1_eRegrInput_eESClusterPhi_2_s);
+    DistributionRecoMap["ele1_eRegrInput_eESClusterPhi_2"]->Fill(ele1_eRegrInput_eESClusterPhi_2_r);
+    DifferenceMap["ele1_eRegrInput_eESClusterPhi_2"]->Fill(ele1_eRegrInput_eESClusterPhi_2_s-ele1_eRegrInput_eESClusterPhi_2_r);
+
+    DistributionStreamMap["ele1_eRegrInput_eESClusterPhi_3"]->Fill(ele1_eRegrInput_eESClusterPhi_3_s);
+    DistributionRecoMap["ele1_eRegrInput_eESClusterPhi_3"]->Fill(ele1_eRegrInput_eESClusterPhi_3_r);
+    DifferenceMap["ele1_eRegrInput_eESClusterPhi_3"]->Fill(ele1_eRegrInput_eESClusterPhi_3_s-ele1_eRegrInput_eESClusterPhi_3_r);
+
+    if(ele1_idtype_s->at(1) == 1 or ele1_idtype_s->at(4) == 1) DistributionStreamMap["ele1_idtype90"]->Fill(1);
+    else DistributionStreamMap["ele1_idtype90"]->Fill(0);
+
+    if(ele1_idtype_r->at(1) == 1 or ele1_idtype_r->at(4) == 1) DistributionRecoMap["ele1_idtype90"]->Fill(1);
+    else DistributionRecoMap["ele1_idtype90"]->Fill(0);
+
+    DifferenceMap["ele1_idtype90"]->Fill(ele1_idtype_s->at(4)-ele1_idtype_r->at(4));
+
+    if(ele1_idtype_s->at(1) == 1 or ele1_idtype_s->at(4) == 1) DistributionStreamMap["ele1_idtype80"]->Fill(1);
+    else DistributionStreamMap["ele1_idtype80"]->Fill(0);
+
+    if(ele1_idtype_r->at(1) == 1 or ele1_idtype_r->at(4) == 1) DistributionRecoMap["ele1_idtype80"]->Fill(1);
+    else DistributionRecoMap["ele1_idtype80"]->Fill(0);
+
+    DifferenceMap["ele1_idtype80"]->Fill(ele1_idtype_s->at(4)-ele1_idtype_r->at(4));
+
+    if(ele1_idtype_s->at(1) == 1 or ele1_idtype_s->at(4) == 1) DistributionStreamMap["ele1_idtype70"]->Fill(1);
+    else DistributionStreamMap["ele1_idtype70"]->Fill(0);
+
+    if(ele1_idtype_r->at(1) == 1 or ele1_idtype_r->at(4) == 1) DistributionRecoMap["ele1_idtype70"]->Fill(1);
+    else DistributionRecoMap["ele1_idtype70"]->Fill(0);
+
+    DifferenceMap["ele1_idtype70"]->Fill(ele1_idtype_s->at(4)-ele1_idtype_r->at(4));
+
+
+
   }
 
  }
 
-  // save in output root files
-
+ // save in output root files
  TFile* outputFile = new TFile("outputPlots.root","RECREATE");
  outputFile->cd();
 
@@ -307,7 +547,6 @@ int main (int argc, char** argv){
  for( ; itMap1 != DistributionStreamMap.end() and itMap2 != DistributionRecoMap.end() ; ++itMap1, ++itMap2){
 
   TString tempName = Form ("Comparison_%s",(itMap1)->first.c_str());
-//   std::cout << " tempName.Data() = " << tempName.Data() << std::endl;
   TCanvas* canvasTemp = new TCanvas(tempName.Data(),"",600,650);
   canvasTemp->cd();
   (itMap1)->second->GetXaxis()->SetTitle(((itMap1)->first).c_str());
@@ -346,7 +585,6 @@ int main (int argc, char** argv){
  for( ; itMap3 != DifferenceMap.end() ; ++itMap3){
 
   TString tempName = Form ("Difference_%s",(itMap3)->first.c_str());
-//   std::cout << " tempName.Data() = " << tempName.Data() << std::endl;
   TCanvas* canvasTempDiff = new TCanvas(tempName.Data(),"",600,650);
   canvasTempDiff->cd();
   canvasTempDiff->SetLogy();
@@ -363,28 +601,24 @@ int main (int argc, char** argv){
 
  outputFile->Close();
 
-
  return 0 ;
+
 }
 
 void SetVariablesMapEntry(std::map<std::string,TH1F*> & DistributionStreamMap, std::map<std::string,TH1F*> & DistributionRecoMap, std::map<std::string,TH1F*> & DifferenceMap){
 
-  //Event properties
- DistributionStreamMap.insert(mapElement("isW",new TH1F("isWStream","",2,0,1)));       
- DistributionRecoMap.insert(mapElement("isW",new TH1F("isWReco","",2,0,1)));       
- DifferenceMap.insert(mapElement("isW",new TH1F("isWRatio","",40,-5,5)));       
 
  DistributionStreamMap.insert(mapElement("PV_n",new TH1F("PV_nStream","",40,0,40)));       
  DistributionRecoMap.insert(mapElement("PV_n",new TH1F("PV_nReco","",40,0,40)));       
  DifferenceMap.insert(mapElement("PV_n",new TH1F("PV_nRatio","",40,-20,20)));       
 
- DistributionStreamMap.insert(mapElement("rho",new TH1F("rhoStream","",50,0,100)));       
- DistributionRecoMap.insert(mapElement("rho",new TH1F("rhoReco","",50,0,100)));       
+ DistributionStreamMap.insert(mapElement("rho",new TH1F("rhoStream","",50,0,50)));       
+ DistributionRecoMap.insert(mapElement("rho",new TH1F("rhoReco","",50,0,50)));       
  DifferenceMap.insert(mapElement("rho",new TH1F("rhoRatio","",50,-25,25)));       
 
- DistributionStreamMap.insert(mapElement("met_et",new TH1F("met_etStream","",50,0,200)));       
- DistributionRecoMap.insert(mapElement("met_et",new TH1F("met_etReco","",50,0,200)));       
- DifferenceMap.insert(mapElement("met_et",new TH1F("met_etRatio","",100,-50,50)));       
+ DistributionStreamMap.insert(mapElement("met",new TH1F("met_Stream","",50,0,200)));       
+ DistributionRecoMap.insert(mapElement("met",new TH1F("met_Reco","",50,0,200)));       
+ DifferenceMap.insert(mapElement("met",new TH1F("met_Ratio","",100,-50,50)));       
 
  DistributionStreamMap.insert(mapElement("met_phi",new TH1F("met_phiStream","",50,0,2*3.14)));       
  DistributionRecoMap.insert(mapElement("met_phi",new TH1F("met_phiReco","",50,0,2*3.14)));       
@@ -394,7 +628,45 @@ void SetVariablesMapEntry(std::map<std::string,TH1F*> & DistributionStreamMap, s
  DistributionRecoMap.insert(mapElement("ele1Met_mt",new TH1F("ele1Met_mtReco","",100,0,200)));       
  DifferenceMap.insert(mapElement("ele1Met_mt",new TH1F("ele1Met_mtRatio","",100,-25,25)));       
 
-  // electron variables
+ // integer variables
+ DistributionStreamMap.insert(mapElement("ele1_seedIeta",new TH1F("ele1_seedIetaStream","",50,0,171)));       
+ DistributionRecoMap.insert(mapElement("ele1_seedIeta",new TH1F("ele1_seedIetaReco","",50,0,171)));       
+ DifferenceMap.insert(mapElement("ele1_seedIeta",new TH1F("ele1_seedIetaRatio","",20,-20,20)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_seedIphi",new TH1F("ele1_seedIphiStream","",50,0,360)));       
+ DistributionRecoMap.insert(mapElement("ele1_seedIphi",new TH1F("ele1_seedIphiReco","",50,0,360)));       
+ DifferenceMap.insert(mapElement("ele1_seedIphi",new TH1F("ele1_seedIphiRatio","",20,-20,20)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_seedIx",new TH1F("ele1_seedIxStream","",50,0,50)));       
+ DistributionRecoMap.insert(mapElement("ele1_seedIx",new TH1F("ele1_seedIxReco","",50,0,50)));       
+ DifferenceMap.insert(mapElement("ele1_seedIx",new TH1F("ele1_seedIxRatio","",15,-25,25)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_seedIy",new TH1F("ele1_seedIyStream","",50,0,50)));       
+ DistributionRecoMap.insert(mapElement("ele1_seedIy",new TH1F("ele1_seedIyReco","",50,0,50)));       
+ DifferenceMap.insert(mapElement("ele1_seedIy",new TH1F("ele1_seedIyRatio","",25,-25,25)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_scNxtal",new TH1F("ele1_scNxtalStream","",30,0,30)));       
+ DistributionRecoMap.insert(mapElement("ele1_scNxtal",new TH1F("ele1_scNxtalReco","",30,0,30)));       
+ DifferenceMap.insert(mapElement("ele1_scNxtal",new TH1F("ele1_scNxtalRatio","",30,-15,15)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_nRecHits",new TH1F("ele1_nRecHitsStream","",50,0,50)));       
+ DistributionRecoMap.insert(mapElement("ele1_nRecHits",new TH1F("ele1_nRecHitsReco","",50,0,50)));       
+ DifferenceMap.insert(mapElement("ele1_nRecHits",new TH1F("ele1_nRecHitsRatio","",20,-10,10)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_nGgsfTrackHits",new TH1F("ele1_nGgsfTrackHitsStream","",50,0,50)));       
+ DistributionRecoMap.insert(mapElement("ele1_nGgsfTrackHits",new TH1F("ele1_nGgsfTrackReco","",50,0,50)));       
+ DifferenceMap.insert(mapElement("ele1_nGgsfTrackHits",new TH1F("ele1_nGgsfTrackHitsRatio","",20,-10,10)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_numberOfLostHits",new TH1F("ele1_numberOfLostHitsStream","",20,0,20)));       
+ DistributionRecoMap.insert(mapElement("ele1_numberOfLostHits",new TH1F("ele1_numberOfLostHitsReco","",20,0,20)));       
+ DifferenceMap.insert(mapElement("ele1_numberOfLostHits",new TH1F("ele1_numberOfLostHitsRatio","",20,-10,10)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_nAmbiguousGsfTrack",new TH1F("ele1_nAmbiguousGsfTrackStream","",20,0,20)));       
+ DistributionRecoMap.insert(mapElement("ele1_nAmbiguousGsfTrack",new TH1F("ele1_nAmbiguousGsfTrackReco","",20,0,20)));       
+ DifferenceMap.insert(mapElement("ele1_nAmbiguousGsfTrack",new TH1F("ele1_nAmbiguousGsfTrackRatio","",20,-10,10)));       
+
+ // electron variables
+
  DistributionStreamMap.insert(mapElement("ele1_pt",new TH1F("ele1_ptStream","",50,30,300)));       
  DistributionRecoMap.insert(mapElement("ele1_pt",new TH1F("ele1_ptReco","",50,30,300)));       
  DifferenceMap.insert(mapElement("ele1_pt",new TH1F("ele1_ptRatio","",200,-1,1)));       
@@ -407,9 +679,9 @@ void SetVariablesMapEntry(std::map<std::string,TH1F*> & DistributionStreamMap, s
  DistributionRecoMap.insert(mapElement("ele1_phi",new TH1F("ele1_phiReco","",50,-3.14,3.14)));       
  DifferenceMap.insert(mapElement("ele1_phi",new TH1F("ele1_phiRatio","",50,-0.5,.5)));       
 
- DistributionStreamMap.insert(mapElement("ele1_sigmaIetaIeta",new TH1F("ele1_sigmaIetaIetaStream","",50,0,5)));       
- DistributionRecoMap.insert(mapElement("ele1_sigmaIetaIeta",new TH1F("ele1_sigmaIetaIetaReco","",50,0,5)));       
- DifferenceMap.insert(mapElement("ele1_sigmaIetaIeta",new TH1F("ele1_sigmaIetaIetaRatio","",50,-5,5)));       
+ DistributionStreamMap.insert(mapElement("ele1_sigmaIetaIeta",new TH1F("ele1_sigmaIetaIetaStream","",50,0,1)));       
+ DistributionRecoMap.insert(mapElement("ele1_sigmaIetaIeta",new TH1F("ele1_sigmaIetaIetaReco","",50,0,1)));       
+ DifferenceMap.insert(mapElement("ele1_sigmaIetaIeta",new TH1F("ele1_sigmaIetaIetaRatio","",50,-0.5,0.5)));       
 
  DistributionStreamMap.insert(mapElement("ele1_DphiIn",new TH1F("ele1_DphiInStream","",50,-0.01,0.01)));       
  DistributionRecoMap.insert(mapElement("ele1_DphiIn",new TH1F("ele1_DphiInReco","",50,-0.01,0.01)));       
@@ -439,9 +711,9 @@ void SetVariablesMapEntry(std::map<std::string,TH1F*> & DistributionStreamMap, s
  DistributionRecoMap.insert(mapElement("ele1_scE",new TH1F("ele1_scEReco","",50,30,300)));       
  DifferenceMap.insert(mapElement("ele1_scE",new TH1F("ele1_scERatio","",100,-3,3)));       
 
- DistributionStreamMap.insert(mapElement("ele1_es",new TH1F("ele1_esStream","",50,0,30)));       
- DistributionRecoMap.insert(mapElement("ele1_es",new TH1F("ele1_esReco","",50,0,30)));       
- DifferenceMap.insert(mapElement("ele1_es",new TH1F("ele1_esRatio","",40,-3,3)));       
+ DistributionStreamMap.insert(mapElement("ele1_es",new TH1F("ele1_esStream","",30,0,80)));       
+ DistributionRecoMap.insert(mapElement("ele1_es",new TH1F("ele1_esReco","",30,0,80)));       
+ DifferenceMap.insert(mapElement("ele1_es",new TH1F("ele1_esRatio","",30,-10,10)));       
 
  DistributionStreamMap.insert(mapElement("ele1_scEta",new TH1F("ele1_scEtaStream","",50,-2.5,2.5)));       
  DistributionRecoMap.insert(mapElement("ele1_scEta",new TH1F("ele1_scEtaReco","",50,-2.5,2.5)));       
@@ -461,11 +733,11 @@ void SetVariablesMapEntry(std::map<std::string,TH1F*> & DistributionStreamMap, s
 
  DistributionStreamMap.insert(mapElement("ele1_tkP",new TH1F("ele1_tkPStream","",50,0,300)));       
  DistributionRecoMap.insert(mapElement("ele1_tkP",new TH1F("ele1_tkPReco","",50,0,300)));       
- DifferenceMap.insert(mapElement("ele1_tkP",new TH1F("ele1_tkPRatio","",100,-0.01,0.01)));       
+ DifferenceMap.insert(mapElement("ele1_tkP",new TH1F("ele1_tkPRatio","",100,-0.1,0.1)));       
 
  DistributionStreamMap.insert(mapElement("ele1_fbrem",new TH1F("ele1_fbremStream","",50,-1,1)));       
  DistributionRecoMap.insert(mapElement("ele1_fbrem",new TH1F("ele1_fbremReco","",50,-1,1)));       
- DifferenceMap.insert(mapElement("ele1_fbrem",new TH1F("ele1_fbremRatio","",100,-0.02,0.02)));       
+ DifferenceMap.insert(mapElement("ele1_fbrem",new TH1F("ele1_fbremRatio","",100,-0.1,0.1)));       
 
  DistributionStreamMap.insert(mapElement("ele1_dxy_PV",new TH1F("ele1_dxy_PVStream","",50,0,0.5)));       
  DistributionRecoMap.insert(mapElement("ele1_dxy_PV",new TH1F("ele1_dxy_PVReco","",50,0,0.5)));       
@@ -487,25 +759,198 @@ void SetVariablesMapEntry(std::map<std::string,TH1F*> & DistributionStreamMap, s
  DistributionRecoMap.insert(mapElement("ele1_seedE",new TH1F("ele1_seedEReco","",100,0,200)));       
  DifferenceMap.insert(mapElement("ele1_seedE",new TH1F("ele1_seedERatio","",100,-25,25)));       
 
- DistributionStreamMap.insert(mapElement("ele1_seedIeta",new TH1F("ele1_seedIetaStream","",50,0,171)));       
- DistributionRecoMap.insert(mapElement("ele1_seedIeta",new TH1F("ele1_seedIetaReco","",50,0,171)));       
- DifferenceMap.insert(mapElement("ele1_seedIeta",new TH1F("ele1_seedIetaRatio","",10,-5,5)));       
+ // regression variables
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_r9",new TH1F("ele1_eRegrInput_r9Stream","",30,0,1)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_r9",new TH1F("ele1_eRegrInput_r9Reco","",30,0,10)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_r9",new TH1F("ele1_eRegrInput_r9Ratio","",30,-0.5,0.5)));       
 
- DistributionStreamMap.insert(mapElement("ele1_seedIphi",new TH1F("ele1_seedIphiStream","",50,0,360)));       
- DistributionRecoMap.insert(mapElement("ele1_seedIphi",new TH1F("ele1_seedIphiReco","",50,0,360)));       
- DifferenceMap.insert(mapElement("ele1_seedIphi",new TH1F("ele1_seedIphiRatio","",10,-5,5)));       
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_SCsize",new TH1F("ele1_eRegrInput_SCsizeStream","",50,0,50)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_SCsize",new TH1F("ele1_eRegrInput_SCsizeReco","",50,0,50)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_SCsize",new TH1F("ele1_eRegrInput_SCsizeRatio","",30,-5,5)));       
 
- DistributionStreamMap.insert(mapElement("ele1_seedIx",new TH1F("ele1_seedIxStream","",50,0,50)));       
- DistributionRecoMap.insert(mapElement("ele1_seedIx",new TH1F("ele1_seedIxReco","",50,0,50)));       
- DifferenceMap.insert(mapElement("ele1_seedIx",new TH1F("ele1_seedIxRatio","",10,-5,5)));       
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_seed_eta",new TH1F("ele1_eRegrInput_seed_etaStream","",50,-2.5,2.5)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_seed_eta",new TH1F("ele1_eRegrInput_seed_etaReco","",50,-2.5,2.5)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_seed_eta",new TH1F("ele1_eRegrInput_seed_etaRatio","",30,-0.5,0.5)));       
 
- DistributionStreamMap.insert(mapElement("ele1_seedIy",new TH1F("ele1_seedIyStream","",50,0,50)));       
- DistributionRecoMap.insert(mapElement("ele1_seedIy",new TH1F("ele1_seedIyReco","",50,0,50)));       
- DifferenceMap.insert(mapElement("ele1_seedIy",new TH1F("ele1_seedIyRatio","",10,-5,5)));       
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_seed_phi",new TH1F("ele1_eRegrInput_seed_phiStream","",50,-3.14,3.14)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_seed_phi",new TH1F("ele1_eRegrInput_seed_phiReco","",50,-3.14,3.14)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_seed_phi",new TH1F("ele1_eRegrInput_seed_phiRatio","",30,-0.5,0.5)));       
 
- DistributionStreamMap.insert(mapElement("ele1_scNxtal",new TH1F("ele1_scNxtalStream","",200,0,200)));       
- DistributionRecoMap.insert(mapElement("ele1_scNxtal",new TH1F("ele1_scNxtalReco","",200,0,200)));       
- DifferenceMap.insert(mapElement("ele1_scNxtal",new TH1F("ele1_scNxtalRatio","",40,-20,20)));       
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_sigiphiiphi",new TH1F("ele1_eRegrInput_sigiphiiphiStream","",50,0,1.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_sigiphiiphi",new TH1F("ele1_eRegrInput_sigiphiiphiReco","",50,0,1.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_sigiphiiphi",new TH1F("ele1_eRegrInput_sigiphiiphiRatio","",30,-0.2,0.2)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_sigietaiphi",new TH1F("ele1_eRegrInput_sigietaiphiStream","",50,0.,1.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_sigietaiphi",new TH1F("ele1_eRegrInput_sigietaiphiReco","",50,0.,1.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_sigietaiphi",new TH1F("ele1_eRegrInput_sigietaiphiRatio","",30,-0.2,0.2)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_eMax",new TH1F("ele1_eRegrInput_eMaxStream","",50,0,100.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_eMax",new TH1F("ele1_eRegrInput_eMaxReco","",50,0,100.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_eMax",new TH1F("ele1_eRegrInput_eMaxRatio","",40,-10,10)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_e2nd",new TH1F("ele1_eRegrInput_e2ndStream","",50,0,100.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_e2nd",new TH1F("ele1_eRegrInput_e2ndReco","",50,0,100.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_e2nd",new TH1F("ele1_eRegrInput_e2ndRatio","",40,-10,10)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_eTop",new TH1F("ele1_eRegrInput_eTopStream","",50,0,100.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_eTop",new TH1F("ele1_eRegrInput_eTopReco","",50,0,100.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_eTop",new TH1F("ele1_eRegrInput_eTopRatio","",40,-10,10)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_eBottom",new TH1F("ele1_eRegrInput_eBottomStream","",50,0,100.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_eBottom",new TH1F("ele1_eRegrInput_eBottomReco","",50,0,100.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_eBottom",new TH1F("ele1_eRegrInput_eBottomRatio","",40,-10,10)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_eLeft",new TH1F("ele1_eRegrInput_eLeftStream","",50,0,100.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_eLeft",new TH1F("ele1_eRegrInput_eLeftReco","",50,0,100.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_eLeft",new TH1F("ele1_eRegrInput_eLeftRatio","",40,-10,10)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_eRight",new TH1F("ele1_eRegrInput_eRightStream","",50,0,100.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_eRight",new TH1F("ele1_eRegrInput_eRightReco","",50,0,100.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_eRight",new TH1F("ele1_eRegrInput_eRightRatio","",40,-10,10)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_e2x5Max",new TH1F("ele1_eRegrInput_e2x5MaxStream","",50,0,100.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_e2x5Max",new TH1F("ele1_eRegrInput_e2x5MaxReco","",50,0,100.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_e2x5Max",new TH1F("ele1_eRegrInput_e2x5MaxRatio","",40,-10,10)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_e2x5Top",new TH1F("ele1_eRegrInput_e2x5TopStream","",50,0,100.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_e2x5Top",new TH1F("ele1_eRegrInput_e2x5TopReco","",50,0,100.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_e2x5Top",new TH1F("ele1_eRegrInput_e2x5TopRatio","",40,-10,10)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_e2x5Left",new TH1F("ele1_eRegrInput_e2x5LeftStream","",50,0,100.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_e2x5Left",new TH1F("ele1_eRegrInput_e2x5LeftReco","",50,0,100.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_e2x5Left",new TH1F("ele1_eRegrInput_e2x5LeftRatio","",40,-10,10)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_e2x5Right",new TH1F("ele1_eRegrInput_e2x5RightStream","",50,0,100.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_e2x5Right",new TH1F("ele1_eRegrInput_e2x5RightReco","",50,0,100.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_e2x5Right",new TH1F("ele1_eRegrInput_e2x5RightRatio","",40,-10,10)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_seed_etaCrySeed",new TH1F("ele1_eRegrInput_seed_etaCrySeedStream","",50,0,50.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_seed_etaCrySeed",new TH1F("ele1_eRegrInput_seed_etaCrySeedReco","",50,0,50.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_seed_etaCrySeed",new TH1F("ele1_eRegrInput_seed_etaCrySeedRatio","",40,-10,10)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_seed_phiCrySeed",new TH1F("ele1_eRegrInput_seed_phiCrySeedStream","",50,0,50.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_seed_phiCrySeed",new TH1F("ele1_eRegrInput_seed_phiCrySeedReco","",50,0,50.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_seed_phiCrySeed",new TH1F("ele1_eRegrInput_seed_phiCrySeedRatio","",40,-10,10)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_preshowerEnergyOverRaw",new TH1F("ele1_eRegrInput_preshowerEnergyOverRawStream","",50,0,1.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_preshowerEnergyOverRaw",new TH1F("ele1_eRegrInput_preshowerEnergyOverRawReco","",50,0,1.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_preshowerEnergyOverRaw",new TH1F("ele1_eRegrInput_preshowerEnergyOverRawRatio","",40,-0.5,0.5)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_eSubClusters",new TH1F("ele1_eRegrInput_eSubClustersStream","",50,0,50.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_eSubClusters",new TH1F("ele1_eRegrInput_eSubClustersReco","",50,0,50.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_eSubClusters",new TH1F("ele1_eRegrInput_eSubClustersRatio","",40,-20.,20.)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_subClusterEnergy_1",new TH1F("ele1_eRegrInput_subClusterEnergy_1Stream","",50,0,50.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_subClusterEnergy_1",new TH1F("ele1_eRegrInput_subClusterEnergy_1Reco","",50,0,50.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_subClusterEnergy_1",new TH1F("ele1_eRegrInput_subClusterEnergy_1Ratio","",40,-20.,20.)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_subClusterEnergy_2",new TH1F("ele1_eRegrInput_subClusterEnergy_2Stream","",50,0,50.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_subClusterEnergy_2",new TH1F("ele1_eRegrInput_subClusterEnergy_2Reco","",50,0,50.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_subClusterEnergy_2",new TH1F("ele1_eRegrInput_subClusterEnergy_2Ratio","",40,-20.,20.)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_subClusterEnergy_3",new TH1F("ele1_eRegrInput_subClusterEnergy_3Stream","",50,0,50.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_subClusterEnergy_3",new TH1F("ele1_eRegrInput_subClusterEnergy_3Reco","",50,0,50.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_subClusterEnergy_3",new TH1F("ele1_eRegrInput_subClusterEnergy_3Ratio","",40,-20.,20.)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_subClusterEta_1",new TH1F("ele1_eRegrInput_subClusterEta_1Stream","",50,-2.5,2.5)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_subClusterEta_1",new TH1F("ele1_eRegrInput_subClusterEta_1Reco","",50,-2.5,2.5)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_subClusterEta_1",new TH1F("ele1_eRegrInput_subClusterEta_1Ratio","",40,-0.5,0.5)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_subClusterEta_2",new TH1F("ele1_eRegrInput_subClusterEta_2Stream","",50,-2.5,2.5)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_subClusterEta_2",new TH1F("ele1_eRegrInput_subClusterEta_2Reco","",50,-2.5,2.5)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_subClusterEta_2",new TH1F("ele1_eRegrInput_subClusterEta_2Ratio","",40,-0.5,0.5)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_subClusterEta_3",new TH1F("ele1_eRegrInput_subClusterEta_3Stream","",50,-2.5,2.5)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_subClusterEta_3",new TH1F("ele1_eRegrInput_subClusterEta_3Reco","",50,-2.5,2.5)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_subClusterEta_3",new TH1F("ele1_eRegrInput_subClusterEta_3Ratio","",40,-0.5,0.5)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_subClusterPhi_1",new TH1F("ele1_eRegrInput_subClusterPhi_1Stream","",50,0,3.14)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_subClusterPhi_1",new TH1F("ele1_eRegrInput_subClusterPhi_1Reco","",50,0,3.14)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_subClusterPhi_1",new TH1F("ele1_eRegrInput_subClusterPhi_1Ratio","",40,-0.5,0.5)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_subClusterPhi_2",new TH1F("ele1_eRegrInput_subClusterPhi_2Stream","",50,0,3.14)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_subClusterPhi_2",new TH1F("ele1_eRegrInput_subClusterPhi_2Reco","",50,0,3.14)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_subClusterPhi_2",new TH1F("ele1_eRegrInput_subClusterPhi_2Ratio","",40,-0.5,0.5)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_subClusterPhi_3",new TH1F("ele1_eRegrInput_subClusterPhi_3Stream","",50,0,3.14)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_subClusterPhi_3",new TH1F("ele1_eRegrInput_subClusterPhi_3Reco","",50,0,3.14)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_subClusterPhi_3",new TH1F("ele1_eRegrInput_subClusterPhi_3Ratio","",40,-0.5,0.5)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_subClusterEmax_1",new TH1F("ele1_eRegrInput_subClusterEmax_1Stream","",50,0,50.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_subClusterEmax_1",new TH1F("ele1_eRegrInput_subClusterEmax_1Reco","",50,0,50.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_subClusterEmax_1",new TH1F("ele1_eRegrInput_subClusterEmax_1Ratio","",40,-20.,20.)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_subClusterEmax_2",new TH1F("ele1_eRegrInput_subClusterEmax_2Stream","",50,0,50.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_subClusterEmax_2",new TH1F("ele1_eRegrInput_subClusterEmax_2Reco","",50,0,50.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_subClusterEmax_2",new TH1F("ele1_eRegrInput_subClusterEmax_2Ratio","",40,-20.,20.)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_subClusterEmax_3",new TH1F("ele1_eRegrInput_subClusterEmax_3Stream","",50,0,50.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_subClusterEmax_3",new TH1F("ele1_eRegrInput_subClusterEmax_3Reco","",50,0,50.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_subClusterEmax_3",new TH1F("ele1_eRegrInput_subClusterEmax_3Ratio","",40,-20.,20.)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_subClusterE3x3_1",new TH1F("ele1_eRegrInput_subClusterE3x3_1Stream","",50,0,50.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_subClusterE3x3_1",new TH1F("ele1_eRegrInput_subClusterE3x3_1Reco","",50,0,50.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_subClusterE3x3_1",new TH1F("ele1_eRegrInput_subClusterE3x3_1Ratio","",40,-20.,20.)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_subClusterE3x3_2",new TH1F("ele1_eRegrInput_subClusterE3x3_2Stream","",50,0,50.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_subClusterE3x3_2",new TH1F("ele1_eRegrInput_subClusterE3x3_2Reco","",50,0,50.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_subClusterE3x3_2",new TH1F("ele1_eRegrInput_subClusterE3x3_2Ratio","",40,-20.,20.)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_subClusterE3x3_3",new TH1F("ele1_eRegrInput_subClusterE3x3_3Stream","",50,0,50.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_subClusterE3x3_3",new TH1F("ele1_eRegrInput_subClusterE3x3_3Reco","",50,0,50.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_subClusterE3x3_3",new TH1F("ele1_eRegrInput_subClusterE3x3_3Ratio","",40,-20.,20.)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_eESClusters",new TH1F("ele1_eRegrInput_eESClustersStream","",50,0,50.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_eESClusters",new TH1F("ele1_eRegrInput_eESClustersReco","",50,0,50.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_eESClusters",new TH1F("ele1_eRegrInput_eESClustersRatio","",40,-20.,20.)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_eESClusterEnergy_1",new TH1F("ele1_eRegrInput_eESClusterEnergy_1Stream","",50,0,50.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_eESClusterEnergy_1",new TH1F("ele1_eRegrInput_eESClusterEnergy_1Reco","",50,0,50.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_eESClusterEnergy_1",new TH1F("ele1_eRegrInput_eESClusterEnergy_1Ratio","",40,-20.,20.)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_eESClusterEnergy_2",new TH1F("ele1_eRegrInput_eESClusterEnergy_2Stream","",50,0,50.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_eESClusterEnergy_2",new TH1F("ele1_eRegrInput_eESClusterEnergy_2Reco","",50,0,50.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_eESClusterEnergy_2",new TH1F("ele1_eRegrInput_eESClusterEnergy_2Ratio","",40,-20.,20.)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_eESClusterEnergy_3",new TH1F("ele1_eRegrInput_eESClusterEnergy_3Stream","",50,0,50.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_eESClusterEnergy_3",new TH1F("ele1_eRegrInput_eESClusterEnergy_3Reco","",50,0,50.)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_eESClusterEnergy_3",new TH1F("ele1_eRegrInput_eESClusterEnergy_3Ratio","",40,-20.,20.)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_eESClusterEta_1",new TH1F("ele1_eRegrInput_eESClusterEta_1Stream","",50,-2.5,2.5)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_eESClusterEta_1",new TH1F("ele1_eRegrInput_eESClusterEta_1Reco","",50,-2.5,2.5)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_eESClusterEta_1",new TH1F("ele1_eRegrInput_eESClusterEta_1Ratio","",40,-0.5,0.5)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_eESClusterEta_2",new TH1F("ele1_eRegrInput_eESClusterEta_2Stream","",50,-2.5,2.5)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_eESClusterEta_2",new TH1F("ele1_eRegrInput_eESClusterEta_2Reco","",50,-2.5,2.5)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_eESClusterEta_2",new TH1F("ele1_eRegrInput_eESClusterEta_2Ratio","",40,-0.5,0.5)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_eESClusterEta_3",new TH1F("ele1_eRegrInput_eESClusterEta_3Stream","",50,-2.5,2.5)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_eESClusterEta_3",new TH1F("ele1_eRegrInput_eESClusterEta_3Reco","",50,-2.5,2.5)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_eESClusterEta_3",new TH1F("ele1_eRegrInput_eESClusterEta_3Ratio","",40,-0.5,0.5)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_eESClusterPhi_1",new TH1F("ele1_eRegrInput_eESClusterPhi_1Stream","",50,0,3.14)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_eESClusterPhi_1",new TH1F("ele1_eRegrInput_eESClusterPhi_1Reco","",50,0,3.14)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_eESClusterPhi_1",new TH1F("ele1_eRegrInput_eESClusterPhi_1Ratio","",40,-0.5,0.5)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_eESClusterPhi_2",new TH1F("ele1_eRegrInput_eESClusterPhi_2Stream","",50,0,3.14)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_eESClusterPhi_2",new TH1F("ele1_eRegrInput_eESClusterPhi_2Reco","",50,0,3.14)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_eESClusterPhi_2",new TH1F("ele1_eRegrInput_eESClusterPhi_2Ratio","",40,-0.5,0.5)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_eESClusterPhi_3",new TH1F("ele1_eRegrInput_eESClusterPhi_3Stream","",50,0,3.14)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_eESClusterPhi_3",new TH1F("ele1_eRegrInput_eESClusterPhi_3Reco","",50,0,3.14)));       
+ DifferenceMap.insert(mapElement("ele1_eRegrInput_eESClusterPhi_3",new TH1F("ele1_eRegrInput_eESClusterPhi_3Ratio","",40,-0.5,0.5)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_idtype90",new TH1F("ele1_idtype90Stream","",2,0,2)));       
+ DistributionRecoMap.insert(mapElement("ele1_idtype90",new TH1F("ele1_idtype90Reco","",2,0,2)));       
+ DifferenceMap.insert(mapElement("ele1_idtype90",new TH1F("ele1_idtype90Ratio","",2,-1,1)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_idtype80",new TH1F("ele1_idtype80Stream","",2,0,2)));       
+ DistributionRecoMap.insert(mapElement("ele1_idtype80",new TH1F("ele1_idtype80Reco","",2,0,2)));       
+ DifferenceMap.insert(mapElement("ele1_idtype80",new TH1F("ele1_idtype80Ratio","",2,-1,1)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_idtype70",new TH1F("ele1_idtype70Stream","",2,0,2)));       
+ DistributionRecoMap.insert(mapElement("ele1_idtype70",new TH1F("ele1_idtype70Reco","",2,0,2)));       
+ DifferenceMap.insert(mapElement("ele1_idtype70",new TH1F("ele1_idtype70Ratio","",2,-1,1)));       
 
  return ;
 
@@ -515,17 +960,28 @@ void SetVariablesMapEntry(std::map<std::string,TH1F*> & DistributionStreamMap, s
 void SetStartingBranchTrees(TTree* streamTree, TTree* recoTree){
 
  streamTree->SetBranchStatus("*",0);
+
  streamTree->SetBranchStatus("lumiId",1);
- streamTree->SetBranchStatus("isW",1);
- streamTree->SetBranchStatus("PV_n",1);
  streamTree->SetBranchStatus("eventId",1);
  streamTree->SetBranchStatus("runId",1);
+ streamTree->SetBranchStatus("isW",1);
  streamTree->SetBranchStatus("rho",1);
- streamTree->SetBranchStatus("ele1_pt",1);
+ streamTree->SetBranchStatus("PV_n",1);
+ streamTree->SetBranchStatus("ele1_nRecHits",1);
+ streamTree->SetBranchStatus("ele1_nGgsfTrackHits",1);
+ streamTree->SetBranchStatus("ele1_numberOfLostHits",1);
+ streamTree->SetBranchStatus("ele1_nAmbiguousGsfTrack",1);
  streamTree->SetBranchStatus("ele1_isEB",1);
+ streamTree->SetBranchStatus("ele1_seedIeta",1);
+ streamTree->SetBranchStatus("ele1_seedIphi",1);
+ streamTree->SetBranchStatus("ele1_seedIx",1);
+ streamTree->SetBranchStatus("ele1_seedIy",1);
+ streamTree->SetBranchStatus("ele1_seedZside",1);
+ streamTree->SetBranchStatus("ele1_scNxtal",1);
+
+ streamTree->SetBranchStatus("ele1_pt",1);
  streamTree->SetBranchStatus("ele1_eta",1);
  streamTree->SetBranchStatus("ele1_phi",1);
- streamTree->SetBranchStatus("ele1_isEB",1);
  streamTree->SetBranchStatus("ele1_sigmaIetaIeta",1);
  streamTree->SetBranchStatus("ele1_DphiIn",1);
  streamTree->SetBranchStatus("ele1_DetaIn",1);
@@ -536,12 +992,10 @@ void SetStartingBranchTrees(TTree* streamTree, TTree* recoTree){
  streamTree->SetBranchStatus("ele1_scERaw",1);
  streamTree->SetBranchStatus("ele1_scE",1);
  streamTree->SetBranchStatus("ele1_es",1);
- streamTree->SetBranchStatus("ele1_scLaserCorr",1);
  streamTree->SetBranchStatus("ele1_scEta",1);
  streamTree->SetBranchStatus("ele1_scPhi",1);
  streamTree->SetBranchStatus("ele1_scEtaWidth",1);
  streamTree->SetBranchStatus("ele1_scPhiWidth",1);
- streamTree->SetBranchStatus("ele1_fEta",1);
  streamTree->SetBranchStatus("ele1_tkP",1);
  streamTree->SetBranchStatus("ele1_fbrem",1);
  streamTree->SetBranchStatus("ele1_dxy_PV",1);
@@ -549,29 +1003,103 @@ void SetStartingBranchTrees(TTree* streamTree, TTree* recoTree){
  streamTree->SetBranchStatus("ele1_e5x5",1);
  streamTree->SetBranchStatus("ele1_e3x3",1);
  streamTree->SetBranchStatus("ele1_seedE",1);
- streamTree->SetBranchStatus("ele1_seedIeta",1);
- streamTree->SetBranchStatus("ele1_seedIphi",1);
- streamTree->SetBranchStatus("ele1_seedIx",1);
- streamTree->SetBranchStatus("ele1_seedIy",1);
- streamTree->SetBranchStatus("ele1_seedZside",1);
- streamTree->SetBranchStatus("ele1_scNxtal",1);
- streamTree->SetBranchStatus("ele1_recHit_E",1);
- streamTree->SetBranchStatus("ele1_idtype",1);
+
  streamTree->SetBranchStatus("met_et",1);
  streamTree->SetBranchStatus("met_phi",1);
  streamTree->SetBranchStatus("ele1Met_mt",1);
 
+ streamTree->SetBranchStatus("ele1_recHit_E",1);
+ streamTree->SetBranchStatus("ele1_idtype",1);
+
+ streamTree->SetBranchStatus("ele1_eRegrInput_rawE",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_r9",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_eta",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_phi",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_etaW",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_phiW",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_SCsize",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_rho",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_hoe",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_nPV",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_seed_eta",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_seed_phi",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_seed_E",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_sigietaieta",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_sigiphiiphi",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_sigietaiphi",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_eMax",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_e2nd",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_eTop",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_eBottom",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_eLeft",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_eRight",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_e2x5Max",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_e2x5Top",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_e2x5Bottom",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_e2x5Left",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_e2x5Right",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_seed_ieta",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_seed_iphi",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_seed_etaCrySeed",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_seed_phiCrySeed",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_preshowerEnergyOverRaw",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_ecalDrivenSeed",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_isEBEtaGap",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_isEBPhiGap",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_eSubClusters",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_subClusterEnergy_1",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_subClusterEnergy_2",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_subClusterEnergy_3",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_subClusterEta_1",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_subClusterEta_2",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_subClusterEta_3",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_subClusterPhi_1",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_subClusterPhi_2",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_subClusterPhi_3",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_subClusterEmax_1",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_subClusterEmax_2",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_subClusterEmax_3",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_subClusterE3x3_1",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_subClusterE3x3_2",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_subClusterE3x3_3",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_eESClusters",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_eESClusterEnergy_1",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_eESClusterEnergy_2",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_eESClusterEnergy_3",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_eESClusterEta_1",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_eESClusterEta_2",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_eESClusterEta_3",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_eESClusterPhi_1",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_eESClusterPhi_2",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_eESClusterPhi_3",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_pt",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_trackMomentumAtVtxR",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_fbrem",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_charge",1);
+ streamTree->SetBranchStatus("ele1_eRegrInput_eSuperClusterOverP",1);
+
+ // branch Address
  streamTree->SetBranchAddress("lumiId",&lumiId_s);
  streamTree->SetBranchAddress("eventId",&eventId_s);
  streamTree->SetBranchAddress("runId",&runId_s);
  streamTree->SetBranchAddress("isW",&isW_s);
- streamTree->SetBranchAddress("PV_n",&PV_n_s);
  streamTree->SetBranchAddress("rho",&rho_s);
+ streamTree->SetBranchAddress("PV_n",&PV_n_s);
+ streamTree->SetBranchAddress("ele1_nRecHits",&ele1_nRecHits_s);
+ streamTree->SetBranchAddress("ele1_nGgsfTrackHits",&ele1_nGgsfTrackHits_s);
+ streamTree->SetBranchAddress("ele1_numberOfLostHits",&ele1_numberOfLostHits_s);
+ streamTree->SetBranchAddress("ele1_nAmbiguousGsfTrack",&ele1_nAmbiguousGsfTrack_s);
  streamTree->SetBranchAddress("ele1_isEB",&ele1_isEB_s);
+ streamTree->SetBranchAddress("ele1_seedIeta",&ele1_seedIeta_s);
+ streamTree->SetBranchAddress("ele1_seedIphi",&ele1_seedIphi_s);
+ streamTree->SetBranchAddress("ele1_seedIx",&ele1_seedIx_s);
+ streamTree->SetBranchAddress("ele1_seedIy",&ele1_seedIy_s);
+ streamTree->SetBranchAddress("ele1_seedZside",&ele1_seedZside_s);
+ streamTree->SetBranchAddress("ele1_scNxtal",&ele1_scNxtal_s);
+
  streamTree->SetBranchAddress("ele1_pt",&ele1_pt_s);
  streamTree->SetBranchAddress("ele1_eta",&ele1_eta_s);
  streamTree->SetBranchAddress("ele1_phi",&ele1_phi_s);
- streamTree->SetBranchAddress("ele1_isEB",&ele1_isEB_s);
  streamTree->SetBranchAddress("ele1_sigmaIetaIeta",&ele1_sigmaIetaIeta_s);
  streamTree->SetBranchAddress("ele1_DphiIn",&ele1_DphiIn_s);
  streamTree->SetBranchAddress("ele1_DetaIn",&ele1_DetaIn_s);
@@ -582,12 +1110,10 @@ void SetStartingBranchTrees(TTree* streamTree, TTree* recoTree){
  streamTree->SetBranchAddress("ele1_scERaw",&ele1_scERaw_s);
  streamTree->SetBranchAddress("ele1_scE",&ele1_scE_s);
  streamTree->SetBranchAddress("ele1_es",&ele1_es_s);
- streamTree->SetBranchAddress("ele1_scLaserCorr",&ele1_scLaserCorr_s);
  streamTree->SetBranchAddress("ele1_scEta",&ele1_scEta_s);
  streamTree->SetBranchAddress("ele1_scPhi",&ele1_scPhi_s);
  streamTree->SetBranchAddress("ele1_scEtaWidth",&ele1_scEtaWidth_s);
  streamTree->SetBranchAddress("ele1_scPhiWidth",&ele1_scPhiWidth_s);
- streamTree->SetBranchAddress("ele1_fEta",&ele1_fEta_s);
  streamTree->SetBranchAddress("ele1_tkP",&ele1_tkP_s);
  streamTree->SetBranchAddress("ele1_fbrem",&ele1_fbrem_s);
  streamTree->SetBranchAddress("ele1_dxy_PV",&ele1_dxy_PV_s);
@@ -595,30 +1121,102 @@ void SetStartingBranchTrees(TTree* streamTree, TTree* recoTree){
  streamTree->SetBranchAddress("ele1_e5x5",&ele1_e5x5_s);
  streamTree->SetBranchAddress("ele1_e3x3",&ele1_e3x3_s);
  streamTree->SetBranchAddress("ele1_seedE",&ele1_seedE_s);
- streamTree->SetBranchAddress("ele1_seedIeta",&ele1_seedIeta_s);
- streamTree->SetBranchAddress("ele1_seedIphi",&ele1_seedIphi_s);
- streamTree->SetBranchAddress("ele1_seedIx",&ele1_seedIx_s);
- streamTree->SetBranchAddress("ele1_seedIy",&ele1_seedIy_s);
- streamTree->SetBranchAddress("ele1_seedZside",&ele1_seedZside_s);
- streamTree->SetBranchAddress("ele1_scNxtal",&ele1_scNxtal_s);
- streamTree->SetBranchAddress("ele1_recHit_E",&ele1_recHit_E_s,&b_ele1_recHit_E_s);
- streamTree->SetBranchAddress("ele1_idtype",&ele1_idtype_s,&b_ele1_idtype_s);
+
  streamTree->SetBranchAddress("met_et",&met_s);
  streamTree->SetBranchAddress("met_phi",&met_phi_s);
  streamTree->SetBranchAddress("ele1Met_mt",&ele1Met_mt_s);
-  
+
+ streamTree->SetBranchAddress("ele1_recHit_E",&ele1_recHit_E_s);
+ streamTree->SetBranchAddress("ele1_idtype",&ele1_idtype_s);
+
+ streamTree->SetBranchAddress("ele1_eRegrInput_rawE",&ele1_eRegrInput_rawE_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_r9",&ele1_eRegrInput_r9_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_eta",&ele1_eRegrInput_eta_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_phi",&ele1_eRegrInput_phi_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_etaW",&ele1_eRegrInput_etaW_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_phiW",&ele1_eRegrInput_phiW_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_SCsize",&ele1_eRegrInput_SCsize_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_rho",&ele1_eRegrInput_rho_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_hoe",&ele1_eRegrInput_hoe_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_nPV",&ele1_eRegrInput_nPV_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_seed_eta",&ele1_eRegrInput_seed_eta_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_seed_phi",&ele1_eRegrInput_seed_phi_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_seed_E",&ele1_eRegrInput_seed_E_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_sigietaieta",&ele1_eRegrInput_sigietaieta_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_sigiphiiphi",&ele1_eRegrInput_sigiphiiphi_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_sigietaiphi",&ele1_eRegrInput_sigietaiphi_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_eMax",&ele1_eRegrInput_eMax_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_e2nd",&ele1_eRegrInput_e2nd_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_eTop",&ele1_eRegrInput_eTop_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_eBottom",&ele1_eRegrInput_eBottom_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_eLeft",&ele1_eRegrInput_eLeft_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_eRight",&ele1_eRegrInput_eRight_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_e2x5Max",&ele1_eRegrInput_e2x5Max_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_e2x5Top",&ele1_eRegrInput_e2x5Top_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_e2x5Bottom",&ele1_eRegrInput_e2x5Bottom_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_e2x5Left",&ele1_eRegrInput_e2x5Left_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_e2x5Right",&ele1_eRegrInput_e2x5Right_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_seed_ieta",&ele1_eRegrInput_seed_ieta_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_seed_iphi",&ele1_eRegrInput_seed_iphi_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_seed_etaCrySeed",&ele1_eRegrInput_seed_etaCrySeed_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_seed_phiCrySeed",&ele1_eRegrInput_seed_phiCrySeed_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_preshowerEnergyOverRaw",&ele1_eRegrInput_preshowerEnergyOverRaw_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_ecalDrivenSeed",&ele1_eRegrInput_ecalDrivenSeed_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_isEBEtaGap",&ele1_eRegrInput_isEBEtaGap_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_isEBPhiGap",&ele1_eRegrInput_isEBPhiGap_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_eSubClusters",&ele1_eRegrInput_eSubClusters_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_subClusterEnergy_1",&ele1_eRegrInput_subClusterEnergy_1_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_subClusterEnergy_2",&ele1_eRegrInput_subClusterEnergy_2_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_subClusterEnergy_3",&ele1_eRegrInput_subClusterEnergy_3_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_subClusterEta_1",&ele1_eRegrInput_subClusterEta_1_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_subClusterEta_2",&ele1_eRegrInput_subClusterEta_2_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_subClusterEta_3",&ele1_eRegrInput_subClusterEta_3_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_subClusterPhi_1",&ele1_eRegrInput_subClusterPhi_1_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_subClusterPhi_2",&ele1_eRegrInput_subClusterPhi_2_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_subClusterPhi_3",&ele1_eRegrInput_subClusterPhi_3_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_subClusterEmax_1",&ele1_eRegrInput_subClusterEmax_1_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_subClusterEmax_2",&ele1_eRegrInput_subClusterEmax_2_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_subClusterEmax_3",&ele1_eRegrInput_subClusterEmax_3_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_subClusterE3x3_1",&ele1_eRegrInput_subClusterE3x3_1_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_subClusterE3x3_2",&ele1_eRegrInput_subClusterE3x3_2_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_subClusterE3x3_3",&ele1_eRegrInput_subClusterE3x3_3_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_eESClusters",&ele1_eRegrInput_eESClusters_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_eESClusterEnergy_1",&ele1_eRegrInput_eESClusterEnergy_1_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_eESClusterEnergy_2",&ele1_eRegrInput_eESClusterEnergy_2_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_eESClusterEnergy_3",&ele1_eRegrInput_eESClusterEnergy_3_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_eESClusterEta_1",&ele1_eRegrInput_eESClusterEta_1_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_eESClusterEta_2",&ele1_eRegrInput_eESClusterEta_2_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_eESClusterEta_3",&ele1_eRegrInput_eESClusterEta_3_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_eESClusterPhi_1",&ele1_eRegrInput_eESClusterPhi_1_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_eESClusterPhi_2",&ele1_eRegrInput_eESClusterPhi_2_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_eESClusterPhi_3",&ele1_eRegrInput_eESClusterPhi_3_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_pt",&ele1_eRegrInput_pt_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_trackMomentumAtVtxR",&ele1_eRegrInput_trackMomentumAtVtxR_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_fbrem",&ele1_eRegrInput_fbrem_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_charge",&ele1_eRegrInput_charge_s);
+ streamTree->SetBranchAddress("ele1_eRegrInput_eSuperClusterOverP",&ele1_eRegrInput_eSuperClusterOverP_s);
 
  recoTree->SetBranchStatus("lumiId",1);
  recoTree->SetBranchStatus("eventId",1);
  recoTree->SetBranchStatus("runId",1);
- recoTree->SetBranchStatus("rho",1);
  recoTree->SetBranchStatus("isW",1);
+ recoTree->SetBranchStatus("rho",1);
  recoTree->SetBranchStatus("PV_n",1);
+ recoTree->SetBranchStatus("ele1_nRecHits",1);
+ recoTree->SetBranchStatus("ele1_nGgsfTrackHits",1);
+ recoTree->SetBranchStatus("ele1_numberOfLostHits",1);
+ recoTree->SetBranchStatus("ele1_nAmbiguousGsfTrack",1);
  recoTree->SetBranchStatus("ele1_isEB",1);
+ recoTree->SetBranchStatus("ele1_seedIeta",1);
+ recoTree->SetBranchStatus("ele1_seedIphi",1);
+ recoTree->SetBranchStatus("ele1_seedIx",1);
+ recoTree->SetBranchStatus("ele1_seedIy",1);
+ recoTree->SetBranchStatus("ele1_seedZside",1);
+ recoTree->SetBranchStatus("ele1_scNxtal",1);
+
  recoTree->SetBranchStatus("ele1_pt",1);
  recoTree->SetBranchStatus("ele1_eta",1);
  recoTree->SetBranchStatus("ele1_phi",1);
- recoTree->SetBranchStatus("ele1_isEB",1);
  recoTree->SetBranchStatus("ele1_sigmaIetaIeta",1);
  recoTree->SetBranchStatus("ele1_DphiIn",1);
  recoTree->SetBranchStatus("ele1_DetaIn",1);
@@ -629,12 +1227,10 @@ void SetStartingBranchTrees(TTree* streamTree, TTree* recoTree){
  recoTree->SetBranchStatus("ele1_scERaw",1);
  recoTree->SetBranchStatus("ele1_scE",1);
  recoTree->SetBranchStatus("ele1_es",1);
- recoTree->SetBranchStatus("ele1_scLaserCorr",1);
  recoTree->SetBranchStatus("ele1_scEta",1);
  recoTree->SetBranchStatus("ele1_scPhi",1);
  recoTree->SetBranchStatus("ele1_scEtaWidth",1);
  recoTree->SetBranchStatus("ele1_scPhiWidth",1);
- recoTree->SetBranchStatus("ele1_fEta",1);
  recoTree->SetBranchStatus("ele1_tkP",1);
  recoTree->SetBranchStatus("ele1_fbrem",1);
  recoTree->SetBranchStatus("ele1_dxy_PV",1);
@@ -642,28 +1238,36 @@ void SetStartingBranchTrees(TTree* streamTree, TTree* recoTree){
  recoTree->SetBranchStatus("ele1_e5x5",1);
  recoTree->SetBranchStatus("ele1_e3x3",1);
  recoTree->SetBranchStatus("ele1_seedE",1);
- recoTree->SetBranchStatus("ele1_seedIeta",1);
- recoTree->SetBranchStatus("ele1_seedIphi",1);
- recoTree->SetBranchStatus("ele1_seedIx",1);
- recoTree->SetBranchStatus("ele1_seedIy",1);
- recoTree->SetBranchStatus("ele1_seedZside",1);
- recoTree->SetBranchStatus("ele1_recHit_E",1);
- recoTree->SetBranchStatus("ele1_idtype",1);
+
  recoTree->SetBranchStatus("met_et",1);
  recoTree->SetBranchStatus("met_phi",1);
  recoTree->SetBranchStatus("ele1Met_mt",1);
 
+ recoTree->SetBranchStatus("ele1_recHit_E",1);
+ recoTree->SetBranchStatus("ele1_idtype",1);
+ 
+ // set branch address
  recoTree->SetBranchAddress("lumiId",&lumiId_r);
  recoTree->SetBranchAddress("eventId",&eventId_r);
  recoTree->SetBranchAddress("runId",&runId_r);
- recoTree->SetBranchAddress("rho",&rho_r);
  recoTree->SetBranchAddress("isW",&isW_r);
+ recoTree->SetBranchAddress("rho",&rho_r);
  recoTree->SetBranchAddress("PV_n",&PV_n_r);
+ recoTree->SetBranchAddress("ele1_nRecHits",&ele1_nRecHits_r);
+ recoTree->SetBranchAddress("ele1_nGgsfTrackHits",&ele1_nGgsfTrackHits_r);
+ recoTree->SetBranchAddress("ele1_numberOfLostHits",&ele1_numberOfLostHits_r);
+ recoTree->SetBranchAddress("ele1_nAmbiguousGsfTrack",&ele1_nAmbiguousGsfTrack_r);
  recoTree->SetBranchAddress("ele1_isEB",&ele1_isEB_r);
+ recoTree->SetBranchAddress("ele1_seedIeta",&ele1_seedIeta_r);
+ recoTree->SetBranchAddress("ele1_seedIphi",&ele1_seedIphi_r);
+ recoTree->SetBranchAddress("ele1_seedIx",&ele1_seedIx_r);
+ recoTree->SetBranchAddress("ele1_seedIy",&ele1_seedIy_r);
+ recoTree->SetBranchAddress("ele1_seedZside",&ele1_seedZside_r);
+ recoTree->SetBranchAddress("ele1_scNxtal",&ele1_scNxtal_r);
+
  recoTree->SetBranchAddress("ele1_pt",&ele1_pt_r);
  recoTree->SetBranchAddress("ele1_eta",&ele1_eta_r);
  recoTree->SetBranchAddress("ele1_phi",&ele1_phi_r);
- recoTree->SetBranchAddress("ele1_isEB",&ele1_isEB_r);
  recoTree->SetBranchAddress("ele1_sigmaIetaIeta",&ele1_sigmaIetaIeta_r);
  recoTree->SetBranchAddress("ele1_DphiIn",&ele1_DphiIn_r);
  recoTree->SetBranchAddress("ele1_DetaIn",&ele1_DetaIn_r);
@@ -674,12 +1278,10 @@ void SetStartingBranchTrees(TTree* streamTree, TTree* recoTree){
  recoTree->SetBranchAddress("ele1_scERaw",&ele1_scERaw_r);
  recoTree->SetBranchAddress("ele1_scE",&ele1_scE_r);
  recoTree->SetBranchAddress("ele1_es",&ele1_es_r);
- recoTree->SetBranchAddress("ele1_scLaserCorr",&ele1_scLaserCorr_r);
  recoTree->SetBranchAddress("ele1_scEta",&ele1_scEta_r);
  recoTree->SetBranchAddress("ele1_scPhi",&ele1_scPhi_r);
  recoTree->SetBranchAddress("ele1_scEtaWidth",&ele1_scEtaWidth_r);
  recoTree->SetBranchAddress("ele1_scPhiWidth",&ele1_scPhiWidth_r);
- recoTree->SetBranchAddress("ele1_fEta",&ele1_fEta_r);
  recoTree->SetBranchAddress("ele1_tkP",&ele1_tkP_r);
  recoTree->SetBranchAddress("ele1_fbrem",&ele1_fbrem_r);
  recoTree->SetBranchAddress("ele1_dxy_PV",&ele1_dxy_PV_r);
@@ -687,17 +1289,81 @@ void SetStartingBranchTrees(TTree* streamTree, TTree* recoTree){
  recoTree->SetBranchAddress("ele1_e5x5",&ele1_e5x5_r);
  recoTree->SetBranchAddress("ele1_e3x3",&ele1_e3x3_r);
  recoTree->SetBranchAddress("ele1_seedE",&ele1_seedE_r);
- recoTree->SetBranchAddress("ele1_seedIeta",&ele1_seedIeta_r);
- recoTree->SetBranchAddress("ele1_seedIphi",&ele1_seedIphi_r);
- recoTree->SetBranchAddress("ele1_seedIx",&ele1_seedIx_r);
- recoTree->SetBranchAddress("ele1_seedIy",&ele1_seedIy_r);
- recoTree->SetBranchAddress("ele1_seedZside",&ele1_seedZside_r);
- recoTree->SetBranchAddress("ele1_scNxtal",&ele1_scNxtal_r);
- recoTree->SetBranchAddress("ele1_recHit_E",&ele1_recHit_E_r,&b_ele1_recHit_E_r);
- recoTree->SetBranchAddress("ele1_idtype",&ele1_idtype_r,&b_ele1_idtype_r);
+
  recoTree->SetBranchAddress("met_et",&met_r);
  recoTree->SetBranchAddress("met_phi",&met_phi_r);
  recoTree->SetBranchAddress("ele1Met_mt",&ele1Met_mt_r);
 
+ recoTree->SetBranchAddress("ele1_recHit_E",&ele1_recHit_E_r);
+ recoTree->SetBranchAddress("ele1_idtype",&ele1_idtype_r);
+
+ recoTree->SetBranchAddress("ele1_eRegrInput_rawE",&ele1_eRegrInput_rawE_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_r9",&ele1_eRegrInput_r9_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_eta",&ele1_eRegrInput_eta_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_phi",&ele1_eRegrInput_phi_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_etaW",&ele1_eRegrInput_etaW_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_phiW",&ele1_eRegrInput_phiW_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_SCsize",&ele1_eRegrInput_SCsize_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_rho",&ele1_eRegrInput_rho_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_hoe",&ele1_eRegrInput_hoe_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_nPV",&ele1_eRegrInput_nPV_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_seed_eta",&ele1_eRegrInput_seed_eta_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_seed_phi",&ele1_eRegrInput_seed_phi_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_seed_E",&ele1_eRegrInput_seed_E_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_sigietaieta",&ele1_eRegrInput_sigietaieta_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_sigiphiiphi",&ele1_eRegrInput_sigiphiiphi_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_sigietaiphi",&ele1_eRegrInput_sigietaiphi_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_eMax",&ele1_eRegrInput_eMax_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_e2nd",&ele1_eRegrInput_e2nd_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_eTop",&ele1_eRegrInput_eTop_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_eBottom",&ele1_eRegrInput_eBottom_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_eLeft",&ele1_eRegrInput_eLeft_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_eRight",&ele1_eRegrInput_eRight_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_e2x5Max",&ele1_eRegrInput_e2x5Max_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_e2x5Top",&ele1_eRegrInput_e2x5Top_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_e2x5Bottom",&ele1_eRegrInput_e2x5Bottom_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_e2x5Left",&ele1_eRegrInput_e2x5Left_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_e2x5Right",&ele1_eRegrInput_e2x5Right_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_seed_ieta",&ele1_eRegrInput_seed_ieta_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_seed_iphi",&ele1_eRegrInput_seed_iphi_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_seed_etaCrySeed",&ele1_eRegrInput_seed_etaCrySeed_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_seed_phiCrySeed",&ele1_eRegrInput_seed_phiCrySeed_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_preshowerEnergyOverRaw",&ele1_eRegrInput_preshowerEnergyOverRaw_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_ecalDrivenSeed",&ele1_eRegrInput_ecalDrivenSeed_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_isEBEtaGap",&ele1_eRegrInput_isEBEtaGap_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_isEBPhiGap",&ele1_eRegrInput_isEBPhiGap_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_eSubClusters",&ele1_eRegrInput_eSubClusters_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_subClusterEnergy_1",&ele1_eRegrInput_subClusterEnergy_1_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_subClusterEnergy_2",&ele1_eRegrInput_subClusterEnergy_2_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_subClusterEnergy_3",&ele1_eRegrInput_subClusterEnergy_3_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_subClusterEta_1",&ele1_eRegrInput_subClusterEta_1_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_subClusterEta_2",&ele1_eRegrInput_subClusterEta_2_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_subClusterEta_3",&ele1_eRegrInput_subClusterEta_3_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_subClusterPhi_1",&ele1_eRegrInput_subClusterPhi_1_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_subClusterPhi_2",&ele1_eRegrInput_subClusterPhi_2_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_subClusterPhi_3",&ele1_eRegrInput_subClusterPhi_3_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_subClusterEmax_1",&ele1_eRegrInput_subClusterEmax_1_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_subClusterEmax_2",&ele1_eRegrInput_subClusterEmax_2_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_subClusterEmax_3",&ele1_eRegrInput_subClusterEmax_3_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_subClusterE3x3_1",&ele1_eRegrInput_subClusterE3x3_1_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_subClusterE3x3_2",&ele1_eRegrInput_subClusterE3x3_2_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_subClusterE3x3_3",&ele1_eRegrInput_subClusterE3x3_3_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_eESClusters",&ele1_eRegrInput_eESClusters_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_eESClusterEnergy_1",&ele1_eRegrInput_eESClusterEnergy_1_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_eESClusterEnergy_2",&ele1_eRegrInput_eESClusterEnergy_2_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_eESClusterEnergy_3",&ele1_eRegrInput_eESClusterEnergy_3_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_eESClusterEta_1",&ele1_eRegrInput_eESClusterEta_1_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_eESClusterEta_2",&ele1_eRegrInput_eESClusterEta_2_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_eESClusterEta_3",&ele1_eRegrInput_eESClusterEta_3_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_eESClusterPhi_1",&ele1_eRegrInput_eESClusterPhi_1_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_eESClusterPhi_2",&ele1_eRegrInput_eESClusterPhi_2_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_eESClusterPhi_3",&ele1_eRegrInput_eESClusterPhi_3_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_pt",&ele1_eRegrInput_pt_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_trackMomentumAtVtxR",&ele1_eRegrInput_trackMomentumAtVtxR_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_fbrem",&ele1_eRegrInput_fbrem_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_charge",&ele1_eRegrInput_charge_r);
+ recoTree->SetBranchAddress("ele1_eRegrInput_eSuperClusterOverP",&ele1_eRegrInput_eSuperClusterOverP_r);
+
  return ;
+
 }
