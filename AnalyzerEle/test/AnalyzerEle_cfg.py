@@ -14,6 +14,8 @@ options.register ('skipAnalyzerAndDumpOutput', False, VarParsing.multiplicity.si
                   "true if you don't want to run the analyzer but dump a output file with all the collections keep*")
 options.register ('usePatElectronsTriggerMatch',False,VarParsing.multiplicity.singleton, VarParsing.varType.int,
                   "true if you want to match trigger electron with the pat one and use this collection as input in the analyzer") 
+options.register ('applyWZSelections',False,VarParsing.multiplicity.singleton, VarParsing.varType.int,
+                  "options in order to apply WZ selection topology")
 options.parseArguments();
 print options;
 
@@ -85,7 +87,10 @@ if options.isAlcaStreamOutput != 0 :
  process.Analyzer.PFMetTag = cms.InputTag("hltPFMETProducer");
  process.Analyzer.rhoTag   = cms.InputTag("hltKT6PFJets","rho");
  process.Analyzer.triggerResultsCollection = cms.InputTag('TriggerResults::HLT');
- process.Analyzer.doWZSelection = cms.untracked.bool(True);
+ if options.applyWZSelections:
+    process.Analyzer.doWZSelection = cms.untracked.bool(True);
+ else:
+    process.Analyzer.doWZSelection = cms.untracked.bool(False);
  process.Analyzer.saveMCInfo    = cms.untracked.bool(False);
 else:
  if options.usePatElectronsTriggerMatch :
@@ -94,7 +99,10 @@ else:
  process.Analyzer.PFMetTag = cms.InputTag("pfMet");
  process.Analyzer.rhoTag   = cms.InputTag("kt6PFJets","rho");   
  process.Analyzer.triggerResultsCollection = cms.InputTag('TriggerResults::HLT')
- process.Analyzer.doWZSelection = cms.untracked.bool(True);
+ if options.applyWZSelections:
+    process.Analyzer.doWZSelection = cms.untracked.bool(True);
+ else:
+    process.Analyzer.doWZSelection = cms.untracked.bool(False);
  process.Analyzer.saveMCInfo    = cms.untracked.bool(False);
 
 ### final path
