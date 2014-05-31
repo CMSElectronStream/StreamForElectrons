@@ -40,7 +40,8 @@ if __name__ == "__main__":
  
  jobDirsuffix = ""; 
  if options.applyWZSelections == 0: jobDirsuffix = "_noSelections" ; 
- 
+ if options.triggerMatch ==1: jobDirsuffix += "_match" ; 
+
  sampleJobListFile = "lancia";
 
  if options.isalcastream == 1:
@@ -48,10 +49,14 @@ if __name__ == "__main__":
  else:
      sampleJobListFile = sampleJobListFile+"_streamA";
 
+ if options.triggerMatch == 1:
+     sampleJobListFile = sampleJobListFile+"_match";
+
  if options.applyWZSelections == 0:
      sampleJobListFile = sampleJobListFile+"_noSelection.sh";
  else:
      sampleJobListFile = sampleJobListFile+".sh";
+
 
  SAMPLEJOBLISTFILE = open(sampleJobListFile,"w");
 
