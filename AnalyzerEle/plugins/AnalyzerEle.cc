@@ -1704,7 +1704,7 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   p_met   = &met;
   met_et  = p_met->Et();
   met_phi = p_met->phi();  
-  ele1Met_mt   = sqrt( 2. * ele2_pt * met_et * ( 1. - cos( deltaPhi(ele1_phi,met_phi) ) ) );
+  ele1Met_mt   = sqrt( 2. * ele1_pt * met_et * ( 1. - cos( deltaPhi(ele1_phi,met_phi) ) ) );
   ele1Met_Dphi = deltaPhi(ele2_phi,met_phi);
 
 
