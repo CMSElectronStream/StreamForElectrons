@@ -453,6 +453,10 @@ int main (int argc, char** argv){
    DistributionStreamMap["ele1_eRegrInput_subClusterE3x3_3"]->Fill(ele1_eRegrInput_subClusterE3x3_3_s);
    DistributionRecoMap["ele1_eRegrInput_subClusterE3x3_3"]->Fill(ele1_eRegrInput_subClusterE3x3_3_r);
    DifferenceMap["ele1_eRegrInput_subClusterE3x3_3"]->Fill(ele1_eRegrInput_subClusterE3x3_3_s-ele1_eRegrInput_subClusterE3x3_3_r);
+
+   DistributionStreamMap["ele1_eRegrInput_eESClusters"]->Fill(ele1_eRegrInput_eESClusters_s);
+   DistributionRecoMap["ele1_eRegrInput_eESClusters"]->Fill(ele1_eRegrInput_eESClusters_r);
+   DifferenceMap["ele1_eRegrInput_eESClusters"]->Fill(ele1_eRegrInput_eESClusters_s-ele1_eRegrInput_eESClusters_r);
    /*
    DistributionStreamMap["ele1_eRegrInput_eESClusterEnergy_1"]->Fill(ele1_eRegrInput_eESClusterEnergy_1_s);
    DistributionRecoMap["ele1_eRegrInput_eESClusterEnergy_1"]->Fill(ele1_eRegrInput_eESClusterEnergy_1_r);
@@ -500,7 +504,7 @@ int main (int argc, char** argv){
    CorrelationMap["ele1_tkIso"]->Fill(ele1_tkIso_s,ele1_tkIso_r);
    CorrelationMap["ele1_emIso"]->Fill(ele1_emIso_s,ele1_emIso_r);
    CorrelationMap["ele1_dxy_PV"]->Fill(ele1_dxy_PV_s,ele1_dxy_PV_r);
-   CorrelationMap["ele1_emIso"]->Fill(ele1_dz_PV_s,ele1_dz_PV_r);
+   CorrelationMap["ele1_dz_PV"]->Fill(ele1_dz_PV_s,ele1_dz_PV_r);
 
   }
 
@@ -672,8 +676,8 @@ int main (int argc, char** argv){
   (itMap4)->second->SetMarkerStyle(20);
   (itMap4)->second->SetMarkerSize(1);
   (itMap4)->second->Draw("colz");
-  canvasTempCorr->SaveAs(("plots/Correlation_"+(itMap4)->first+".pdf").c_str(),"pdf"); 
-  canvasTempCorr->SaveAs(("plots/Correlation_"+(itMap4)->first+".png").c_str(),"png"); 
+  canvasTempCorr->SaveAs(("plots_correlation/Correlation_"+(itMap4)->first+".pdf").c_str(),"pdf"); 
+  canvasTempCorr->SaveAs(("plots_correlation/Correlation_"+(itMap4)->first+".png").c_str(),"png"); 
 
   delete canvasTempCorr;
  }
@@ -704,8 +708,8 @@ void SetVariablesMapEntry(std::map<std::string,TH1F*> & DistributionStreamMap, s
  DistributionRecoMap.insert(mapElement("met", new TH1F("met_Reco","",50,0,200)));       
  DifferenceMap.insert(mapElement("met", new TH1F("met_Ratio","",200,-50,150)));       
 
- DistributionStreamMap.insert(mapElement("met_phi", new TH1F("met_phiStream","",50,0,3.14)));       
- DistributionRecoMap.insert(mapElement("met_phi", new TH1F("met_phiReco","",50,0,-3.14)));       
+ DistributionStreamMap.insert(mapElement("met_phi", new TH1F("met_phiStream","",50,-3.14,3.14)));       
+ DistributionRecoMap.insert(mapElement("met_phi", new TH1F("met_phiReco","",50,-3.14,3.14)));       
  DifferenceMap.insert(mapElement("met_phi", new TH1F("met_phiRatio","",100,-3.14,3.14)));       
 
  DistributionStreamMap.insert(mapElement("ele1Met_mt", new TH1F("ele1Met_mtStream","",100,0,200)));       
@@ -729,12 +733,12 @@ void SetVariablesMapEntry(std::map<std::string,TH1F*> & DistributionStreamMap, s
  DistributionRecoMap.insert(mapElement("ele1_seedIy", new TH1F("ele1_seedIyReco","",101,0,101)));       
  DifferenceMap.insert(mapElement("ele1_seedIy", new TH1F("ele1_seedIyRatio","",25,-25,25)));       
  
- DistributionStreamMap.insert(mapElement("ele1_scNxtal", new TH1F("ele1_scNxtalStream","",70,0,70)));       
- DistributionRecoMap.insert(mapElement("ele1_scNxtal", new TH1F("ele1_scNxtalReco","",70,0,70)));       
+ DistributionStreamMap.insert(mapElement("ele1_scNxtal", new TH1F("ele1_scNxtalStream","",90,0,90)));       
+ DistributionRecoMap.insert(mapElement("ele1_scNxtal", new TH1F("ele1_scNxtalReco","",90,0,90)));       
  DifferenceMap.insert(mapElement("ele1_scNxtal", new TH1F("ele1_scNxtalRatio","",50,-25,25)));       
 
- DistributionStreamMap.insert(mapElement("ele1_nRecHits", new TH1F("ele1_nRecHitsStream","",70,0,70)));       
- DistributionRecoMap.insert(mapElement("ele1_nRecHits", new TH1F("ele1_nRecHitsReco","",70,0,70)));       
+ DistributionStreamMap.insert(mapElement("ele1_nRecHits", new TH1F("ele1_nRecHitsStream","",90,0,90)));       
+ DistributionRecoMap.insert(mapElement("ele1_nRecHits", new TH1F("ele1_nRecHitsReco","",90,0,90)));       
  DifferenceMap.insert(mapElement("ele1_nRecHits", new TH1F("ele1_nRecHitsRatio","",30,-15,15)));       
 
  DistributionStreamMap.insert(mapElement("ele1_nGgsfTrackHits", new TH1F("ele1_nGgsfTrackHitsStream","",50,0,50)));       
@@ -763,8 +767,8 @@ void SetVariablesMapEntry(std::map<std::string,TH1F*> & DistributionStreamMap, s
  DistributionRecoMap.insert(mapElement("ele1_phi", new TH1F("ele1_phiReco","",50,-3.14,3.14)));       
  DifferenceMap.insert(mapElement("ele1_phi", new TH1F("ele1_phiRatio","",100,-0.5,.5)));       
 
- DistributionStreamMap.insert(mapElement("ele1_sigmaIetaIeta", new TH1F("ele1_sigmaIetaIetaStream","",50,0,2)));       
- DistributionRecoMap.insert(mapElement("ele1_sigmaIetaIeta", new TH1F("ele1_sigmaIetaIetaReco","",50,0,2)));       
+ DistributionStreamMap.insert(mapElement("ele1_sigmaIetaIeta", new TH1F("ele1_sigmaIetaIetaStream","",50,0,0.1)));       
+ DistributionRecoMap.insert(mapElement("ele1_sigmaIetaIeta", new TH1F("ele1_sigmaIetaIetaReco","",50,0,0.1)));       
  DifferenceMap.insert(mapElement("ele1_sigmaIetaIeta", new TH1F("ele1_sigmaIetaIetaRatio","",50,-0.1,0.1)));       
 
  DistributionStreamMap.insert(mapElement("ele1_DphiIn", new TH1F("ele1_DphiInStream","",50,-0.012,0.012)));       
