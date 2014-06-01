@@ -180,6 +180,7 @@ class AnalyzerEle : public edm::EDAnalyzer {
  
   ///---- input tags ----
   edm::InputTag PVTag_;
+  edm::InputTag PVTag_alternative_;
   edm::InputTag rhoTag_;
   edm::InputTag recHitCollection_EB_;
   edm::InputTag recHitCollection_EE_;
@@ -202,6 +203,7 @@ class AnalyzerEle : public edm::EDAnalyzer {
 
   std::map<float,int> eleIts_;
   math::XYZPoint PVPoint_;
+  math::XYZPoint PVPoint_alternative_;
 
   SuperClusterHelper * mySCHelper_ ;
 
@@ -226,6 +228,10 @@ class AnalyzerEle : public edm::EDAnalyzer {
   int   PV_n_;
   float PV_z_;
   float PV_d0_;
+
+  int   PV_n_alternative_;
+  float PV_z_alternative_;
+  float PV_d0_alternative_;
 
   // PU variables
   float rho_;
@@ -284,6 +290,8 @@ class AnalyzerEle : public edm::EDAnalyzer {
   
   float ele1_dxy_PV ;
   float ele1_dz_PV ;
+  float ele1_dxy_PV_alternative ;
+  float ele1_dz_PV_alternative ;
   float ele1_EcalEnergy ;
   float ele1_sigmaP ;
 
@@ -452,6 +460,8 @@ class AnalyzerEle : public edm::EDAnalyzer {
 
   float ele2_dxy_PV ;
   float ele2_dz_PV ;
+  float ele2_dxy_PV_alternative ;
+  float ele2_dz_PV_alternative ;
   float ele2_sigmaP ;
   float ele2_EcalEnergy ;
   float ele2_effAreaForIso ;

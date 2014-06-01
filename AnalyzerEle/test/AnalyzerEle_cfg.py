@@ -84,6 +84,7 @@ if options.isAlcaStreamOutput != 0 :
  if options.usePatElectronsTriggerMatch :
      process.Analyzer.EleTag = cms.InputTag("PatElectronsTriggerMatch")
  process.Analyzer.PVTag    = cms.InputTag("hltFastPVPixelVertices");
+ process.Analyzer.PVTag_alternative   = cms.InputTag("offlinePrimaryVerticesWithBS"),
  process.Analyzer.PFMetTag = cms.InputTag("hltPFMETProducer");
  process.Analyzer.rhoTag   = cms.InputTag("hltKT6PFJets","rho");
  process.Analyzer.triggerResultsCollection = cms.InputTag('TriggerResults::HLT');
@@ -96,6 +97,7 @@ else:
  if options.usePatElectronsTriggerMatch :
      process.Analyzer.EleTag = cms.InputTag("PatElectronsTriggerMatch")
  process.Analyzer.PVTag    = cms.InputTag("offlinePrimaryVerticesWithBS");
+ process.Analyzer.PVTag_alternative   = cms.InputTag("offlinePrimaryVerticesWithBS"),
  process.Analyzer.PFMetTag = cms.InputTag("pfMet");
  process.Analyzer.rhoTag   = cms.InputTag("kt6PFJets","rho");   
  process.Analyzer.triggerResultsCollection = cms.InputTag('TriggerResults::HLT')

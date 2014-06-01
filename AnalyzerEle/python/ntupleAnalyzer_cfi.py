@@ -3,6 +3,7 @@ import FWCore.ParameterSet.Config as cms
 Analyzer = cms.EDAnalyzer('AnalyzerEle',
                EleTag              = cms.InputTag("patElectrons"),
                PVTag               = cms.InputTag("hltFastPVPixelVertices"),
+               PVTag_alternative   = cms.InputTag("offlinePrimaryVerticesWithBS"),           
                recHitCollection_EB = cms.InputTag("reducedEcalRecHitsEB"),
                recHitCollection_EE = cms.InputTag("reducedEcalRecHitsEE"),
                theBeamSpotTag      = cms.InputTag("offlineBeamSpot"),

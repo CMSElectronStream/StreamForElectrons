@@ -10,6 +10,7 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig){
  recHitCollection_EE_ = iConfig.getParameter<edm::InputTag>("recHitCollection_EE");
  BSTag_               = iConfig.getParameter<edm::InputTag>("theBeamSpotTag");
  PVTag_               = iConfig.getParameter<edm::InputTag>("PVTag");
+ PVTag_alternative_   = iConfig.getParameter<edm::InputTag>("PVTag_alternative");
  rhoTag_              = iConfig.getParameter<edm::InputTag>("rhoTag");
  EleTag_              = iConfig.getParameter<edm::InputTag>("EleTag");
  PFMetTag_            = iConfig.getParameter<edm::InputTag>("PFMetTag");
@@ -55,6 +56,9 @@ void AnalyzerEle::beginJob(){
  myTree_ -> Branch("PV_n", &PV_n_, "PV_n/I");
  myTree_ -> Branch("PV_z", &PV_z_, "PV_z/F");
  myTree_ -> Branch("PV_d0", &PV_d0_, "PV_d0/F");
+ myTree_ -> Branch("PV_n_alternative", &PV_n_alternative_, "PV_n_alternative/I");
+ myTree_ -> Branch("PV_z_alternative", &PV_z_alternative_, "PV_z_alternative/F");
+ myTree_ -> Branch("PV_d0_alternative", &PV_d0_alternative_, "PV_d0_alternative/F");
  myTree_ -> Branch("rho", &rho_, "rho/F");
  myTree_ -> Branch("nele", &nele_, "nele/I");
 
@@ -156,6 +160,8 @@ void AnalyzerEle::beginJob(){
   
  myTree_ -> Branch("ele1_dxy_PV", &ele1_dxy_PV, "ele1_dxy_PV/F");
  myTree_ -> Branch("ele1_dz_PV", &ele1_dz_PV, "ele1_dz_PV/F");
+ myTree_ -> Branch("ele1_dxy_PV_alternative", &ele1_dxy_PV_alternative, "ele1_dxy_PV_alternative/F");
+ myTree_ -> Branch("ele1_dz_PV_alternative", &ele1_dz_PV_alternative, "ele1_dz_PV_alternative/F");
  myTree_ -> Branch("ele1_sigmaP", &ele1_sigmaP, "ele1_sigmaP/F");
   
  myTree_ -> Branch("ele1_eSeedBC", &ele1_eSeedBC, "ele1_eSeedBC/F");
@@ -301,6 +307,8 @@ void AnalyzerEle::beginJob(){
   
  myTree_ -> Branch("ele2_dxy_PV", &ele2_dxy_PV, "ele2_dxy_PV/F");
  myTree_ -> Branch("ele2_dz_PV", &ele2_dz_PV, "ele2_dz_PV/F");
+ myTree_ -> Branch("ele2_dxy_PV_alternative", &ele2_dxy_PV_alternative, "ele2_dxy_PV_alternative/F");
+ myTree_ -> Branch("ele2_dz_PV_alternative", &ele2_dz_PV_alternative, "ele2_dz_PV_alternative/F");
  myTree_ -> Branch("ele2_sigmaP", &ele2_sigmaP, "ele2_sigmaP/F");
   
  myTree_ -> Branch("ele2_scERaw", &ele2_scERaw, "ele2_scERaw/F");
@@ -610,6 +618,25 @@ void AnalyzerEle::fillPVInfo (const edm::Event & iEvent, const edm::EventSetup &
  math::XYZPoint PVPoint(PV.position().x(), PV.position().y(), PV.position().z());
  PVPoint_ = PVPoint;
 
+ iEvent.getByLabel(PVTag_alternative_, vertexes);
+
+ PV_n_alternative_ = vertexes -> size();
+
+ PVfound = (vertexes -> size() != 0);
+
+ if(PVfound){    
+  PV = vertexes->at(0);
+  PV_z_alternative_ = PV.z();
+  PV_d0_alternative_ = PV.position().Rho();
+ }
+ else {
+  PV_z_alternative_  = -999.;
+  PV_d0_alternative_ = -999.;
+ }
+
+ math::XYZPoint PVPoint_alterantive(PV.position().x(), PV.position().y(), PV.position().z());
+ PVPoint_alternative_ = PVPoint_alterantive ;
+
 }
 
 //----------------------------------- Rho info for PU subtraction 
@@ -898,6 +925,8 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   reco::GsfTrackRef eleTrack = electron.gsfTrack();
   ele1_dxy_PV  = eleTrack->dxy (PVPoint_);
   ele1_dz_PV   = eleTrack->dz (PVPoint_);
+  ele1_dxy_PV_alternative  = eleTrack->dxy (PVPoint_alternative_);
+  ele1_dz_PV_alternative   = eleTrack->dz (PVPoint_alternative_);
   ele1_sigmaP  = electron.corrections().trackMomentumError;
 
   reco::SuperClusterRef scRef = electron.superCluster();
@@ -1305,6 +1334,8 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   reco::GsfTrackRef eleTrack = electron.gsfTrack() ;
   ele2_dxy_PV = eleTrack->dxy (PVPoint_);
   ele2_dz_PV  = eleTrack->dz (PVPoint_);
+  ele2_dxy_PV_alternative  = eleTrack->dxy (PVPoint_alternative_);
+  ele2_dz_PV_alternative   = eleTrack->dz (PVPoint_alternative_);
   ele2_sigmaP = electron.corrections().trackMomentumError;
         
   reco::SuperClusterRef scRef = electron.superCluster();
@@ -1763,6 +1794,8 @@ void AnalyzerEle::initialize(){
 
  ele1_dxy_PV=-99.;
  ele1_dz_PV=-99.;
+ ele1_dxy_PV_alternative=-99.;
+ ele1_dz_PV_alternative=-99.;
  ele1_sigmaP = -99.;
  ele1_effAreaForIso=-99.;
 
@@ -1921,6 +1954,8 @@ void AnalyzerEle::initialize(){
 
  ele2_dxy_PV=-99.;
  ele2_dz_PV=-99.;
+ ele2_dxy_PV_alternative=-99.;
+ ele2_dz_PV_alternative=-99.;
  ele2_sigmaP = -99.;
  ele2_effAreaForIso=-99.;
 
