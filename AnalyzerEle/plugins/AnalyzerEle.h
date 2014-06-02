@@ -197,6 +197,7 @@ class AnalyzerEle : public edm::EDAnalyzer {
   std::string dataRun_;
   bool verbosity_; 
   bool applyCorrections_;
+  bool applyElectronID_;
   bool doWZSelection_;
   bool dataFlag_;
   bool saveMCInfo_ ;

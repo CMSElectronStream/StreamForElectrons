@@ -16,6 +16,8 @@ options.register ('usePatElectronsTriggerMatch',False,VarParsing.multiplicity.si
                   "true if you want to match trigger electron with the pat one and use this collection as input in the analyzer") 
 options.register ('applyWZSelections',False,VarParsing.multiplicity.singleton, VarParsing.varType.int,
                   "options in order to apply WZ selection topology") 
+options.register ('applyElectronID',False,VarParsing.multiplicity.singleton, VarParsing.varType.int,
+                  "options in order to apply electron ID WP80 on the whole electron collection")
 options.parseArguments();
 print options;
 
@@ -84,14 +86,18 @@ if options.isAlcaStreamOutput != 0 :
  if options.usePatElectronsTriggerMatch :
      process.Analyzer.EleTag = cms.InputTag("PatElectronsTriggerMatch")
  process.Analyzer.PVTag    = cms.InputTag("hltFastPVPixelVertices");
- process.Analyzer.PVTag_alternative   = cms.InputTag("offlinePrimaryVerticesWithBS"),
+ process.Analyzer.PVTag_alternative   = cms.InputTag("offlinePrimaryVerticesWithBS");
  process.Analyzer.PFMetTag = cms.InputTag("hltPFMETProducer");
  process.Analyzer.rhoTag   = cms.InputTag("hltKT6PFJets","rho");
  process.Analyzer.triggerResultsCollection = cms.InputTag('TriggerResults::HLT');
  if options.applyWZSelections:
      process.Analyzer.doWZSelection = cms.untracked.bool(True);
  else:
-     process.Analyzer.doWZSelection = cms.untracked.bool(False);     
+     process.Analyzer.doWZSelection = cms.untracked.bool(False);
+ if options.applyElectronID:
+    process.Analyzer.applyElectronID = cms.untracked.bool(True);
+ else:
+    process.Analyzer.applyElectronID = cms.untracked.bool(False);                 
  process.Analyzer.saveMCInfo    = cms.untracked.bool(False);
 else:
  if options.usePatElectronsTriggerMatch :
@@ -104,7 +110,11 @@ else:
  if options.applyWZSelections:
      process.Analyzer.doWZSelection = cms.untracked.bool(True);
  else:
-     process.Analyzer.doWZSelection = cms.untracked.bool(False);     
+     process.Analyzer.doWZSelection = cms.untracked.bool(False);
+ if options.applyElectronID:
+    process.Analyzer.applyElectronID = cms.untracked.bool(True);
+ else:
+    process.Analyzer.applyElectronID = cms.untracked.bool(False);                 
  process.Analyzer.saveMCInfo    = cms.untracked.bool(False);
 
 ### final path

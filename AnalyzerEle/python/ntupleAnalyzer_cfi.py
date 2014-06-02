@@ -22,6 +22,7 @@ Analyzer = cms.EDAnalyzer('AnalyzerEle',
                verbosity           = cms.untracked.bool(False),
                doWZSelection       = cms.untracked.bool(False),  # save *all* electrons combinations
                applyCorrections    = cms.untracked.bool(False),
+               applyElectronID     = cms.untracked.bool(False),
                dataFlag            = cms.untracked.bool(True),
                saveMCInfo          = cms.untracked.bool(False)           
 )

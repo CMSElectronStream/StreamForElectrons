@@ -22,6 +22,7 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig){
 
  verbosity_          = iConfig.getUntrackedParameter<bool>("verbosity", false);
  doWZSelection_      = iConfig.getUntrackedParameter<bool>("doWZSelection", false);
+ applyElectronID_    = iConfig.getUntrackedParameter<bool>("applyElectronID", false);
  applyCorrections_   = iConfig.getUntrackedParameter<bool>("applyCorrections",false);
  dataFlag_           = iConfig.getUntrackedParameter<bool>("dataFlag", true);
  saveMCInfo_         = iConfig.getUntrackedParameter<bool>("saveMCInfo", false);
@@ -554,16 +555,46 @@ void AnalyzerEle::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
  else {
    
   int nele = electrons.size();
-  if(nele == 1) { isW_ = 1; isZ_ = 0; }
-  if(nele == 2) { isW_ = 0; isZ_ = 1; }
-  if(isW_ == 1) fillEleInfo ( iEvent, iSetup, 0, "ele1" );
-  if(isZ_ == 1) {
-   fillEleInfo ( iEvent, iSetup, 0, "ele1" );
-   fillEleInfo ( iEvent, iSetup, 1, "ele2" );
-   fillDoubleEleInfo (iEvent, iSetup);
+  if(applyElectronID_){
+
+   std::map<float,int> eleIts_ ; //map to take track of the electron inside the collection 1/pt and position 
+   eleIts_.clear(); // clear the list in every event
+
+   int nWP80 = 0; //only WP70
+
+   for( unsigned int iEle = 0 ; iEle < electrons.size(); iEle++){ // Loop on the electron 
+     if(electrons.at(iEle).electronID("cIso80") or electrons.at(iEle).electronID("relIso80")){ //if the electron is WP70 combined or absolute isolation 
+          ++nWP80;
+          eleIts_[1./electrons.at(iEle).pt()] = iEle; // fill the map and this is both a WP70 and WP90
+	  continue;
+     }
+   }
+
+   if(nWP80 == 0 or nWP80 > 2 ) return ;
+   if(nWP80 == 1){ isW_ = 1; isZ_ = 0; };
+   if(nWP80 == 2){ isW_ = 0; isZ_ = 1; };
+   if(isW_ == 1) fillEleInfo ( iEvent, iSetup, 0, "ele1" );
+   if(isZ_ == 1) {
+    fillEleInfo ( iEvent, iSetup, 0, "ele1" );
+    fillEleInfo ( iEvent, iSetup, 1, "ele2" );
+    fillDoubleEleInfo (iEvent, iSetup);
+   }
+   fillMetInfo (iEvent, iSetup);
+   if (isW_ == 1 || isZ_ == 1) myTree_ -> Fill();
   }
-  fillMetInfo (iEvent, iSetup);
-  if (isW_ == 1 || isZ_ == 1) myTree_ -> Fill();
+  else{
+
+   if(nele == 1) { isW_ = 1; isZ_ = 0; }
+   if(nele == 2) { isW_ = 0; isZ_ = 1; }
+   if(isW_ == 1) fillEleInfo ( iEvent, iSetup, 0, "ele1" );
+   if(isZ_ == 1) {
+    fillEleInfo ( iEvent, iSetup, 0, "ele1" );
+    fillEleInfo ( iEvent, iSetup, 1, "ele2" );
+    fillDoubleEleInfo (iEvent, iSetup);
+   }
+   fillMetInfo (iEvent, iSetup);
+   if (isW_ == 1 || isZ_ == 1) myTree_ -> Fill();
+  }
 
  }
  if( verbosity_ ) std::cout << ">>> AnalyzerEle::analyze end <<<" << std::endl;
