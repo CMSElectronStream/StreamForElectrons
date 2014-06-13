@@ -83,6 +83,29 @@ Input Parameters: 1) globalTag     -> to be specified
                                                                   regionLSB -> dimension
                                                                   puMultCorrect ->if true PU subtraction is calculated 
 
+                                        RegionCorrection takes as input: L1CaloRegions L1CaloEMCand, CaloSubRegion, regionPUparam, regionPUStype
+                                        Count how  many L1 regions have ET > 0, then read eta, phi and pT of a region:
+                                          -> PUM0 method: loop on EM cands and if matching in eta and phi energyECAL2x1=et
+                                             double puSub = regionPUSParams[18*regionEta+pumbin]*2
+
+                                             if(regionET - puSub>0) {
+                                                    int pum0pt = (regionET - puSub-energyECAL2x1); //subtract ECAl energy                                                           
+                                                    corrpum0pt = pum0pt*alpha+gamma+energyECAL2x1; 
+           
+                                                    where alpha = m_regionSF[2*regionEta + 0],2*((m_regionSF[2*regionEta + 1])/3)
+
+                                                    if applyCalibration is false  and regionET < 20 -> alpha = 1 and gamma = 0 ;
+ 
+                                                    regionEtCorr = corrpum0pt;
+                                                    ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > lorentz(0,0,0,0);
+                                                    CaloRegion newSubRegion(*&lorentz, 0, 0, regionEtCorr, regionEta, regionPhi, 0, 0, 0);
+                                                    subRegions->push_back(newSubRegion);
+                                             }
+
+
+                                             Output producer: L1CaloRegionCollection "CorrectedRegions", int "PUM0Level" 
+
+
                                         process.UCT2015Producer -> some tresholds are interesting here
 
                                                                   jetSeed ->sed energy for jets 
@@ -97,7 +120,39 @@ Input Parameters: 1) globalTag     -> to be specified
                                                                   regionETCutForHT
                                                                   maxGctEtaForSums = cms.uint32(17) -> exclude HF
 
-                                        process.uctGctDigis = = cms.EDProducer("UCT2015GctCandsProducer", -> objected produced
+
+                                      Following collections are produced:   JetUnpacked
+                                                                            CorrJetUnpacked
+                                                                            RelaxedEGUnpacked
+                                                                            IsolatedEGUnpacked
+                                                                            PULevelPUM0Unpacked
+                                                                            PULevelUnpacked
+                                                                            PULevelUICUnpacked
+
+                                      Start from the corrected region -> if grater that seed energy (egtSeed 2 GeV), match EMcand with full region
+
+				      if(et<40 && (!region->tauVeto() && !region->mip() )) isEle=true;
+				      if(et>=40 && et<63 && (!region->mip() )) isEle=true;
+                                      if(et>=63) isEle=true;
+                                      findAnnulusInfo -> given a seed region find the second and the third highest energy region and the mip content
+
+                                      if the seed is found: if (isEle){ rlxEGList.push_back(egtauCands) }
+
+                                      For the isolation -> loop on the jets, match with the EMcand which pass the seed condition "associatedJetPt" stored, 
+                                      double jetIsolationEG = jet->pt() - et;        // Jet isolation                                                                    
+                                      double relativeJetIsolationEG = jetIsolationEG / et;
+                                      double relativeJetIsolation = jetIsolation / regionEt;
+
+                                      bool isolatedEG=false;
+                                      if(et<63 && relativeJetIsolationEG < relativeJetIsolationCut)  isolatedEG=true;;
+                                      if (et>=63) isolatedEG=true;;
+
+                                      if(isEle){ rlxEGList.back().setInt("isIsolated",isolatedEG);
+                                                 if(isolatedEG){ isoEGList.push_back(rlxEGList.back());}
+                                               }
+
+
+                                      process.uctGctDigis = = cms.EDProducer("UCT2015GctCandsProducer", -> objected produced
                                                  metSource = cms.InputTag("UCT2015Producer","METUnpacked"),
                                                  jetSource = cms.InputTag("UCT2015Producer","CorrJetUnpacked"),
                                                  egRelaxed = cms.InputTag("UCT2015Producer","RelaxedEGUnpacked"),
