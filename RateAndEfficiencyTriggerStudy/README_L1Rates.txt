@@ -27,6 +27,31 @@ cd ../..
 
 git clone https://github.com/mcepeda/ExamplesTSG.git TutorialL1/Examples 
 
+git clone https://github.com/CMSElectronStream/StreamForElectrons
+
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/BuildFile_L1Trigger_UCT2015.xml L1Trigger/UCT2015/BuildFile.xml
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/plugins/UCT2015Producer.cc  L1Trigger/UCT2015/plugins/
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/plugins/UCT2015GctCandsProducer.cc  L1Trigger/UCT2015/plugins/
+
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/BuildFile_L1Ntuples.xml L1TriggerDPG/L1Ntuples/BuildFile.xml
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/interface/L1AnalysisGCT.h L1TriggerDPG/L1Ntuples/interface/
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/interface/L1AnalysisGCTDataFormat.h  L1TriggerDPG/L1Ntuples/interface/
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/interface/L1NtupleProducer.h L1TriggerDPG/L1Ntuples/interface/
+
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/src/L1AnalysisGCT.cc L1TriggerDPG/L1Ntuples/src/
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/src/L1GObject.h L1TriggerDPG/L1Ntuples/src/
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/src/L1NtupleProducer.cc L1TriggerDPG/L1Ntuples/src/
+
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/python/l1NtupleProducer_cfi.py L1TriggerDPG/L1Menu/python/
+
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/test/customL1NtupleFromRaw.py L1TriggerDPG/L1Menu/test/
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/test/crab_TEMPLATE.cfg L1TriggerDPG/L1Menu/test/crab/
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/test/multicrab.cfg L1TriggerDPG/L1Menu/test/crab/
+
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/macros/BasicRatePlots.C L1TriggerDPG/L1Menu/macros/
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/macros/L1AlgoFactory.h L1TriggerDPG/L1Ntuples/macros/
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/macros/L1Ntuple.C L1TriggerDPG/L1Ntuples/macros/
+
 scramv1 b -j 9
 
 ######################

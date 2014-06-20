@@ -92,46 +92,46 @@ void EleSelectionProducers::produce(edm::Event& iEvent, const edm::EventSetup& i
       ele_itr != (electronsHandle)->end(); ele_itr++){
     const reco::GsfElectronRef eleRef(electronsHandle, ele_itr-electronsHandle->begin());
     // the new tree has one event per each electron
-    pat::strbitset fiducial_ret;
-    pat::strbitset cIso70_ret;
+    //    pat::strbitset fiducial_ret;
+    //pat::strbitset cIso70_ret;
     pat::strbitset cIso80_ret;
-    pat::strbitset cIso90_ret;
-    pat::strbitset relIso70_ret;
+    //pat::strbitset cIso90_ret;
+    //pat::strbitset relIso70_ret;
     pat::strbitset relIso80_ret;
-    pat::strbitset relIso90_ret;
-    
+    //pat::strbitset relIso90_ret;
+    /*    
     fiducial_selector(eleRef, fiducial_ret);
     fiducial_vec.push_back(fiducial_selector.result());
     
-    relIso70_selector(eleRef, relIso70_ret);
+    relIso70_selector(eleRef, relIso70_ret);*/
     relIso80_selector(eleRef, relIso80_ret);
-    relIso90_selector(eleRef, relIso90_ret);
+    //    relIso90_selector(eleRef, relIso90_ret);
      
-    relIso70_vec.push_back(relIso70_selector.result()); // result gives a float
+    // relIso70_vec.push_back(relIso70_selector.result()); // result gives a float
     relIso80_vec.push_back(relIso80_selector.result()); // result gives a float
-    relIso90_vec.push_back(relIso90_selector.result()); // result gives a float
+    //  relIso90_vec.push_back(relIso90_selector.result()); // result gives a float
     
-    cIso70_selector(eleRef, cIso70_ret);
+    //cIso70_selector(eleRef, cIso70_ret);
     cIso80_selector(eleRef, cIso80_ret);
-    cIso90_selector(eleRef, cIso90_ret);
+    //cIso90_selector(eleRef, cIso90_ret);
 
-    cIso70_vec.push_back(cIso70_selector.result());
+    //cIso70_vec.push_back(cIso70_selector.result());
     cIso80_vec.push_back(cIso80_selector.result());
-    cIso90_vec.push_back(cIso90_selector.result());
+    // cIso90_vec.push_back(cIso90_selector.result());
     
-    if(((bool)cIso80_selector.result())){
-      if(!(bool) cIso80_selector.result() || !(bool) cIso90_selector.result()){
-	edm::LogError("Incoherent selection") << "passing tight but not medium or loose";
-	exit (1);
-      }
-    }
+   // if(((bool)cIso80_selector.result())){
+    //  if(!(bool) cIso80_selector.result() || !(bool) cIso90_selector.result()){
+//	edm::LogError("Incoherent selection") << "passing tight but not medium or loose";
+//	exit (1);
+ //     }
+//    }
 
-    if(((bool)cIso80_selector.result())){
-      if( !(bool) cIso90_selector.result()){
-	edm::LogError("Incoherent selection") << "passing medium but not loose";
-	exit (1);
-      }
-    }
+ //   if(((bool)cIso80_selector.result())){
+  //    if( !(bool) cIso90_selector.result()){
+//	edm::LogError("Incoherent selection") << "passing medium but not loose";
+//	exit (1);
+//      }
+//    }
     
 #ifdef DEBUG
     std::cout << "[DEBUG] relIso80 ret=" << relIso80_selector.bitMask() << std::endl;
@@ -144,44 +144,44 @@ void EleSelectionProducers::produce(edm::Event& iEvent, const edm::EventSetup& i
 
   //prepare product 
   // declare the filler of the ValueMap
-  SelectionMap::Filler fiducial_filler(*fiducialMap);
-  SelectionMap::Filler relIso90_filler(*relIso90_Map);
+  //SelectionMap::Filler fiducial_filler(*fiducialMap);
+  //SelectionMap::Filler relIso90_filler(*relIso90_Map);
   SelectionMap::Filler relIso80_filler(*relIso80_Map);
-  SelectionMap::Filler relIso70_filler(*relIso70_Map);
-  SelectionMap::Filler cIso90_filler(*cIso90_Map);
+  //SelectionMap::Filler relIso70_filler(*relIso70_Map);
+  //SelectionMap::Filler cIso90_filler(*cIso90_Map);
   SelectionMap::Filler cIso80_filler(*cIso80_Map);
-  SelectionMap::Filler cIso70_filler(*cIso70_Map);
+  //SelectionMap::Filler cIso70_filler(*cIso70_Map);
   
   //fill and insert valuemap
-  fiducial_filler.insert(electronsHandle,fiducial_vec.begin(),fiducial_vec.end());
+  //fiducial_filler.insert(electronsHandle,fiducial_vec.begin(),fiducial_vec.end());
   
-  cIso90_filler.insert(electronsHandle,cIso90_vec.begin(),cIso90_vec.end());
+  //cIso90_filler.insert(electronsHandle,cIso90_vec.begin(),cIso90_vec.end());
   cIso80_filler.insert(electronsHandle,cIso80_vec.begin(),cIso80_vec.end());
-  cIso70_filler.insert(electronsHandle,cIso70_vec.begin(),cIso70_vec.end());
+  //cIso70_filler.insert(electronsHandle,cIso70_vec.begin(),cIso70_vec.end());
 
-  relIso90_filler.insert(electronsHandle,relIso90_vec.begin(),relIso90_vec.end());
+  //relIso90_filler.insert(electronsHandle,relIso90_vec.begin(),relIso90_vec.end());
   relIso80_filler.insert(electronsHandle,relIso80_vec.begin(),relIso80_vec.end());
-  relIso70_filler.insert(electronsHandle,relIso70_vec.begin(),relIso70_vec.end());
+  //relIso70_filler.insert(electronsHandle,relIso70_vec.begin(),relIso70_vec.end());
   
-  fiducial_filler.fill();
-  relIso90_filler.fill();
+  //fiducial_filler.fill();
+  //relIso90_filler.fill();
   relIso80_filler.fill();
-  relIso70_filler.fill();
+  //relIso70_filler.fill();
 
-  cIso90_filler.fill();
+  //cIso90_filler.fill();
   cIso80_filler.fill();
-  cIso70_filler.fill();
+  //cIso70_filler.fill();
   
   //------------------------------
   // put the ValueMap in the event
   
-  iEvent.put(fiducialMap, "fiducial");
-  iEvent.put(relIso90_Map,"relIso90");
+  //iEvent.put(fiducialMap, "fiducial");
+ // iEvent.put(relIso90_Map,"relIso90");
   iEvent.put(relIso80_Map,"relIso80");
-  iEvent.put(relIso70_Map,"relIso70");
-  iEvent.put(cIso90_Map,  "cIso90");
+  //iEvent.put(relIso70_Map,"relIso70");
+  //iEvent.put(cIso90_Map,  "cIso90");
   iEvent.put(cIso80_Map,  "cIso80");
-  iEvent.put(cIso70_Map,  "cIso70");
+  //iEvent.put(cIso70_Map,  "cIso70");
 
 }
 

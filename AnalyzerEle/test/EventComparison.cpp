@@ -18,25 +18,26 @@
 #include "TPaveStats.h"
 #include "TLatex.h"
 #include "TStyle.h"
+#include "TProfile.h"
 
 // stream integer variables
-Int_t runId_s,lumiId_s,isW_s,isZ_s,PV_n_s,nele_s,ele1_nRecHits_s,ele1_nGgsfTrackHits_s,ele1_numberOfLostHits_s,ele1_nAmbiguousGsfTrack_s,ele1_isEB_s;
+Int_t runId_s,lumiId_s,isW_s,isZ_s,PV_n_s,nele_s,ele1_nRecHits_s,ele1_nGgsfTrackHits_s,ele1_numberOfLostHits_s,ele1_nAmbiguousGsfTrack_s,ele1_isEB_s,PV_n_alternative_s;
 Int_t ele1_seedIeta_s,ele1_seedIphi_s,ele1_seedIx_s,ele1_seedIy_s,ele1_seedZside_s;
 
 // recco integer variables
-Int_t runId_r,lumiId_r,isW_r,isZ_r,PV_n_r,nele_r,ele1_nRecHits_r,ele1_nGgsfTrackHits_r,ele1_numberOfLostHits_r,ele1_nAmbiguousGsfTrack_r,ele1_isEB_r;
+Int_t runId_r,lumiId_r,isW_r,isZ_r,PV_n_r,nele_r,ele1_nRecHits_r,ele1_nGgsfTrackHits_r,ele1_numberOfLostHits_r,ele1_nAmbiguousGsfTrack_r,ele1_isEB_r,PV_n_alternative_r;
 Int_t ele1_seedIeta_r,ele1_seedIphi_r,ele1_seedIx_r,ele1_seedIy_r,ele1_seedZside_r;
 
 Long64_t eventId_s, eventId_r ;
 
 // stream float
 Float_t rho_s,ele1_pt_s,ele1_eta_s,ele1_phi_s,ele1_sigmaIetaIeta_s,ele1_DphiIn_s,ele1_DetaIn_s,ele1_HOverE_s,ele1_tkIso_s,ele1_emIso_s,ele1_hadIso_s;
-Float_t ele1_scERaw_s,ele1_scE_s,ele1_es_s,ele1_scEta_s,ele1_scPhi_s,ele1_scEtaWidth_s,ele1_scPhiWidth_s,ele1_tkP_s,ele1_fbrem_s,ele1_dxy_PV_s,ele1_dz_PV_s,ele1_e5x5_s,ele1_e3x3_s,ele1_seedE_s,ele1_scNxtal_s;
+Float_t ele1_scERaw_s,ele1_scE_s,ele1_es_s,ele1_scEta_s,ele1_scPhi_s,ele1_scEtaWidth_s,ele1_scPhiWidth_s,ele1_tkP_s,ele1_fbrem_s,ele1_dxy_PV_s,ele1_dxy_PV_alternative_s,ele1_dz_PV_s,ele1_dz_PV_alternative_s,ele1_e5x5_s,ele1_e3x3_s,ele1_seedE_s,ele1_scNxtal_s;
 Float_t met_s,met_phi_s,ele1Met_mt_s;
 
 // reco float
 Float_t rho_r,ele1_pt_r,ele1_eta_r,ele1_phi_r,ele1_sigmaIetaIeta_r,ele1_DphiIn_r,ele1_DetaIn_r,ele1_HOverE_r,ele1_tkIso_r,ele1_emIso_r,ele1_hadIso_r;
-Float_t ele1_scERaw_r,ele1_scE_r,ele1_es_r,ele1_scEta_r,ele1_scPhi_r,ele1_scEtaWidth_r,ele1_scPhiWidth_r,ele1_tkP_r,ele1_fbrem_r,ele1_dxy_PV_r,ele1_dz_PV_r,ele1_e5x5_r,ele1_e3x3_r,ele1_seedE_r,ele1_scNxtal_r;
+Float_t ele1_scERaw_r,ele1_scE_r,ele1_es_r,ele1_scEta_r,ele1_scPhi_r,ele1_scEtaWidth_r,ele1_scPhiWidth_r,ele1_tkP_r,ele1_fbrem_r,ele1_dxy_PV_r,ele1_dxy_PV_alternative_r,ele1_dz_PV_r,ele1_dz_PV_alternative_r,ele1_e5x5_r,ele1_e3x3_r,ele1_seedE_r,ele1_scNxtal_r;
 Float_t met_r,met_phi_r,ele1Met_mt_r;
 
 // stream regression inputs 
@@ -160,6 +161,10 @@ int main (int argc, char** argv){
    DistributionStreamMap["PV_n"]->Fill(PV_n_s);
    DistributionRecoMap["PV_n"]->Fill(PV_n_r);
    DifferenceMap["PV_n"]->Fill(PV_n_s-PV_n_r);
+
+   DistributionStreamMap["PV_n_alternative"]->Fill(PV_n_alternative_s);
+   DistributionRecoMap["PV_n_alternative"]->Fill(PV_n_alternative_r);
+   DifferenceMap["PV_n_alternative"]->Fill(PV_n_alternative_s-PV_n_alternative_r);
       
    DistributionStreamMap["rho"]->Fill(rho_s);       
    DistributionRecoMap["rho"]->Fill(rho_r);
@@ -273,6 +278,14 @@ int main (int argc, char** argv){
    DistributionStreamMap["ele1_dz_PV"]->Fill(ele1_dz_PV_s);       
    DistributionRecoMap["ele1_dz_PV"]->Fill(ele1_dz_PV_r);
    DifferenceMap["ele1_dz_PV"]->Fill(ele1_dz_PV_s-ele1_dz_PV_r);
+
+   DistributionStreamMap["ele1_dxy_PV_alternative"]->Fill(ele1_dxy_PV_alternative_s);       
+   DistributionRecoMap["ele1_dxy_PV_alternative"]->Fill(ele1_dxy_PV_alternative_r);
+   DifferenceMap["ele1_dxy_PV_alternative"]->Fill(ele1_dxy_PV_alternative_s-ele1_dxy_PV_alternative_r);
+   
+   DistributionStreamMap["ele1_dz_PV_alternative"]->Fill(ele1_dz_PV_alternative_s);       
+   DistributionRecoMap["ele1_dz_PV_alternative"]->Fill(ele1_dz_PV_alternative_r);
+   DifferenceMap["ele1_dz_PV_alternative"]->Fill(ele1_dz_PV_alternative_s-ele1_dz_PV_alternative_r);
 
    DistributionStreamMap["ele1_e5x5"]->Fill(ele1_e5x5_s);       
    DistributionRecoMap["ele1_e5x5"]->Fill(ele1_e5x5_r);
@@ -670,16 +683,38 @@ int main (int argc, char** argv){
   TString tempName = Form ("Correlation_%s",(itMap4)->first.c_str());
   TCanvas* canvasTempCorr = new TCanvas(tempName.Data(),"",600,650);
   canvasTempCorr->cd();
+  canvasTempCorr->SetGrid();
+  
   (itMap4)->second->GetXaxis()->SetTitle(((itMap4)->first+" stream").c_str());
   (itMap4)->second->GetYaxis()->SetTitle(((itMap4)->first+" reco").c_str());
   (itMap4)->second->SetMarkerColor(kBlack);
   (itMap4)->second->SetMarkerStyle(20);
   (itMap4)->second->SetMarkerSize(1);
   (itMap4)->second->Draw("colz");
+  TProfile* profileX = (itMap4)->second->ProfileX(((itMap4)->first+"_pfX").c_str(),1,-1,"oi");
+  profileX->SetMarkerStyle(20);
+  profileX->SetMarkerSize(1);
+  profileX->Draw("Esame");
+
   canvasTempCorr->SaveAs(("plots_correlation/Correlation_"+(itMap4)->first+".pdf").c_str(),"pdf"); 
   canvasTempCorr->SaveAs(("plots_correlation/Correlation_"+(itMap4)->first+".png").c_str(),"png"); 
 
+  canvasTempCorr->SetLogz();
+  gPad->Update();
+
+  canvasTempCorr->SaveAs(("plots_correlation/Correlation_Log_"+(itMap4)->first+".pdf").c_str(),"pdf"); 
+  canvasTempCorr->SaveAs(("plots_correlation/Correlation_Log_"+(itMap4)->first+".png").c_str(),"png"); 
+
+  canvasTempCorr->Clear();
+  profileX->GetXaxis()->SetTitle(((itMap4)->first+" Profile").c_str());
+  profileX->GetYaxis()->SetTitle("Events");
+  profileX->Draw("E");
+
+  canvasTempCorr->SaveAs(("plots_correlation/Profile_"+(itMap4)->first+".pdf").c_str(),"pdf"); 
+  canvasTempCorr->SaveAs(("plots_correlation/Profile_"+(itMap4)->first+".png").c_str(),"png"); 
+
   delete canvasTempCorr;
+
  }
  
 
@@ -699,6 +734,10 @@ void SetVariablesMapEntry(std::map<std::string,TH1F*> & DistributionStreamMap, s
  DistributionStreamMap.insert(mapElement("PV_n",new TH1F("PV_nStream","",40,0,40)));       
  DistributionRecoMap.insert(mapElement("PV_n",new TH1F("PV_nReco","",40,0,40)));       
  DifferenceMap.insert(mapElement("PV_n",new TH1F("PV_nRatio","",80,-40,40)));       
+
+ DistributionStreamMap.insert(mapElement("PV_n_alternative",new TH1F("PV_n_alternativeStream","",40,0,40)));       
+ DistributionRecoMap.insert(mapElement("PV_n_alternative",new TH1F("PV_n_alternativeReco","",40,0,40)));       
+ DifferenceMap.insert(mapElement("PV_n_alternative",new TH1F("PV_n_alternativenRatio","",80,-40,40)));       
  
  DistributionStreamMap.insert(mapElement("rho", new TH1F("rhoStream","",50,0,50)));       
  DistributionRecoMap.insert(mapElement("rho", new TH1F("rhoReco","",50,0,50)));       
@@ -733,12 +772,12 @@ void SetVariablesMapEntry(std::map<std::string,TH1F*> & DistributionStreamMap, s
  DistributionRecoMap.insert(mapElement("ele1_seedIy", new TH1F("ele1_seedIyReco","",101,0,101)));       
  DifferenceMap.insert(mapElement("ele1_seedIy", new TH1F("ele1_seedIyRatio","",25,-25,25)));       
  
- DistributionStreamMap.insert(mapElement("ele1_scNxtal", new TH1F("ele1_scNxtalStream","",90,0,90)));       
- DistributionRecoMap.insert(mapElement("ele1_scNxtal", new TH1F("ele1_scNxtalReco","",90,0,90)));       
+ DistributionStreamMap.insert(mapElement("ele1_scNxtal", new TH1F("ele1_scNxtalStream","",100,0,100)));       
+ DistributionRecoMap.insert(mapElement("ele1_scNxtal", new TH1F("ele1_scNxtalReco","",100,0,100)));       
  DifferenceMap.insert(mapElement("ele1_scNxtal", new TH1F("ele1_scNxtalRatio","",50,-25,25)));       
 
- DistributionStreamMap.insert(mapElement("ele1_nRecHits", new TH1F("ele1_nRecHitsStream","",90,0,90)));       
- DistributionRecoMap.insert(mapElement("ele1_nRecHits", new TH1F("ele1_nRecHitsReco","",90,0,90)));       
+ DistributionStreamMap.insert(mapElement("ele1_nRecHits", new TH1F("ele1_nRecHitsStream","",100,0,100)));       
+ DistributionRecoMap.insert(mapElement("ele1_nRecHits", new TH1F("ele1_nRecHitsReco","",100,0,100)));       
  DifferenceMap.insert(mapElement("ele1_nRecHits", new TH1F("ele1_nRecHitsRatio","",30,-15,15)));       
 
  DistributionStreamMap.insert(mapElement("ele1_nGgsfTrackHits", new TH1F("ele1_nGgsfTrackHitsStream","",50,0,50)));       
@@ -827,13 +866,21 @@ void SetVariablesMapEntry(std::map<std::string,TH1F*> & DistributionStreamMap, s
  DistributionRecoMap.insert(mapElement("ele1_fbrem", new TH1F("ele1_fbremReco","",40,-0.4,1)));       
  DifferenceMap.insert(mapElement("ele1_fbrem", new TH1F("ele1_fbremRatio","",150,-0.2,0.2)));       
  
- DistributionStreamMap.insert(mapElement("ele1_dxy_PV", new TH1F("ele1_dxy_PVStream","",50,0,0.5)));       
- DistributionRecoMap.insert(mapElement("ele1_dxy_PV", new TH1F("ele1_dxy_PVReco","",50,0,0.5)));       
+ DistributionStreamMap.insert(mapElement("ele1_dxy_PV", new TH1F("ele1_dxy_PVStream","",50,-0.50,0.5)));       
+ DistributionRecoMap.insert(mapElement("ele1_dxy_PV", new TH1F("ele1_dxy_PVReco","",50,-0.5,0.5)));       
  DifferenceMap.insert(mapElement("ele1_dxy_PV", new TH1F("ele1_dxy_PVRatio","",100,-0.5,0.5)));       
  
- DistributionStreamMap.insert(mapElement("ele1_dz_PV", new TH1F("ele1_dz_PVStream","",50,0,20)));       
- DistributionRecoMap.insert(mapElement("ele1_dz_PV", new TH1F("ele1_dz_PVReco","",50,0,20)));       
- DifferenceMap.insert(mapElement("ele1_dz_PV", new TH1F("ele1_dz_PVRatio","",50,-20,20)));       
+ DistributionStreamMap.insert(mapElement("ele1_dz_PV", new TH1F("ele1_dz_PVStream","",50,-10,10)));       
+ DistributionRecoMap.insert(mapElement("ele1_dz_PV", new TH1F("ele1_dz_PVReco","",50,-10,10)));       
+ DifferenceMap.insert(mapElement("ele1_dz_PV", new TH1F("ele1_dz_PVRatio","",50,-10,10)));       
+
+ DistributionStreamMap.insert(mapElement("ele1_dxy_PV_alternative", new TH1F("ele1_dxy_PV_alternativeStream","",50,-0.5,0.5)));       
+ DistributionRecoMap.insert(mapElement("ele1_dxy_PV_alternative", new TH1F("ele1_dxy_PV_alternativeReco","",50,-0.5,0.5)));       
+ DifferenceMap.insert(mapElement("ele1_dxy_PV_alternative", new TH1F("ele1_dxy_PV_alternativeRatio","",100,-0.5,0.5)));       
+ 
+ DistributionStreamMap.insert(mapElement("ele1_dz_PV_alternative", new TH1F("ele1_dz_PV_alternativeStream","",50,-10,10)));       
+ DistributionRecoMap.insert(mapElement("ele1_dz_PV_alternative", new TH1F("ele1_dz_PV_alternativeReco","",50,-10,10)));       
+ DifferenceMap.insert(mapElement("ele1_dz_PV_alternative", new TH1F("ele1_dz_PV_alternativeRatio","",50,-10,10)));       
 
  DistributionStreamMap.insert(mapElement("ele1_e5x5", new TH1F("ele1_e5x5Stream","",100,0,250)));       
  DistributionRecoMap.insert(mapElement("ele1_e5x5", new TH1F("ele1_e5x5Reco","",100,0,250)));       
@@ -988,8 +1035,8 @@ void SetVariablesMapEntry(std::map<std::string,TH1F*> & DistributionStreamMap, s
  DistributionRecoMap.insert(mapElement("ele1_eRegrInput_subClusterE3x3_3", new TH1F("ele1_eRegrInput_subClusterE3x3_3Reco","",30,0,30.)));       
  DifferenceMap.insert(mapElement("ele1_eRegrInput_subClusterE3x3_3", new TH1F("ele1_eRegrInput_subClusterE3x3_3Ratio","",40,-15.,15.)));       
 
- DistributionStreamMap.insert(mapElement("ele1_eRegrInput_eESClusters", new TH1F("ele1_eRegrInput_eESClustersStream","",50,0,50.)));       
- DistributionRecoMap.insert(mapElement("ele1_eRegrInput_eESClusters", new TH1F("ele1_eRegrInput_eESClustersReco","",50,0,50.)));       
+ DistributionStreamMap.insert(mapElement("ele1_eRegrInput_eESClusters", new TH1F("ele1_eRegrInput_eESClustersStream","",50,0,2.)));       
+ DistributionRecoMap.insert(mapElement("ele1_eRegrInput_eESClusters", new TH1F("ele1_eRegrInput_eESClustersReco","",50,0,2.)));       
  DifferenceMap.insert(mapElement("ele1_eRegrInput_eESClusters", new TH1F("ele1_eRegrInput_eESClustersRatio","",40,-20.,20.)));       
  /* 
  DistributionStreamMap.insert(mapElement("ele1_eRegrInput_eESClusterEnergy_1", new TH1F("ele1_eRegrInput_eESClusterEnergy_1Stream","",50,0,50.)));       
@@ -1035,17 +1082,20 @@ void SetVariablesMapEntry(std::map<std::string,TH1F*> & DistributionStreamMap, s
 void SetVariablesCorrelationMapEntry(std::map<std::string,TH2F*> & CorrelationMap){
 
  
- CorrelationMap.insert(mapElementCorr("rho",  new TH2F("rho_corr","",50,0,50.,50.,0,50.)));
+ CorrelationMap.insert(mapElementCorr("rho",  new TH2F("rho_corr","",50,0,30.,50.,0,40.)));
  CorrelationMap.insert(mapElementCorr("PV_n", new TH2F("PV_n_corr","",40,0,40,40,0,40)));
- CorrelationMap.insert(mapElementCorr("met",  new TH2F("met","",50,0,200,50,0,200)));
+ CorrelationMap.insert(mapElementCorr("met",  new TH2F("met","",50,0,180,50,0,160)));
  CorrelationMap.insert(mapElementCorr("ele1Met_mt", new TH2F("ele1Met_mt","",50,0,100,50,0,100)));
 
- CorrelationMap.insert(mapElementCorr("ele1_hadIso", new TH2F("ele1_hadIso","",50,0,10,50,0,10)));
- CorrelationMap.insert(mapElementCorr("ele1_tkIso",  new TH2F("ele1_tkIso","",50,0,10,50,0,10)));
+ CorrelationMap.insert(mapElementCorr("ele1_hadIso", new TH2F("ele1_hadIso","",50,0,6,50,0,6)));
+ CorrelationMap.insert(mapElementCorr("ele1_tkIso",  new TH2F("ele1_tkIso","",35,0,10,35,0,10)));
  CorrelationMap.insert(mapElementCorr("ele1_emIso",  new TH2F("ele1_emIso","",50,0,10,50,0,10)));
 
- CorrelationMap.insert(mapElementCorr("ele1_dxy_PV", new TH2F("ele1_dxy_PV","",50,0,0.5,50,0,0.5)));
- CorrelationMap.insert(mapElementCorr("ele1_dz_PV", new TH2F("ele1_dz_PV","",50,0,20,50,0,20)));
+ CorrelationMap.insert(mapElementCorr("ele1_dxy_PV", new TH2F("ele1_dxy_PV","",50,-0.5,0.5,50,-0.5,0.5)));
+ CorrelationMap.insert(mapElementCorr("ele1_dz_PV", new TH2F("ele1_dz_PV","",50,-10,10,50,-10,10)));
+
+ CorrelationMap.insert(mapElementCorr("ele1_dxy_PV_alternative", new TH2F("ele1_dxy_alternativePV","",50,-0.5,0.5,50,-0.5,0.5)));
+ CorrelationMap.insert(mapElementCorr("ele1_dz_PV_alternative", new TH2F("ele1_dz_alternativePV","",50,-10,10,50,-10,10)));
 
  return ;
 
@@ -1062,6 +1112,7 @@ void SetStartingBranchTrees(TTree* streamTree, TTree* recoTree){
  streamTree->SetBranchStatus("isW",1);
  streamTree->SetBranchStatus("rho",1);
  streamTree->SetBranchStatus("PV_n",1);
+ streamTree->SetBranchStatus("PV_n_alternative",1);
  streamTree->SetBranchStatus("ele1_nRecHits",1);
  streamTree->SetBranchStatus("ele1_nGgsfTrackHits",1);
  streamTree->SetBranchStatus("ele1_numberOfLostHits",1);
@@ -1095,6 +1146,8 @@ void SetStartingBranchTrees(TTree* streamTree, TTree* recoTree){
  streamTree->SetBranchStatus("ele1_fbrem",1);
  streamTree->SetBranchStatus("ele1_dxy_PV",1);
  streamTree->SetBranchStatus("ele1_dz_PV",1);
+ streamTree->SetBranchStatus("ele1_dxy_PV_alternative",1);
+ streamTree->SetBranchStatus("ele1_dz_PV_alternative",1);
  streamTree->SetBranchStatus("ele1_e5x5",1);
  streamTree->SetBranchStatus("ele1_e3x3",1);
  streamTree->SetBranchStatus("ele1_seedE",1);
@@ -1180,6 +1233,8 @@ void SetStartingBranchTrees(TTree* streamTree, TTree* recoTree){
  streamTree->SetBranchAddress("isW",&isW_s);
  streamTree->SetBranchAddress("rho",&rho_s);
  streamTree->SetBranchAddress("PV_n",&PV_n_s);
+ streamTree->SetBranchAddress("PV_n_alternative",&PV_n_alternative_s);
+ streamTree->SetBranchAddress("PV_n_alternative",&PV_n_alternative_s);
  streamTree->SetBranchAddress("ele1_nRecHits",&ele1_nRecHits_s);
  streamTree->SetBranchAddress("ele1_nGgsfTrackHits",&ele1_nGgsfTrackHits_s);
  streamTree->SetBranchAddress("ele1_numberOfLostHits",&ele1_numberOfLostHits_s);
@@ -1213,6 +1268,8 @@ void SetStartingBranchTrees(TTree* streamTree, TTree* recoTree){
  streamTree->SetBranchAddress("ele1_fbrem",&ele1_fbrem_s);
  streamTree->SetBranchAddress("ele1_dxy_PV",&ele1_dxy_PV_s);
  streamTree->SetBranchAddress("ele1_dz_PV",&ele1_dz_PV_s);
+ streamTree->SetBranchAddress("ele1_dz_PV_alternative",&ele1_dz_PV_alternative_s);
+ streamTree->SetBranchAddress("ele1_dxy_PV_alternative",&ele1_dxy_PV_alternative_s);
  streamTree->SetBranchAddress("ele1_e5x5",&ele1_e5x5_s);
  streamTree->SetBranchAddress("ele1_e3x3",&ele1_e3x3_s);
  streamTree->SetBranchAddress("ele1_seedE",&ele1_seedE_s);
@@ -1297,6 +1354,7 @@ void SetStartingBranchTrees(TTree* streamTree, TTree* recoTree){
  recoTree->SetBranchStatus("isW",1);
  recoTree->SetBranchStatus("rho",1);
  recoTree->SetBranchStatus("PV_n",1);
+ recoTree->SetBranchStatus("PV_n_alternative",1);
  recoTree->SetBranchStatus("ele1_nRecHits",1);
  recoTree->SetBranchStatus("ele1_nGgsfTrackHits",1);
  recoTree->SetBranchStatus("ele1_numberOfLostHits",1);
@@ -1330,6 +1388,8 @@ void SetStartingBranchTrees(TTree* streamTree, TTree* recoTree){
  recoTree->SetBranchStatus("ele1_fbrem",1);
  recoTree->SetBranchStatus("ele1_dxy_PV",1);
  recoTree->SetBranchStatus("ele1_dz_PV",1);
+ recoTree->SetBranchStatus("ele1_dxy_PV_alternative",1);
+ recoTree->SetBranchStatus("ele1_dz_PV_alternative",1);
  recoTree->SetBranchStatus("ele1_e5x5",1);
  recoTree->SetBranchStatus("ele1_e3x3",1);
  recoTree->SetBranchStatus("ele1_seedE",1);
@@ -1381,6 +1441,8 @@ void SetStartingBranchTrees(TTree* streamTree, TTree* recoTree){
  recoTree->SetBranchAddress("ele1_fbrem",&ele1_fbrem_r);
  recoTree->SetBranchAddress("ele1_dxy_PV",&ele1_dxy_PV_r);
  recoTree->SetBranchAddress("ele1_dz_PV",&ele1_dz_PV_r);
+ recoTree->SetBranchAddress("ele1_dxy_PV_alternative",&ele1_dxy_PV_alternative_r);
+ recoTree->SetBranchAddress("ele1_dz_PV_alternative",&ele1_dz_PV_alternative_r);
  recoTree->SetBranchAddress("ele1_e5x5",&ele1_e5x5_r);
  recoTree->SetBranchAddress("ele1_e3x3",&ele1_e3x3_r);
  recoTree->SetBranchAddress("ele1_seedE",&ele1_seedE_r);

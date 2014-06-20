@@ -26,13 +26,13 @@ patElectrons.isolationValues = cms.PSet(
 patElectrons.electronIDSources = cms.PSet(
 # configure many IDs as InputTag <someName> = <someTag> you
 # can comment out those you don't want to save some disk space
-  fiducial = cms.InputTag("eleSelectionProducers", "fiducial"),
-  relIso90 = cms.InputTag("eleSelectionProducers", "relIso90"),
+#  fiducial = cms.InputTag("eleSelectionProducers", "fiducial"),
+#  relIso90 = cms.InputTag("eleSelectionProducers", "relIso90"),
   relIso80 = cms.InputTag("eleSelectionProducers", "relIso80"),
-  relIso70 = cms.InputTag("eleSelectionProducers", "relIso70"),
-  cIso90   = cms.InputTag("eleSelectionProducers", "cIso90"),
+#  relIso70 = cms.InputTag("eleSelectionProducers", "relIso70"),
+#  cIso90   = cms.InputTag("eleSelectionProducers", "cIso90"),
   cIso80   = cms.InputTag("eleSelectionProducers", "cIso80"),
-  cIso70   = cms.InputTag("eleSelectionProducers", "cIso70")
+#  cIso70   = cms.InputTag("eleSelectionProducers", "cIso70")
 )
 
 

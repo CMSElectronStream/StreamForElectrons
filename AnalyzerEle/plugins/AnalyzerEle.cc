@@ -2,8 +2,6 @@
 
 AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig){
 
- std::cout << ">>> AnalyzerEle::AnalyzerEle begin <<<" << std::endl;
-
  // parse input informations
  dataRun_             = iConfig.getParameter<std::string>("dataRun");
  recHitCollection_EB_ = iConfig.getParameter<edm::InputTag>("recHitCollection_EB");
@@ -27,6 +25,9 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig){
  dataFlag_           = iConfig.getUntrackedParameter<bool>("dataFlag", true);
  saveMCInfo_         = iConfig.getUntrackedParameter<bool>("saveMCInfo", false);
 
+ if(verbosity_) std::cout << ">>> AnalyzerEle::AnalyzerEle begin <<<" << std::endl;
+
+
  eventNaiveId_ = 0;
  
  //////////////////////////
@@ -36,14 +37,14 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig){
 }
 
 // --------------------------------------------------------------------
-AnalyzerEle::~AnalyzerEle () { std::cout << ">>> AnalyzerEle::~AnalyzerEle <<< analyzed " << eventNaiveId_ << " events" << std::endl;}
+AnalyzerEle::~AnalyzerEle () { if(verbosity_) std::cout << ">>> AnalyzerEle::~AnalyzerEle <<< analyzed " << eventNaiveId_ << " events" << std::endl;}
 
 // ------------ method called once each job just before starting event loop ------------
 void AnalyzerEle::beginJob(){
 
  myTree_ = fs_->make<TTree>("AnalyzerEle","AnalyzerEle"); 
 
- std::cout << ">>>>>> AnalyzerEle::AnalyzerEle::set event branches <<<" << std::endl;
+ if(verbosity_) std::cout << ">>>>>> AnalyzerEle::AnalyzerEle::set event branches <<<" << std::endl;
 
  myTree_ -> Branch("bxId", &bxId_, "bxId/L");
  myTree_ -> Branch("eventId", &eventId_, "eventId/L");
@@ -67,7 +68,7 @@ void AnalyzerEle::beginJob(){
 
  if(saveMCInfo_){
 
-  std::cout<< ">>>>>> SimpleNtupleEoverP::SimpleNtupleEoverP::set MC branches <<<" << std::endl;
+  if(verbosity_) std::cout<< ">>>>>> SimpleNtupleEoverP::SimpleNtupleEoverP::set MC branches <<<" << std::endl;
   myTree_ -> Branch("nPU",&nPU_,"nPU/F");
 
   myTree_ -> Branch("mcV_E", &mcV_E, "mcV_E/F");
@@ -103,7 +104,7 @@ void AnalyzerEle::beginJob(){
  }
  
  // ele1 variables
- std::cout << ">>>>>> AnalyzerEle::AnalyzerEle::set ele1 branches <<<" << std::endl;
+ if(verbosity_) std::cout << ">>>>>> AnalyzerEle::AnalyzerEle::set ele1 branches <<<" << std::endl;
 
  myTree_ -> Branch("ele1_charge",&ele1_charge,"ele1_charge/F");
  myTree_ -> Branch("ele1_p", &ele1_p, "ele1_p/F");
@@ -272,7 +273,7 @@ void AnalyzerEle::beginJob(){
 
 
  // ele2 variables
- std::cout << ">>>>>> AnalyzerEle::AnalyzerEle::set ele2 branches <<<" << std::endl;
+ if(verbosity_) std::cout << ">>>>>> AnalyzerEle::AnalyzerEle::set ele2 branches <<<" << std::endl;
 
  myTree_ -> Branch("ele2_charge",&ele2_charge,"ele2_charge/F");
  myTree_ -> Branch("ele2_p", &ele2_p, "ele2_p/F");
@@ -441,18 +442,18 @@ void AnalyzerEle::beginJob(){
 
 
  // met variables
- std::cout << ">>>>>> AnalyzerEle::AnalyzerEle::set met branches <<<" << std::endl;
+ if(verbosity_) std::cout << ">>>>>> AnalyzerEle::AnalyzerEle::set met branches <<<" << std::endl;
  myTree_ -> Branch("met_et", &met_et, "met_et/F");
  myTree_ -> Branch("met_phi", &met_phi, "met_phi/F");
  myTree_ -> Branch("ele1Met_mt", &ele1Met_mt, "ele1Met_mt/F");
  myTree_ -> Branch("ele1Met_Dphi",&ele1Met_Dphi,"ele1Met_Dphi/F");
 
  // di-electron variables
- std::cout << ">>>>>> AnalyzerEle::AnalyzerEle::set dielectron branches <<<" << std::endl;
+ if(verbosity_) std::cout << ">>>>>> AnalyzerEle::AnalyzerEle::set dielectron branches <<<" << std::endl;
  myTree_ -> Branch("ele1ele2_m", &ele1ele2_m, "ele1ele2_m/F");
  myTree_ -> Branch("ele1ele2_scM", &ele1ele2_scM, "ele1ele2_scM/F");
 
- std::cout << ">>> AnalyzerEle::AnalyzerEle end <<<" << std::endl;
+ if(verbosity_) std::cout << ">>> AnalyzerEle::AnalyzerEle end <<<" << std::endl;
 
 }
 
@@ -555,6 +556,7 @@ void AnalyzerEle::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
  else {
    
   int nele = electrons.size();
+
   if(applyElectronID_){
 
    std::map<float,int> eleIts_ ; //map to take track of the electron inside the collection 1/pt and position 
@@ -935,7 +937,7 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   if(electron.electronID("cIso90"))    ele1_idtype.at(4) = 1;
   if(electron.electronID("cIso80"))    ele1_idtype.at(5) = 1;
   if(electron.electronID("cIso70"))    ele1_idtype.at(6) = 1;
-  
+
   ele1_isTrackerDriven = !(electron.ecalDriven());
   ele1_classification  = electron.classification();
   ele1_sigmaIetaIeta   = electron.sigmaIetaIeta();
@@ -1341,7 +1343,7 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   if(electron.electronID("cIso90"))    ele2_idtype.at(4) = 1;
   if(electron.electronID("cIso80"))    ele2_idtype.at(5) = 1;
   if(electron.electronID("cIso70"))    ele2_idtype.at(6) = 1;
-      
+
   ele2_isTrackerDriven = !(electron.ecalDriven());
   ele2_classification  = electron.classification();
   ele2_sigmaIetaIeta   = electron.sigmaIetaIeta();

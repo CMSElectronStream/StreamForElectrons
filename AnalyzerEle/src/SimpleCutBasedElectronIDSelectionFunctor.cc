@@ -157,8 +157,8 @@ void SimpleCutBasedElectronIDSelectionFunctor::initialize( Version_t version ){
       set("relTrackIso_EB", 1.2e03); set("relTrackIso_EE", 5.0e03);
       set("relEcalIso_EB",  9.0e03); set("relEcalIso_EE",  6.0e03);
       set("relHcalIso_EB",  1.0e03); set("relHcalIso_EE",  3.0e03);      
-      set("cIso_EB",       1000.);   set("cIso_EE",    1000.);
-      set("ooemoop_EB",    1000.);   set("ooemoop_EE", 1000.);  
+      set("cIso_EB",       100000.);   set("cIso_EE",    100000.);
+      set("ooemoop_EB",    100000.);   set("ooemoop_EE", 100000.);  
     } 
     else if (version_ == relIso90) {
       
@@ -171,13 +171,13 @@ void SimpleCutBasedElectronIDSelectionFunctor::initialize( Version_t version ){
       set("relTrackIso_EB", 1.2e-01);  set("relTrackIso_EE", 5.0e-02);
       set("relEcalIso_EB",  9.0e-02);  set("relEcalIso_EE",  6.0e-02);
       set("relHcalIso_EB",  1.0e-01);  set("relHcalIso_EE",  3.0e-02);      
-      set("cIso_EB",       1000.);     set("cIso_EE",    1000.);
+      set("cIso_EB",       100000.);   set("cIso_EE",    100000.);
       set("ooemoop_EB",    0.050);     set("ooemoop_EE", 0.050);  
            
     }
     else if (version_ == relIso80) { // equivalent to relIso80 egamma pog
       
-      set("maxNumberOfExpectedMissingHits", 0);
+      set("maxNumberOfExpectedMissingHits", 1);
       set("conversionRejection",            1);
       set("hoe_EB",      4.0e-02);    set("hoe_EE",      2.5e-02);  
       set("deta_EB",     4.0e-03);    set("deta_EE",     7.0e-03);
@@ -186,7 +186,7 @@ void SimpleCutBasedElectronIDSelectionFunctor::initialize( Version_t version ){
       set("relTrackIso_EB", 9.0e-02); set("relTrackIso_EE", 4.0e-02);
       set("relEcalIso_EB",  7.0e-02); set("relEcalIso_EE",  5.0e-02);
       set("relHcalIso_EB",  1.0e-01); set("relHcalIso_EE",  2.5e-02);      
-      set("cIso_EB",       1000.);    set("cIso_EE",  1000.);
+      set("cIso_EB",       100000.);    set("cIso_EE",  100000.);
       set("ooemoop_EB",    0.050);    set("ooemoop_EE", 0.050);  
                        
     } 
@@ -361,6 +361,8 @@ bool SimpleCutBasedElectronIDSelectionFunctor::WPxx_PU( const reco::GsfElectronR
     if ( (absEtaSC < 1.4442 || (absEtaSC > 1.566 && absEtaSC < 2.5) ) || ignoreCut("fiducial")){ passCut(retInternal_, "fiducial");}
 
     //------------------------------ conversion rejection cut
+    std::cout<<" barrel case: hits  "<<innerHits<<" cut "<<cut("maxNumberOfExpectedMissingHits", int())<<" conversion "<<isConv<<" deta "<<fabs(Deta)<<" cut "<<cut("deta_EB",     double())<<" dphi "<<fabs(Dphi)<<" cut "<<cut("dphi_EB",     double())<<" sihih "<<sihih<<" cut "<<cut("sihih_EB",    double())<<" hoverE "<<HoE<<" cut "<<cut("hoe_EB",      double())<<" ooemoop "<<ooemoop<<" cut "<<cut("ooemoop_EB",  double())<<" trackIso "<< trackIso<<" cut "<<cut("relTrackIso_EB",  double())<<" ecalIso "<<ecalIso<<" cut "<<cut("relEcalIso_EB",   double())<<" hcalIso "<<hcalIso<<" cut "<<cut("relHcalIso_EB",   double())<<" cIso "<<cIso<<" cut "<<cut("cIso_EB",        double())<<std::endl;
+
     if ( innerHits  <= cut("maxNumberOfExpectedMissingHits", int()) || ignoreCut("maxNumberOfExpectedMissingHits")){ passCut(retInternal_, "maxNumberOfExpectedMissingHits"); }
     if (isConv == false  || ignoreCut("conversionRejection")) { passCut(retInternal_, "conversionRejection");}
     if (electron.isEB()) { // BARREL case
@@ -392,7 +394,9 @@ bool SimpleCutBasedElectronIDSelectionFunctor::WPxx_PU( const reco::GsfElectronR
       passCut(retInternal_, "relEcalIso_EE");	
       passCut(retInternal_, "relHcalIso_EE");	
       passCut(retInternal_, "cIso_EE");
-    } else {  // ENDCAPS case
+     } else {  // ENDCAPS case
+
+    std::cout<<" endcap case: hits  "<<innerHits<<" cut "<<cut("maxNumberOfExpectedMissingHits", int())<<" conversion "<<isConv<<" deta "<<fabs(Deta)<<" cut "<<cut("deta_EE",     double())<<" dphi "<<fabs(Dphi)<<" cut "<<cut("dphi_EE",     double())<<" sihih "<<sihih<<" cut "<<cut("sihih_EE",    double())<<" hoverE "<<HoE<<" cut "<<cut("hoe_EE",      double())<<" ooemoop "<<ooemoop<<" cut "<<cut("ooemoop_EE",  double())<<" trackIso "<< trackIso<<" cut "<<cut("relTrackIso_EE",  double())<<" ecalIso "<<ecalIso<<" cut "<<cut("relEcalIso_EE",   double())<<" hcalIso "<<hcalIso<<" cut "<<cut("relHcalIso_EE",   double())<<" cIso "<<cIso<<" cut "<<cut("cIso_EE",        double())<<std::endl;
 
       if ( fabs(Deta)  <  cut("deta_EE",     double()) || ignoreCut("deta_EE")    )    { passCut(retInternal_, "deta_EE");    }
       if ( fabs(Dphi)  <  cut("dphi_EE",     double()) || ignoreCut("dphi_EE")    )    { passCut(retInternal_, "dphi_EE");    }
