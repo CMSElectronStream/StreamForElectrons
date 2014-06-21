@@ -1,4 +1,4 @@
-#include "StreamForElectrons/AnalyzerEle/interface/SimpleCutBasedElectronIDSelectionFunctor.h"
+#include "EgammaAnalysis/ElectronTools/interface/SimpleCutBasedElectronIDSelectionFunctor.h"
 
 
 SimpleCutBasedElectronIDSelectionFunctor::SimpleCutBasedElectronIDSelectionFunctor(edm::ParameterSet const & parameters):
@@ -361,7 +361,7 @@ bool SimpleCutBasedElectronIDSelectionFunctor::WPxx_PU( const reco::GsfElectronR
     if ( (absEtaSC < 1.4442 || (absEtaSC > 1.566 && absEtaSC < 2.5) ) || ignoreCut("fiducial")){ passCut(retInternal_, "fiducial");}
 
     //------------------------------ conversion rejection cut
-    std::cout<<" barrel case: hits  "<<innerHits<<" cut "<<cut("maxNumberOfExpectedMissingHits", int())<<" conversion "<<isConv<<" deta "<<fabs(Deta)<<" cut "<<cut("deta_EB",     double())<<" dphi "<<fabs(Dphi)<<" cut "<<cut("dphi_EB",     double())<<" sihih "<<sihih<<" cut "<<cut("sihih_EB",    double())<<" hoverE "<<HoE<<" cut "<<cut("hoe_EB",      double())<<" ooemoop "<<ooemoop<<" cut "<<cut("ooemoop_EB",  double())<<" trackIso "<< trackIso<<" cut "<<cut("relTrackIso_EB",  double())<<" ecalIso "<<ecalIso<<" cut "<<cut("relEcalIso_EB",   double())<<" hcalIso "<<hcalIso<<" cut "<<cut("relHcalIso_EB",   double())<<" cIso "<<cIso<<" cut "<<cut("cIso_EB",        double())<<std::endl;
+    //    std::cout<<" barrel case: hits  "<<innerHits<<" cut "<<cut("maxNumberOfExpectedMissingHits", int())<<" conversion "<<isConv<<" deta "<<fabs(Deta)<<" cut "<<cut("deta_EB",     double())<<" dphi "<<fabs(Dphi)<<" cut "<<cut("dphi_EB",     double())<<" sihih "<<sihih<<" cut "<<cut("sihih_EB",    double())<<" hoverE "<<HoE<<" cut "<<cut("hoe_EB",      double())<<" ooemoop "<<ooemoop<<" cut "<<cut("ooemoop_EB",  double())<<" trackIso "<< trackIso<<" cut "<<cut("relTrackIso_EB",  double())<<" ecalIso "<<ecalIso<<" cut "<<cut("relEcalIso_EB",   double())<<" hcalIso "<<hcalIso<<" cut "<<cut("relHcalIso_EB",   double())<<" cIso "<<cIso<<" cut "<<cut("cIso_EB",        double())<<std::endl;
 
     if ( innerHits  <= cut("maxNumberOfExpectedMissingHits", int()) || ignoreCut("maxNumberOfExpectedMissingHits")){ passCut(retInternal_, "maxNumberOfExpectedMissingHits"); }
     if (isConv == false  || ignoreCut("conversionRejection")) { passCut(retInternal_, "conversionRejection");}
@@ -396,7 +396,7 @@ bool SimpleCutBasedElectronIDSelectionFunctor::WPxx_PU( const reco::GsfElectronR
       passCut(retInternal_, "cIso_EE");
      } else {  // ENDCAPS case
 
-    std::cout<<" endcap case: hits  "<<innerHits<<" cut "<<cut("maxNumberOfExpectedMissingHits", int())<<" conversion "<<isConv<<" deta "<<fabs(Deta)<<" cut "<<cut("deta_EE",     double())<<" dphi "<<fabs(Dphi)<<" cut "<<cut("dphi_EE",     double())<<" sihih "<<sihih<<" cut "<<cut("sihih_EE",    double())<<" hoverE "<<HoE<<" cut "<<cut("hoe_EE",      double())<<" ooemoop "<<ooemoop<<" cut "<<cut("ooemoop_EE",  double())<<" trackIso "<< trackIso<<" cut "<<cut("relTrackIso_EE",  double())<<" ecalIso "<<ecalIso<<" cut "<<cut("relEcalIso_EE",   double())<<" hcalIso "<<hcalIso<<" cut "<<cut("relHcalIso_EE",   double())<<" cIso "<<cIso<<" cut "<<cut("cIso_EE",        double())<<std::endl;
+      //std::cout<<" endcap case: hits  "<<innerHits<<" cut "<<cut("maxNumberOfExpectedMissingHits", int())<<" conversion "<<isConv<<" deta "<<fabs(Deta)<<" cut "<<cut("deta_EE",     double())<<" dphi "<<fabs(Dphi)<<" cut "<<cut("dphi_EE",     double())<<" sihih "<<sihih<<" cut "<<cut("sihih_EE",    double())<<" hoverE "<<HoE<<" cut "<<cut("hoe_EE",      double())<<" ooemoop "<<ooemoop<<" cut "<<cut("ooemoop_EE",  double())<<" trackIso "<< trackIso<<" cut "<<cut("relTrackIso_EE",  double())<<" ecalIso "<<ecalIso<<" cut "<<cut("relEcalIso_EE",   double())<<" hcalIso "<<hcalIso<<" cut "<<cut("relHcalIso_EE",   double())<<" cIso "<<cIso<<" cut "<<cut("cIso_EE",        double())<<std::endl;
 
       if ( fabs(Deta)  <  cut("deta_EE",     double()) || ignoreCut("deta_EE")    )    { passCut(retInternal_, "deta_EE");    }
       if ( fabs(Dphi)  <  cut("dphi_EE",     double()) || ignoreCut("dphi_EE")    )    { passCut(retInternal_, "dphi_EE");    }
