@@ -32,6 +32,7 @@ git clone https://github.com/CMSElectronStream/StreamForElectrons
 cp StreamForElectrons/RateAndEfficiencyTriggerStudy/BuildFile_L1Trigger_UCT2015.xml L1Trigger/UCT2015/BuildFile.xml
 cp StreamForElectrons/RateAndEfficiencyTriggerStudy/plugins/UCT2015Producer.cc  L1Trigger/UCT2015/plugins/
 cp StreamForElectrons/RateAndEfficiencyTriggerStudy/plugins/UCT2015GctCandsProducer.cc  L1Trigger/UCT2015/plugins/
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/plugins/EfficiencyExample.cc  TutorialL1/Examples/plugins/
 
 cp StreamForElectrons/RateAndEfficiencyTriggerStudy/BuildFile_L1Ntuples.xml L1TriggerDPG/L1Ntuples/BuildFile.xml
 cp StreamForElectrons/RateAndEfficiencyTriggerStudy/interface/L1AnalysisGCT.h L1TriggerDPG/L1Ntuples/interface/
@@ -43,6 +44,8 @@ cp StreamForElectrons/RateAndEfficiencyTriggerStudy/src/L1GObject.h L1TriggerDPG
 cp StreamForElectrons/RateAndEfficiencyTriggerStudy/src/L1NtupleProducer.cc L1TriggerDPG/L1Ntuples/src/
 
 cp StreamForElectrons/RateAndEfficiencyTriggerStudy/python/l1NtupleProducer_cfi.py L1TriggerDPG/L1Menu/python/
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/python/customL1Ntuple_cfg.py L1TriggerDPG/L1Menu/python/
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/python/customiseL1Calos_cff.py L1TriggerDPG/L1Menu/python/
 
 cp StreamForElectrons/RateAndEfficiencyTriggerStudy/test/customL1NtupleFromRaw.py L1TriggerDPG/L1Menu/test/
 cp StreamForElectrons/RateAndEfficiencyTriggerStudy/test/crab_TEMPLATE.cfg L1TriggerDPG/L1Menu/test/crab/
