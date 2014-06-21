@@ -184,6 +184,10 @@ void EfficiencyExample::analyze(const edm::Event& evt, const edm::EventSetup& es
           const reco::Candidate* bestL1    = findBestMatch(genObject,l1Objects,maxDR_);
           const reco::Candidate* bestReco  = findBestMatch(genObject,recoObjects,maxDR_);
 	  const pat::Electron*  bestPat = dynamic_cast<const pat::Electron*>(bestReco);
+         
+          ptsGen_->push_back(genObject->pt()); 
+          etasGen_->push_back(genObject->eta()); 
+          phisGen_->push_back(genObject->phi());
 
           if(bestL1!=NULL and bestReco != NULL ){
 
@@ -258,10 +262,6 @@ void EfficiencyExample::analyze(const edm::Event& evt, const edm::EventSetup& es
 
 	   isRecoL1matched_->push_back(0);
 	  }  
-
-          ptsReco_->push_back(genObject->pt());
-          etasReco_->push_back(genObject->eta());
-          phisReco_->push_back(genObject->phi());
 
 	}
         // fill!

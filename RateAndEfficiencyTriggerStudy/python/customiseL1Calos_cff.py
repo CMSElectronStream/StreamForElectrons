@@ -99,7 +99,7 @@ def customiseUCT2015(process, runOnMC, runOnPostLS1, whichPU ):
         if runOnMC :
 
             process.createGenParticlesEle = cms.EDProducer("FilterGenParticles",
-                                                            MaxEtaThreshold = cms.untracked.double(2.5),
+                                                            MaxEtaThreshold = cms.untracked.double(3.),
                                                             GenLevelSelect = cms.untracked.int32(11),
                                                             MinPtThreshold = cms.untracked.double(2))
 

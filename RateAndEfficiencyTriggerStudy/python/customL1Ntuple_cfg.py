@@ -199,8 +199,10 @@ if  options.useCrabParent and options.runOnMC:
              rhoFastJet = cms.InputTag('ak5PFJets',"rho"),
              vertexCollection = cms.InputTag('offlinePrimaryVerticesWithBS'),
              conversionCollection = cms.InputTag('allConversions'),
-             BeamSpotCollection = cms.InputTag('offlineBeamSpot'))
-
+             BeamSpotCollection = cms.InputTag('offlineBeamSpot'),
+             chIsoVals = cms.InputTag('elPFIsoValueCharged03PFId'),
+             emIsoVals = cms.InputTag('elPFIsoValueGamma03PFId'),
+             nhIsoVals = cms.InputTag('elPFIsoValueNeutral03PFId'))
 
      process.load('PhysicsTools.PatAlgos.producersLayer1.electronProducer_cfi')
 
@@ -208,7 +210,7 @@ if  options.useCrabParent and options.runOnMC:
      process.patElectrons.embedHighLevelSelection = cms.bool(False)
      process.patElectrons.useParticleFlow = cms.bool(False)
      process.patElectrons.addElectronID = cms.bool(True)
-     process.patElectrons.addGenMatch = cms.bool(True)
+     process.patElectrons.addGenMatch = cms.bool(False)
      process.patElectrons.pvSrc = cms.InputTag("offlinePrimaryVertices")
      process.patElectrons.reducedBarrelRecHitCollection = cms.InputTag("reducedEcalRecHitsEB")
      process.patElectrons.reducedEndcapRecHitCollection = cms.InputTag("reducedEcalRecHitsEE")
@@ -220,10 +222,8 @@ if  options.useCrabParent and options.runOnMC:
          fiducial = cms.InputTag("eleSelectionProducers", "fiducial"),
          relIso90 = cms.InputTag("eleSelectionProducers", "relIso90"),
          relIso80 = cms.InputTag("eleSelectionProducers", "relIso80"),
-         relIso70 = cms.InputTag("eleSelectionProducers", "relIso70"),
          cIso90 = cms.InputTag("eleSelectionProducers", "cIso90"),
-         cIso80 = cms.InputTag("eleSelectionProducers", "cIso80"),
-         cIso70 = cms.InputTag("eleSelectionProducers", "cIso70"))
+         cIso80 = cms.InputTag("eleSelectionProducers", "cIso80"))
      
      process.rlxEGEfficiency = cms.EDAnalyzer("EfficiencyExample",
                     recoSrc = cms.VInputTag("patElectrons"),                          
