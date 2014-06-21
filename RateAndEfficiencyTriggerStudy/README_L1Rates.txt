@@ -52,6 +52,11 @@ cp StreamForElectrons/RateAndEfficiencyTriggerStudy/macros/BasicRatePlots.C L1Tr
 cp StreamForElectrons/RateAndEfficiencyTriggerStudy/macros/L1AlgoFactory.h L1TriggerDPG/L1Ntuples/macros/
 cp StreamForElectrons/RateAndEfficiencyTriggerStudy/macros/L1Ntuple.C L1TriggerDPG/L1Ntuples/macros/
 
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/plugins/EfficiencyExample.cc TutorialL1/Examples/plugins
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/plugins/FilterGenParticles.cc TutorialL1/Examples/plugins
+
+rm -r StreamForElectrons
+
 scramv1 b -j 9
 
 ######################
