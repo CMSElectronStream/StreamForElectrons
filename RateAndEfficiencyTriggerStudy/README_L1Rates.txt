@@ -27,6 +27,8 @@ cd ../..
 
 git clone https://github.com/mcepeda/ExamplesTSG.git TutorialL1/Examples 
 
+git clone https://github.com/cms-analysis/EgammaAnalysis-ElectronTools EgammaAnalysis/ElectronTools
+
 git clone https://github.com/CMSElectronStream/StreamForElectrons
 
 cp StreamForElectrons/RateAndEfficiencyTriggerStudy/BuildFile_L1Trigger_UCT2015.xml L1Trigger/UCT2015/BuildFile.xml
@@ -57,6 +59,11 @@ cp StreamForElectrons/RateAndEfficiencyTriggerStudy/macros/L1Ntuple.C L1TriggerD
 
 cp StreamForElectrons/RateAndEfficiencyTriggerStudy/plugins/EfficiencyExample.cc TutorialL1/Examples/plugins
 cp StreamForElectrons/RateAndEfficiencyTriggerStudy/plugins/FilterGenParticles.cc TutorialL1/Examples/plugins
+
+cp StreamForElectrons/AnalyzerEle/interface/SimpleCutBasedElectronIDSelectionFunctor.h EgammaAnalysis/ElectronTools/interface/
+cp StreamForElectrons/AnalyzerEle/interface/EleSelectionProducers.h EgammaAnalysis/ElectronTools/interface/
+cp StreamForElectrons/AnalyzerEle/src/SimpleCutBasedElectronIDSelectionFunctor.cc EgammaAnalysis/ElectronTools/src/
+cp StreamForElectrons/AnalyzerEle/src/EleSelectionProducers.cc EgammaAnalysis/ElectronTools/src/
 
 rm -r StreamForElectrons
 
