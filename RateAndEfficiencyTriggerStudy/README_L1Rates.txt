@@ -29,6 +29,12 @@ git clone https://github.com/mcepeda/ExamplesTSG.git TutorialL1/Examples
 
 git clone https://github.com/cms-analysis/EgammaAnalysis-ElectronTools EgammaAnalysis/ElectronTools
 
+rm EgammaAnalysis/ElectronTools/plugins/ElectronIdMVAProducer.cc
+rm EgammaAnalysis/ElectronTools/src/ElectronEnergyCalibrator.cc
+rm EgammaAnalysis/ElectronTools/test/ElectronAnalyzer.cc
+rm EgammaAnalysis/ElectronTools/plugins/CalibratedElectronProducer.*
+rm EgammaAnalysis/ElectronTools/plugins/CalibratedPatElectronProducer.*
+
 git clone https://github.com/CMSElectronStream/StreamForElectrons
 
 cp StreamForElectrons/RateAndEfficiencyTriggerStudy/BuildFile_L1Trigger_UCT2015.xml L1Trigger/UCT2015/BuildFile.xml
@@ -65,7 +71,7 @@ cp StreamForElectrons/AnalyzerEle/interface/EleSelectionProducers.h EgammaAnalys
 cp StreamForElectrons/AnalyzerEle/src/SimpleCutBasedElectronIDSelectionFunctor.cc EgammaAnalysis/ElectronTools/src/
 cp StreamForElectrons/AnalyzerEle/src/EleSelectionProducers.cc EgammaAnalysis/ElectronTools/src/
 
-rm -r StreamForElectrons
+rm -rf StreamForElectrons
 
 scramv1 b -j 9
 
