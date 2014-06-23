@@ -51,7 +51,7 @@ cp StreamForElectrons/RateAndEfficiencyTriggerStudy/src/L1AnalysisGCT.cc L1Trigg
 cp StreamForElectrons/RateAndEfficiencyTriggerStudy/src/L1GObject.h L1TriggerDPG/L1Ntuples/src/
 cp StreamForElectrons/RateAndEfficiencyTriggerStudy/src/L1NtupleProducer.cc L1TriggerDPG/L1Ntuples/src/
 
-cp StreamForElectrons/RateAndEfficiencyTriggerStudy/python/l1NtupleProducer_cfi.py L1TriggerDPG/L1Menu/python/
+cp StreamForElectrons/RateAndEfficiencyTriggerStudy/python/l1NtupleProducer_cfi.py L1TriggerDPG/L1Ntuples/python/
 cp StreamForElectrons/RateAndEfficiencyTriggerStudy/python/customL1Ntuple_cfg.py L1TriggerDPG/L1Menu/python/
 cp StreamForElectrons/RateAndEfficiencyTriggerStudy/python/customiseL1Calos_cff.py L1TriggerDPG/L1Menu/python/
 
