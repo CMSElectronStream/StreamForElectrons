@@ -177,7 +177,7 @@ void EfficiencyExample::analyze(const edm::Event& evt, const edm::EventSetup& es
         ptsL1_->clear(); etasL1_->clear(); phisL1_->clear();
         ptsReco_->clear(); etasReco_->clear(); phisReco_->clear();
         ptsGen_->clear(); etasGen_->clear(); phisGen_->clear();
-        relIso80_->clear(); relIso80_->clear(); cIso80_->clear(); cIso90_->clear();
+        relIso90_->clear(); relIso80_->clear(); cIso80_->clear(); cIso90_->clear();
         isRecoL1matched_->clear();
    
         for (size_t i = 0; i < genObjects.size(); ++i) {
