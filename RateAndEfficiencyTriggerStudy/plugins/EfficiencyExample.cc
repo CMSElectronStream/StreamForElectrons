@@ -178,6 +178,7 @@ void EfficiencyExample::analyze(const edm::Event& evt, const edm::EventSetup& es
         ptsReco_->clear(); etasReco_->clear(); phisReco_->clear();
         ptsGen_->clear(); etasGen_->clear(); phisGen_->clear();
         relIso80_->clear(); relIso80_->clear(); cIso80_->clear(); cIso90_->clear();
+        isRecoL1matched_->clear();
    
         for (size_t i = 0; i < genObjects.size(); ++i) {
 	  const reco::Candidate* genObject = genObjects[i]; // loop on the generated electrons
