@@ -66,6 +66,7 @@ To install in CMSSW_7_1_X (on SLC6 machine only):
     cp StreamForElectrons/HLTStreamModule/plugins/BuildFile.xml.decomment              HLTrigger/Egamma/BuildFile.xml
     cp StreamForElectrons/HLTStreamModule/test/HcalElectronicsMap_v7.00_offline HLTrigger/Configuration/test
     cp StreamForElectrons/HLTStreamModule/test/ES_lookup_table.dat HLTrigger/Configuration/test
+    rm -r StreamForElectrons/ ;
     scramv1 b -j 8
 
 test:
