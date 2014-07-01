@@ -1,365 +1,301 @@
 import FWCore.ParameterSet.Config as cms
 
-hltHybridSuperClustersL1Seeded = cms.EDProducer( "EgammaHLTHybridClusterProducer",
-  xi = cms.double( 0.0 ),
-  regionEtaMargin = cms.double( 0.14 ),
-  regionPhiMargin = cms.double( 0.4 ),
-  severityRecHitThreshold = cms.double( 4.0 ),
-  RecHitFlagToBeExcluded = cms.vstring(  ),
-  ecalhitcollection = cms.string( "EcalRecHitsEB" ),
-  eThreshA = cms.double( 0.003 ),
-  basicclusterCollection = cms.string( "" ),
-  eThreshB = cms.double( 0.1 ),
-  dynamicPhiRoad = cms.bool( False ),
-  RecHitSeverityToBeExcluded = cms.vstring( 'kWeird' ),
-  l1UpperThr = cms.double( 999.0 ),
-  excludeFlagged = cms.bool( True ),
-  posCalcParameters = cms.PSet(
-        T0_barl = cms.double( 7.4 ),
-        LogWeighted = cms.bool( True ),
-        T0_endc = cms.double( 3.1 ),
-        T0_endcPresh = cms.double( 1.2 ),
-        W0 = cms.double( 4.2 ),
-        X0 = cms.double( 0.89 )),
- l1LowerThr = cms.double( 5.0 ),                                                         
- doIsolated = cms.bool( True ),
- eseed = cms.double( 0.35 ),
- ethresh = cms.double( 0.1 ),
- ewing = cms.double( 0.0 ),
- useEtForXi = cms.bool( True ),
- step = cms.int32( 17 ),
- debugLevel = cms.string( "INFO" ),
- dynamicEThresh = cms.bool( False ),
- l1TagIsolated = cms.InputTag( 'hltL1extraParticles','Isolated' ),
- superclusterCollection = cms.string( "" ),
- HybridBarrelSeedThr = cms.double( 1.5 ),
- l1TagNonIsolated = cms.InputTag( 'hltL1extraParticles','NonIsolated' ),
- l1LowerThrIgnoreIsolation = cms.double( 0.0 ),
- ecalhitproducer = cms.InputTag( "hltEcalRegionalEgammaRecHit" ))
+hltRechitInRegionsECAL = cms.EDProducer( "EgammaHLTRechitInRegionsProducer",
+    l1LowerThr = cms.double( 5.0 ),
+    doIsolated = cms.bool( True ),
+    useUncalib = cms.bool( False ),
+    regionEtaMargin = cms.double( 0.14 ),
+    ecalhitLabels = cms.VInputTag( 'hltEcalRecHit:EcalRecHitsEB','hltEcalRecHit:EcalRecHitsEE' ),
+    regionPhiMargin = cms.double( 0.4 ),
+    l1TagNonIsolated = cms.InputTag( 'hltL1extraParticles','NonIsolated' ),
+    l1UpperThr = cms.double( 999.0 ),
+    l1LowerThrIgnoreIsolation = cms.double( 0.0 ),
+    productLabels = cms.vstring( 'EcalRecHitsEB',
+      'EcalRecHitsEE' ),
+    l1TagIsolated = cms.InputTag( 'hltL1extraParticles','Isolated' )
+)
 
+hltRechitInRegionsES = cms.EDProducer( "EgammaHLTRechitInRegionsProducer",
+    l1LowerThr = cms.double( 5.0 ),
+    doIsolated = cms.bool( True ),
+    useUncalib = cms.bool( False ),
+    regionEtaMargin = cms.double( 0.14 ),
+    ecalhitLabels = cms.VInputTag( 'hltEcalPreshowerRecHit:EcalRecHitsES' ),
+    regionPhiMargin = cms.double( 0.4 ),
+    l1TagNonIsolated = cms.InputTag( 'hltL1extraParticles','NonIsolated' ),
+    l1UpperThr = cms.double( 999.0 ),
+    l1LowerThrIgnoreIsolation = cms.double( 0.0 ),
+    productLabels = cms.vstring( 'EcalRecHitsES' ),
+    l1TagIsolated = cms.InputTag( 'hltL1extraParticles','Isolated' )
+)
 
-hltCorrectedHybridSuperClustersL1Seeded = cms.EDProducer( "EgammaSCCorrectionMaker",
-        corectedSuperClusterCollection = cms.string( "" ),
-        sigmaElectronicNoise = cms.double( 0.03 ),
-        superClusterAlgo = cms.string( "Hybrid" ),
-        etThresh = cms.double( 1.0 ),
-        rawSuperClusterProducer = cms.InputTag( "hltHybridSuperClustersL1Seeded" ),
-        applyEnergyCorrection = cms.bool( True ),
-        isl_fCorrPset = cms.PSet(  ),
-        VerbosityLevel = cms.string( "ERROR" ),
-        recHitProducer = cms.InputTag( 'hltEcalRegionalEgammaRecHit','EcalRecHitsEB' ),
-        fix_fCorrPset = cms.PSet(  ),
-        modeEE = cms.int32( 0 ),
-        modeEB = cms.int32( 0 ),
-        dyn_fCorrPset = cms.PSet(  ),
-        energyCorrectorName = cms.string( "EcalClusterEnergyCorrectionObjectSpecific" ),
-        applyLocalContCorrection = cms.bool( False ),
-        localContCorrectorName = cms.string( "EcalBasicClusterLocalContCorrection" ),
-        crackCorrectorName = cms.string( "EcalClusterCrackCorrection" ),
-        applyCrackCorrection = cms.bool( False ),
-        hyb_fCorrPset = cms.PSet(
-             brLinearLowThr = cms.double( 1.1 ),
-             BremVec = cms.vdouble( -0.05208, 0.1331, 0.9196, -5.735E-4, 1.343 ),
-             brLinearHighThr = cms.double( 8.0 ),
-             fEtEtaVec = cms.vdouble( 1.0012, -0.5714, 0.0, 0.0, 0.0, 0.5549, 12.74, 1.0448, 0.0, 0.0, 0.0, 0.0, 8.0, 1.023, -0.00181, 0.0, 0.0 )))
-
-
-hltMulti5x5BasicClustersL1Seeded = cms.EDProducer( "EgammaHLTMulti5x5ClusterProducer",
-  l1LowerThr = cms.double( 5.0 ),
-  Multi5x5BarrelSeedThr = cms.double( 0.5 ),
-  Multi5x5EndcapSeedThr = cms.double( 0.18 ),
-  endcapHitCollection = cms.string( "EcalRecHitsEE" ),
-  barrelClusterCollection = cms.string( "notused" ),
-  doEndcaps = cms.bool( True ),
-  regionEtaMargin = cms.double( 0.3 ),
-  regionPhiMargin = cms.double( 0.4 ),
-  RecHitFlagToBeExcluded = cms.vstring(  ),
-  l1TagNonIsolated = cms.InputTag( 'hltL1extraParticles','NonIsolated' ),
-  endcapHitProducer = cms.InputTag( "hltEcalRegionalEgammaRecHit" ),
-  posCalcParameters = cms.PSet(
-       T0_barl = cms.double( 7.4 ),
-       LogWeighted = cms.bool( True ),
-       T0_endc = cms.double( 3.1 ),
-       T0_endcPresh = cms.double( 1.2 ),
-       W0 = cms.double( 4.2 ),
-       X0 = cms.double( 0.89 )), 
-  VerbosityLevel = cms.string( "ERROR" ),
-  doIsolated = cms.bool( True ),
-  barrelHitProducer = cms.InputTag( "hltEcalRegionalEgammaRecHit" ),
-  l1LowerThrIgnoreIsolation = cms.double( 0.0 ),
-  l1TagIsolated = cms.InputTag( 'hltL1extraParticles','Isolated' ),
-  barrelHitCollection = cms.string( "EcalRecHitsEB" ),
-  doBarrel = cms.bool( False ),
-  endcapClusterCollection = cms.string( "multi5x5EndcapBasicClusters" ),
-  l1UpperThr = cms.double( 999.0 ))
-
-hltMulti5x5SuperClustersL1Seeded = cms.EDProducer( "Multi5x5SuperClusterProducer",
-  barrelSuperclusterCollection = cms.string( "multi5x5BarrelSuperClusters" ),
-  endcapEtaSearchRoad = cms.double( 0.14 ),
-  barrelClusterCollection = cms.string( "multi5x5BarrelBasicClusters" ),
-  dynamicPhiRoad = cms.bool( False ),
-  endcapClusterProducer = cms.string( "hltMulti5x5BasicClustersL1Seeded" ),
-  barrelPhiSearchRoad = cms.double( 0.8 ),
-  endcapPhiSearchRoad = cms.double( 0.6 ),
-  barrelClusterProducer = cms.string( "notused" ),
-  seedTransverseEnergyThreshold = cms.double( 1.0 ),
-  endcapSuperclusterCollection = cms.string( "multi5x5EndcapSuperClusters" ),
-  barrelEtaSearchRoad = cms.double( 0.06 ),
-  bremRecoveryPset = cms.PSet(
-   barrel = cms.PSet(  ),
-   endcap = cms.PSet(
-    a = cms.double( 47.85 ),
-    c = cms.double( 0.1201 ),
-    b = cms.double( 108.8 )),
-   doEndcaps = cms.bool( True ),
-   doBarrel = cms.bool( False )),
-  doEndcaps = cms.bool( True ),
-  endcapClusterCollection = cms.string( "multi5x5EndcapBasicClusters" ),
-  doBarrel = cms.bool( False ))
-
-hltMulti5x5EndcapSuperClustersWithPreshowerL1Seeded = cms.EDProducer( "PreshowerClusterProducer",
-  assocSClusterCollection = cms.string( "" ),
-  preshStripEnergyCut = cms.double( 0.0 ),
-  preshClusterCollectionY = cms.string( "preshowerYClusters" ),
-  preshClusterCollectionX = cms.string( "preshowerXClusters" ),
-  etThresh = cms.double( 5.0 ),
-  preshRecHitProducer = cms.InputTag( 'hltESRegionalEgammaRecHit','EcalRecHitsES' ),
-  endcapSClusterProducer = cms.InputTag( 'hltMulti5x5SuperClustersL1Seeded','multi5x5EndcapSuperClusters' ),
-  preshNclust = cms.int32( 4 ),
-  debugLevel = cms.string( "" ),
-  preshClusterEnergyCut = cms.double( 0.0 ),
-  preshSeededNstrip = cms.int32( 15 ))
-
-hltCorrectedMulti5x5EndcapSuperClustersWithPreshowerL1Seeded = cms.EDProducer( "EgammaSCCorrectionMaker",
-  corectedSuperClusterCollection = cms.string( "" ),
-  sigmaElectronicNoise = cms.double( 0.15 ),
-  superClusterAlgo = cms.string( "Multi5x5" ),
-  etThresh = cms.double( 1.0 ),
-  rawSuperClusterProducer = cms.InputTag( "hltMulti5x5EndcapSuperClustersWithPreshowerL1Seeded" ),
-  applyEnergyCorrection = cms.bool( True ),
-  isl_fCorrPset = cms.PSet(  ),
-  VerbosityLevel = cms.string( "ERROR" ),
-  recHitProducer = cms.InputTag( 'hltEcalRegionalEgammaRecHit','EcalRecHitsEE' ),
-  fix_fCorrPset = cms.PSet(
-    brLinearLowThr = cms.double( 0.6 ),
-    fBremVec = cms.vdouble( -0.04163, 0.08552, 0.95048, -0.002308, 1.077 ),
-    brLinearHighThr = cms.double( 6.0 ),
-    fEtEtaVec = cms.vdouble( 0.9746, -6.512, 0.0, 0.0, 0.02771, 4.983, 0.0, 0.0, -0.007288, -0.9446, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0 )),
-  modeEE = cms.int32( 0 ),
-  modeEB = cms.int32( 0 ),
-  dyn_fCorrPset = cms.PSet(  ),
-  energyCorrectorName = cms.string( "EcalClusterEnergyCorrectionObjectSpecific" ),
-  applyLocalContCorrection = cms.bool( False ),
-  localContCorrectorName = cms.string( "EcalBasicClusterLocalContCorrection" ),
-  crackCorrectorName = cms.string( "EcalClusterCrackCorrection" ),
-  applyCrackCorrection = cms.bool( False ),
-  hyb_fCorrPset = cms.PSet())
-
-### candidare producer HLTRecoEcalEgamma
-hltL1SeededRecoEcalCandidate = cms.EDProducer( "EgammaHLTRecoEcalCandidateProducers",
-        scIslandEndcapProducer = cms.InputTag( "hltCorrectedMulti5x5EndcapSuperClustersWithPreshowerL1Seeded" ),
-        scHybridBarrelProducer = cms.InputTag( "hltCorrectedHybridSuperClustersL1Seeded" ),
-        recoEcalCandidateCollection = cms.string( "" ))
-
-
-hltL1SeededHLTClusterShape = cms.EDProducer( "EgammaHLTClusterShapeProducer",
-    recoEcalCandidateProducer = cms.InputTag( "hltL1SeededRecoEcalCandidate" ),
-    ecalRechitEB = cms.InputTag( 'hltEcalRegionalEgammaRecHit','EcalRecHitsEB' ),
-    ecalRechitEE = cms.InputTag( 'hltEcalRegionalEgammaRecHit','EcalRecHitsEE' ),
-    isIeta = cms.bool( True ))
-
-
-
-HLTMulti5x5SuperClusterL1Seeded = cms.Sequence( hltMulti5x5BasicClustersL1Seeded +
-                                                hltMulti5x5SuperClustersL1Seeded +
-                                                hltMulti5x5EndcapSuperClustersWithPreshowerL1Seeded +
-                                                hltCorrectedMulti5x5EndcapSuperClustersWithPreshowerL1Seeded )
-
-HLTL1SeededEcalClustersSequence = cms.Sequence( hltHybridSuperClustersL1Seeded +
-                                                hltCorrectedHybridSuperClustersL1Seeded +
-                                                HLTMulti5x5SuperClusterL1Seeded)
-
-#### complete clustering sequence and not regional one L1seeded
-
-from HLTrigger.Configuration.HLTDoRegionalEgammaEcal_cff import *
-
-hltHybridSuperClustersActivity = cms.EDProducer( "HybridClusterProducer",
- eThreshA = cms.double( 0.003 ),
- basicclusterCollection = cms.string( "hybridBarrelBasicClusters" ),
- clustershapecollection = cms.string( "" ),
- ethresh = cms.double( 0.1 ),
- ewing = cms.double( 0.0 ),
- RecHitSeverityToBeExcluded = cms.vstring( 'kWeird' ),
- posCalcParameters = cms.PSet( 
-      T0_barl = cms.double( 7.4 ),
-      LogWeighted = cms.bool( True ),
-      T0_endc = cms.double( 3.1 ),
-      T0_endcPresh = cms.double( 1.2 ),
-      W0 = cms.double( 4.2 ),
-      X0 = cms.double( 0.89 )),
- HybridBarrelSeedThr = cms.double( 1.0 ),
- dynamicPhiRoad = cms.bool( False ),
- shapeAssociation = cms.string( "hybridShapeAssoc" ),
- RecHitFlagToBeExcluded = cms.vstring(  ),
- useEtForXi = cms.bool( True ),
- step = cms.int32( 17 ),
- eThreshB = cms.double( 0.1 ),
- xi = cms.double( 0.0 ),
- eseed = cms.double( 0.35 ),
- ecalhitproducer = cms.string( "hltEcalRecHitAll" ),
- dynamicEThresh = cms.bool( False ),
- ecalhitcollection = cms.string( "EcalRecHitsEB" ),
- excludeFlagged = cms.bool( True ),
- superclusterCollection = cms.string( "" ))
-
-hltCorrectedHybridSuperClustersActivity = cms.EDProducer( "EgammaSCCorrectionMaker",
-    corectedSuperClusterCollection = cms.string( "" ),
-    sigmaElectronicNoise = cms.double( 0.15 ),
-    superClusterAlgo = cms.string( "Hybrid" ),
-    etThresh = cms.double( 5.0 ),
-    rawSuperClusterProducer = cms.InputTag( "hltHybridSuperClustersActivity" ),
-    applyEnergyCorrection = cms.bool( True ),
-    isl_fCorrPset = cms.PSet(  ),
-    VerbosityLevel = cms.string( "ERROR" ),
-    recHitProducer = cms.InputTag( 'hltEcalRecHitAll','EcalRecHitsEB' ),
-    fix_fCorrPset = cms.PSet(  ),
-    modeEE = cms.int32( 0 ),
-    modeEB = cms.int32( 0 ),
-    dyn_fCorrPset = cms.PSet(  ),
-    energyCorrectorName = cms.string( "EcalClusterEnergyCorrectionObjectSpecific" ),
-    applyLocalContCorrection = cms.bool( False ),
-    localContCorrectorName = cms.string( "EcalBasicClusterLocalContCorrection" ),
-    crackCorrectorName = cms.string( "EcalClusterCrackCorrection" ),
-    applyCrackCorrection = cms.bool( False ),
-    hyb_fCorrPset = cms.PSet( 
-      brLinearLowThr = cms.double( 1.1 ),
-      fEtEtaVec = cms.vdouble( 0.0, 1.00121, -0.63672, 0.0, 0.0, 0.0, 0.5655, 6.457, 0.5081, 8.0, 1.023, -0.00181 ),
-      brLinearHighThr = cms.double( 8.0 ),
-      fBremVec = cms.vdouble( -0.04382, 0.1169, 0.9267, -9.413E-4, 1.419 )))
-
-hltMulti5x5BasicClustersActivity = cms.EDProducer( "Multi5x5ClusterProducer",
-    reassignSeedCrysToClusterItSeeds = cms.bool( False ),
-    endcapHitCollection = cms.string( "EcalRecHitsEE" ),
-    barrelClusterCollection = cms.string( "multi5x5BarrelBasicClusters" ),
-    IslandEndcapSeedThr = cms.double( 0.18 ),
-    doEndcap = cms.bool( True ),
-    posCalcParameters = cms.PSet( 
-      T0_barl = cms.double( 7.4 ),
-      LogWeighted = cms.bool( True ),
-      T0_endc = cms.double( 3.1 ),
-      T0_endcPresh = cms.double( 1.2 ),
-      W0 = cms.double( 4.2 ),
-      X0 = cms.double( 0.89 )
-    ),
-    barrelShapeAssociation = cms.string( "multi5x5BarrelShapeAssoc" ),
-    RecHitFlagToBeExcluded = cms.vstring(  ),
-    endcapHitProducer = cms.string( "hltEcalRecHitAll" ),
-    clustershapecollectionEB = cms.string( "multi5x5BarrelShape" ),
-    IslandBarrelSeedThr = cms.double( 0.5 ),
-    barrelHitProducer = cms.string( "hltEcalRecHitAll" ),
-    endcapShapeAssociation = cms.string( "multi5x5EndcapShapeAssoc" ),
-    barrelHitCollection = cms.string( "EcalRecHitsEB" ),
-    clustershapecollectionEE = cms.string( "multi5x5EndcapShape" ),
-    endcapClusterCollection = cms.string( "multi5x5EndcapBasicClusters" ),
-    doBarrel = cms.bool( False ))
-
-hltMulti5x5SuperClustersActivity = cms.EDProducer( "Multi5x5SuperClusterProducer",
-    barrelSuperclusterCollection = cms.string( "multi5x5BarrelSuperClusters" ),
-    endcapEtaSearchRoad = cms.double( 0.14 ),
-    barrelClusterCollection = cms.string( "multi5x5BarrelBasicClusters" ),
-    dynamicPhiRoad = cms.bool( False ),
-    endcapClusterProducer = cms.string( "hltMulti5x5BasicClustersActivity" ),
-    barrelPhiSearchRoad = cms.double( 0.8 ),
-    endcapPhiSearchRoad = cms.double( 0.6 ),
-    barrelClusterProducer = cms.string( "hltMulti5x5BasicClustersActivity" ),
-    seedTransverseEnergyThreshold = cms.double( 1.0 ),
-    endcapSuperclusterCollection = cms.string( "multi5x5EndcapSuperClusters" ),
-    barrelEtaSearchRoad = cms.double( 0.06 ),
-    bremRecoveryPset = cms.PSet( 
-      barrel = cms.PSet( 
-        cryVec = cms.vint32( 16, 13, 11, 10, 9, 8, 7, 6, 5, 4, 3 ),
-        cryMin = cms.int32( 2 ),
-        etVec = cms.vdouble( 5.0, 10.0, 15.0, 20.0, 30.0, 40.0, 45.0, 55.0, 135.0, 195.0, 225.0 )
+hltParticleFlowRecHitECALL1Seeded = cms.EDProducer( "PFRecHitProducer",
+    producers = cms.VPSet(cms.PSet(  src = cms.InputTag( 'hltRechitInRegionsECAL','EcalRecHitsEB' ),
+        qualityTests = cms.VPSet(
+          cms.PSet(  threshold = cms.double( 0.08 ),
+            name = cms.string( "PFRecHitQTestThreshold" )),
+          cms.PSet(  timingCleaning = cms.bool( True ),
+            topologicalCleaning = cms.bool( True ),
+            cleaningThreshold = cms.double( 2.0 ),
+            skipTTRecoveredHits = cms.bool( True ),
+            name = cms.string( "PFRecHitQTestECAL" )
+          )
+        ),
+        name = cms.string( "PFEBRecHitCreator" )
       ),
-      endcap = cms.PSet( 
-        a = cms.double( 47.85 ),
-        c = cms.double( 0.1201 ),
-        b = cms.double( 108.8 )
+      cms.PSet(  src = cms.InputTag( 'hltRechitInRegionsECAL','EcalRecHitsEE' ),
+        qualityTests = cms.VPSet(
+          cms.PSet(  threshold = cms.double( 0.3 ),
+            name = cms.string( "PFRecHitQTestThreshold" )),
+         cms.PSet(  timingCleaning = cms.bool( True ),
+            topologicalCleaning = cms.bool( True ),
+            cleaningThreshold = cms.double( 2.0 ),
+            skipTTRecoveredHits = cms.bool( True ),
+            name = cms.string( "PFRecHitQTestECAL" ))),
+        name = cms.string( "PFEERecHitCreator" )
       )
     ),
-    doEndcaps = cms.bool( True ),
-    endcapClusterCollection = cms.string( "multi5x5EndcapBasicClusters" ),
-    doBarrel = cms.bool( False )
-)
+    navigator = cms.PSet(
+      barrel = cms.PSet(  ),
+      endcap = cms.PSet(  ),
+      name = cms.string( "PFRecHitECALNavigator" )
+    ))
 
-hltMulti5x5SuperClustersWithPreshowerActivity = cms.EDProducer( "PreshowerClusterProducer",
-    assocSClusterCollection = cms.string( "" ),
-    preshStripEnergyCut = cms.double( 0.0 ),
-    preshClusterCollectionY = cms.string( "preshowerYClusters" ),
-    preshClusterCollectionX = cms.string( "preshowerXClusters" ),
-    etThresh = cms.double( 0.0 ),
-    preshRecHitProducer = cms.InputTag( 'hltESRecHitAll','EcalRecHitsES' ),
-    endcapSClusterProducer = cms.InputTag( 'hltMulti5x5SuperClustersActivity','multi5x5EndcapSuperClusters' ),
-    preshNclust = cms.int32( 4 ),
-    debugLevel = cms.string( "" ),
-    preshClusterEnergyCut = cms.double( 0.0 ),
-    preshSeededNstrip = cms.int32( 15 )
-)
-
-hltCorrectedMulti5x5SuperClustersWithPreshowerActivity = cms.EDProducer( "EgammaSCCorrectionMaker",
-    corectedSuperClusterCollection = cms.string( "" ),
-    sigmaElectronicNoise = cms.double( 0.15 ),
-    superClusterAlgo = cms.string( "Multi5x5" ),
-    etThresh = cms.double( 5.0 ),
-    rawSuperClusterProducer = cms.InputTag( "hltMulti5x5SuperClustersWithPreshowerActivity" ),
-    applyEnergyCorrection = cms.bool( True ),
-    isl_fCorrPset = cms.PSet(  ),
-    VerbosityLevel = cms.string( "ERROR" ),
-    recHitProducer = cms.InputTag( 'hltEcalRecHitAll','EcalRecHitsEE' ),
-    fix_fCorrPset = cms.PSet( 
-      brLinearLowThr = cms.double( 0.9 ),
-      fEtEtaVec = cms.vdouble( 1.0, -0.4386, -32.38, 0.6372, 15.67, -0.0928, -2.462, 1.138, 20.93 ),
-      brLinearHighThr = cms.double( 6.0 ),
-      fBremVec = cms.vdouble( -0.05228, 0.08738, 0.9508, 0.002677, 1.221 )
+hltParticleFlowRecHitPSL1Seeded = cms.EDProducer( "PFRecHitProducer",
+    producers = cms.VPSet(
+      cms.PSet(  src = cms.InputTag( 'hltRechitInRegionsES','EcalRecHitsES' ),
+        qualityTests = cms.VPSet(
+          cms.PSet(  threshold = cms.double( 7.0E-6 ),
+            name = cms.string( "PFRecHitQTestThreshold" )
+          )
+        ),
+        name = cms.string( "PFPSRecHitCreator" )
+      )
     ),
-    modeEE = cms.int32( 0 ),
-    modeEB = cms.int32( 0 ),
-    dyn_fCorrPset = cms.PSet(  ),
-    energyCorrectorName = cms.string( "EcalClusterEnergyCorrectionObjectSpecific" ),
-    applyLocalContCorrection = cms.bool( False ),
-    localContCorrectorName = cms.string( "EcalBasicClusterLocalContCorrection" ),
-    crackCorrectorName = cms.string( "EcalClusterCrackCorrection" ),
-    applyCrackCorrection = cms.bool( False ),
-    hyb_fCorrPset = cms.PSet(  )
+    navigator = cms.PSet(  name = cms.string( "PFRecHitPreshowerNavigator" ) )
 )
 
-hltRecoEcalSuperClusterActivityCandidate = cms.EDProducer( "EgammaHLTRecoEcalCandidateProducers",
-    scIslandEndcapProducer = cms.InputTag( "hltCorrectedMulti5x5SuperClustersWithPreshowerActivity" ),
-    scHybridBarrelProducer = cms.InputTag( "hltCorrectedHybridSuperClustersActivity" ),
+hltParticleFlowClusterPSL1Seeded = cms.EDProducer( "PFClusterProducer",
+    pfClusterBuilder = cms.PSet(
+      minFracTot = cms.double( 1.0E-20 ),
+      positionCalc = cms.PSet(
+        minFractionInCalc = cms.double( 1.0E-9 ),
+        logWeightDenominator = cms.double( 6.0E-5 ),
+        minAllowedNormalization = cms.double( 1.0E-9 ),
+        posCalcNCrystals = cms.int32( -1 ),
+        algoName = cms.string( "Basic2DGenericPFlowPositionCalc" )),
+      maxIterations = cms.uint32( 50 ),
+      stoppingTolerance = cms.double( 1.0E-8 ),
+      minFractionToKeep = cms.double( 1.0E-7 ),
+      excludeOtherSeeds = cms.bool( True ),
+      showerSigma = cms.double( 0.3 ),
+      recHitEnergyNorms = cms.VPSet(
+        cms.PSet(  detector = cms.string( "PS1" ),
+          recHitEnergyNorm = cms.double( 6.0E-5 )),
+        cms.PSet(  detector = cms.string( "PS2" ),
+          recHitEnergyNorm = cms.double( 6.0E-5 ))),
+      algoName = cms.string( "Basic2DGenericPFlowClusterizer" )),
+    positionReCalc = cms.PSet(  ),
+    initialClusteringStep = cms.PSet(
+      thresholdsByDetector = cms.VPSet(
+        cms.PSet(  gatheringThreshold = cms.double( 6.0E-5 ),
+          detector = cms.string( "PS1" ),
+          gatheringThresholdPt = cms.double( 0.0 )
+        ),
+        cms.PSet(  gatheringThreshold = cms.double( 6.0E-5 ),
+          detector = cms.string( "PS2" ),
+          gatheringThresholdPt = cms.double( 0.0 ))),
+      useCornerCells = cms.bool( False ),
+      algoName = cms.string( "Basic2DGenericTopoClusterizer" )),
+    energyCorrector = cms.PSet(  ),
+    recHitCleaners = cms.VPSet(),
+    seedFinder = cms.PSet(
+      nNeighbours = cms.int32( 4 ),
+      thresholdsByDetector = cms.VPSet(
+        cms.PSet(  seedingThreshold = cms.double( 1.2E-4 ),
+          seedingThresholdPt = cms.double( 0.0 ),
+          detector = cms.string( "PS1" )
+        ),
+        cms.PSet(  seedingThreshold = cms.double( 1.2E-4 ),
+          seedingThresholdPt = cms.double( 0.0 ),
+          detector = cms.string( "PS2" )
+        )
+      ),
+      algoName = cms.string( "LocalMaximumSeedFinder" )
+    ),
+    recHitsSource = cms.InputTag( "hltParticleFlowRecHitPSL1Seeded" ))
+
+hltParticleFlowClusterECALUncorrectedL1Seeded = cms.EDProducer( "PFClusterProducer",
+    pfClusterBuilder = cms.PSet( 
+      positionCalc = cms.PSet( 
+        minFractionInCalc = cms.double( 1.0E-9 ),
+        logWeightDenominator = cms.double( 0.08 ),
+        minAllowedNormalization = cms.double( 1.0E-9 ),
+        posCalcNCrystals = cms.int32( 9 ),
+        algoName = cms.string( "Basic2DGenericPFlowPositionCalc" )
+      ),
+      minFracTot = cms.double( 1.0E-20 ),
+      positionCalcForConvergence = cms.PSet( 
+        minFractionInCalc = cms.double( 0.0 ),
+        W0 = cms.double( 4.2 ),
+        minAllowedNormalization = cms.double( 0.0 ),
+        T0_EB = cms.double( 7.4 ),
+        X0 = cms.double( 0.89 ),
+        T0_ES = cms.double( 1.2 ),
+        T0_EE = cms.double( 3.1 ),
+        algoName = cms.string( "ECAL2DPositionCalcWithDepthCorr" )
+      ),
+      maxIterations = cms.uint32( 50 ),
+      stoppingTolerance = cms.double( 1.0E-8 ),
+      minFractionToKeep = cms.double( 1.0E-7 ),
+      excludeOtherSeeds = cms.bool( True ),
+      showerSigma = cms.double( 1.5 ),
+      recHitEnergyNorms = cms.VPSet( 
+        cms.PSet(  detector = cms.string( "ECAL_BARREL" ),
+          recHitEnergyNorm = cms.double( 0.08 )
+        ),
+        cms.PSet(  detector = cms.string( "ECAL_ENDCAP" ),
+          recHitEnergyNorm = cms.double( 0.3 )
+        )
+      ),
+      algoName = cms.string( "Basic2DGenericPFlowClusterizer" ),
+      allCellsPositionCalc = cms.PSet( 
+        minFractionInCalc = cms.double( 1.0E-9 ),
+        logWeightDenominator = cms.double( 0.08 ),
+        minAllowedNormalization = cms.double( 1.0E-9 ),
+        posCalcNCrystals = cms.int32( -1 ),
+        algoName = cms.string( "Basic2DGenericPFlowPositionCalc" )
+      )
+    ),
+    positionReCalc = cms.PSet( 
+      minFractionInCalc = cms.double( 0.0 ),
+      W0 = cms.double( 4.2 ),
+      minAllowedNormalization = cms.double( 0.0 ),
+      T0_EB = cms.double( 7.4 ),
+      X0 = cms.double( 0.89 ),
+      T0_ES = cms.double( 1.2 ),
+      T0_EE = cms.double( 3.1 ),
+      algoName = cms.string( "ECAL2DPositionCalcWithDepthCorr" )
+    ),
+    initialClusteringStep = cms.PSet( 
+      thresholdsByDetector = cms.VPSet( 
+        cms.PSet(  gatheringThreshold = cms.double( 0.08 ),
+          detector = cms.string( "ECAL_BARREL" ),
+          gatheringThresholdPt = cms.double( 0.0 )
+        ),
+        cms.PSet(  gatheringThreshold = cms.double( 0.3 ),
+          detector = cms.string( "ECAL_ENDCAP" ),
+          gatheringThresholdPt = cms.double( 0.0 )
+        )
+      ),
+      useCornerCells = cms.bool( True ),
+      algoName = cms.string( "Basic2DGenericTopoClusterizer" )
+    ),
+    energyCorrector = cms.PSet(  ),
+    recHitCleaners = cms.VPSet( 
+      cms.PSet(  cleaningByDetector = cms.VPSet( 
+  cms.PSet(  doubleSpikeS6S2 = cms.double( 0.04 ),
+    fractionThresholdModifier = cms.double( 3.0 ),
+    doubleSpikeThresh = cms.double( 10.0 ),
+    minS4S1_b = cms.double( -0.024 ),
+    singleSpikeThresh = cms.double( 4.0 ),
+    detector = cms.string( "ECAL_BARREL" ),
+    minS4S1_a = cms.double( 0.04 ),
+    energyThresholdModifier = cms.double( 2.0 )
+  ),
+  cms.PSet(  doubleSpikeS6S2 = cms.double( -1.0 ),
+    fractionThresholdModifier = cms.double( 3.0 ),
+    doubleSpikeThresh = cms.double( 1.0E9 ),
+    minS4S1_b = cms.double( -0.0125 ),
+    singleSpikeThresh = cms.double( 15.0 ),
+    detector = cms.string( "ECAL_ENDCAP" ),
+    minS4S1_a = cms.double( 0.02 ),
+    energyThresholdModifier = cms.double( 2.0 )
+  )
+),
+        algoName = cms.string( "SpikeAndDoubleSpikeCleaner" )
+      )
+    ),
+    seedFinder = cms.PSet( 
+      nNeighbours = cms.int32( 8 ),
+      thresholdsByDetector = cms.VPSet( 
+        cms.PSet(  seedingThreshold = cms.double( 0.6 ),
+          seedingThresholdPt = cms.double( 0.15 ),
+          detector = cms.string( "ECAL_ENDCAP" )
+        ),
+        cms.PSet(  seedingThreshold = cms.double( 0.23 ),
+          seedingThresholdPt = cms.double( 0.0 ),
+          detector = cms.string( "ECAL_BARREL" )
+        )
+      ),
+      algoName = cms.string( "LocalMaximumSeedFinder" )
+    ),
+    recHitsSource = cms.InputTag( "hltParticleFlowRecHitECALL1Seeded" ))
+ 
+
+hltParticleFlowClusterECALL1Seeded = cms.EDProducer( "CorrectedECALPFClusterProducer",
+    minimumPSEnergy = cms.double( 0.0 ),
+    inputPS = cms.InputTag( "hltParticleFlowClusterPSL1Seeded" ),
+    energyCorrector = cms.PSet( 
+      applyCrackCorrections = cms.bool( False ),
+      algoName = cms.string( "PFClusterEMEnergyCorrector" )
+    ),
+    inputECAL = cms.InputTag( "hltParticleFlowClusterECALUncorrectedL1Seeded" )
+)
+
+hltParticleFlowSuperClusterECALL1Seeded = cms.EDProducer( "PFECALSuperClusterProducer",
+    PFSuperClusterCollectionEndcap = cms.string( "hltParticleFlowSuperClusterECALEndcap" ),
+    doSatelliteClusterMerge = cms.bool( False ),
+    thresh_PFClusterBarrel = cms.double( 4.0 ),
+    PFBasicClusterCollectionBarrel = cms.string( "hltParticleFlowBasicClusterECALBarrel" ),
+    useRegression = cms.bool( False ),
+    satelliteMajorityFraction = cms.double( 0.5 ),
+    thresh_PFClusterEndcap = cms.double( 4.0 ),
+    ESAssociation = cms.InputTag( "hltParticleFlowClusterECALL1Seeded" ),
+    PFBasicClusterCollectionPreshower = cms.string( "hltParticleFlowBasicClusterECALPreshower" ),
+    use_preshower = cms.bool( True ),
+    verbose = cms.untracked.bool( False ),
+    thresh_SCEt = cms.double( 4.0 ),
+    etawidth_SuperClusterEndcap = cms.double( 0.04 ),
+    phiwidth_SuperClusterEndcap = cms.double( 0.6 ),
+    useDynamicDPhiWindow = cms.bool( True ),
+    PFSuperClusterCollectionBarrel = cms.string( "hltParticleFlowSuperClusterECALBarrel" ),
+    regressionConfig = cms.PSet( 
+      regressionKeyEE = cms.string( "pfscecal_EECorrection_offline" ),
+      ecalRecHitsEE = cms.InputTag( 'hltRechitInRegionsECAL','EcalRecHitsEE' ),
+      ecalRecHitsEB = cms.InputTag( 'hltRechitInRegionsECAL','EcalRecHitsEB' ),
+      regressionKeyEB = cms.string( "pfscecal_EBCorrection_offline" ),
+      vertexCollection = cms.InputTag( "offlinePrimaryVertices" )
+    ),
+    applyCrackCorrections = cms.bool( False ),
+    satelliteClusterSeedThreshold = cms.double( 50.0 ),
+    etawidth_SuperClusterBarrel = cms.double( 0.04 ),
+    PFBasicClusterCollectionEndcap = cms.string( "hltParticleFlowBasicClusterECALEndcap" ),
+    PFClusters = cms.InputTag( "hltParticleFlowClusterECALL1Seeded" ),
+    thresh_PFClusterSeedBarrel = cms.double( 4.0 ),
+    ClusteringType = cms.string( "Mustache" ),
+    EnergyWeight = cms.string( "Raw" ),
+    BeamSpot = cms.InputTag( "hltOnlineBeamSpot" ),
+    thresh_PFClusterSeedEndcap = cms.double( 4.0 ),
+    phiwidth_SuperClusterBarrel = cms.double( 0.6 ),
+    thresh_PFClusterES = cms.double( 5.0 ),
+    seedThresholdIsET = cms.bool( True ),
+    PFSuperClusterCollectionEndcapWithPreshower = cms.string( "hltParticleFlowSuperClusterECALEndcapWithPreshower" )
+)
+
+
+HLTPFClusteringForEgamma = cms.Sequence(hltRechitInRegionsECAL+hltRechitInRegionsES+hltParticleFlowRecHitECALL1Seeded+hltParticleFlowRecHitPSL1Seeded+hltParticleFlowClusterPSL1Seeded+hltParticleFlowClusterECALUncorrectedL1Seeded+hltParticleFlowClusterECALL1Seeded+hltParticleFlowSuperClusterECALL1Seeded)
+
+hltEgammaCandidates = cms.EDProducer( "EgammaHLTRecoEcalCandidateProducers",
+    scIslandEndcapProducer = cms.InputTag( 'hltParticleFlowSuperClusterECALL1Seeded','hltParticleFlowSuperClusterECALEndcapWithPreshower' ),
+    scHybridBarrelProducer = cms.InputTag( 'hltParticleFlowSuperClusterECALL1Seeded','hltParticleFlowSuperClusterECALBarrel' ),
     recoEcalCandidateCollection = cms.string( "" )
 )
 
-hltEcalActivitySuperClusterWrapper = cms.EDFilter( "HLTEgammaTriggerFilterObjectWrapper",
-    saveTags = cms.bool( False ),
-    doIsolated = cms.bool( True ),
-    candIsolatedTag = cms.InputTag( "hltRecoEcalSuperClusterActivityCandidate" ),
-    candNonIsolatedTag = cms.InputTag( "" )
-)
-
-
-
-HLTEcalActivitySequence = cms.Sequence( hltEcalRegionalRestFEDs + hltEcalRegionalESRestFEDs + 
-	                                hltEcalRecHitAll + hltESRecHitAll + 
-					hltHybridSuperClustersActivity + hltCorrectedHybridSuperClustersActivity +
-	                                hltMulti5x5BasicClustersActivity + hltMulti5x5SuperClustersActivity +
-				        hltMulti5x5SuperClustersWithPreshowerActivity +
-	                                hltCorrectedMulti5x5SuperClustersWithPreshowerActivity +
-					hltRecoEcalSuperClusterActivityCandidate + hltEcalActivitySuperClusterWrapper)
-
-
-hltActivityPhotonClusterShape = cms.EDProducer( "EgammaHLTClusterShapeProducer",
-    recoEcalCandidateProducer = cms.InputTag( "hltRecoEcalSuperClusterActivityCandidate" ),
-    ecalRechitEB = cms.InputTag( 'hltEcalRecHitAll','EcalRecHitsEB' ),
-    ecalRechitEE = cms.InputTag( 'hltEcalRecHitAll','EcalRecHitsEE' ),
+hltEgammaClusterShape = cms.EDProducer( "EgammaHLTClusterShapeProducer",
+    recoEcalCandidateProducer = cms.InputTag( "hltEgammaCandidates" ),
+    ecalRechitEB = cms.InputTag( 'hltRechitInRegionsECAL','EcalRecHitsEB' ),
+    ecalRechitEE = cms.InputTag( 'hltRechitInRegionsECAL','EcalRecHitsEE' ),
     isIeta = cms.bool( True )
 )
+
