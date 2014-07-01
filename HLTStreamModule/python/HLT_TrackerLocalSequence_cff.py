@@ -25,6 +25,11 @@ hltSiPixelClusters = cms.EDProducer( "SiPixelClusterProducer",
     ClusterThreshold = cms.double( 4000.0 )
 )
 
+hltSiPixelClustersCache = cms.EDProducer( "SiPixelClusterShapeCacheProducer",
+    src = cms.InputTag( "hltSiPixelClusters" ),
+    onDemand = cms.bool( False )
+)
+
 hltSiPixelRecHits = cms.EDProducer( "SiPixelRecHitConverter",
     VerboseLevel = cms.untracked.int32( 0 ),
     src = cms.InputTag( "hltSiPixelClusters" ),
@@ -35,10 +40,10 @@ hltSiStripExcludedFEDListProducer = cms.EDProducer( "SiStripExcludedFEDListProdu
     ProductLabel = cms.InputTag( "rawDataCollector" )
 )
 
-hltSiStripRawToClustersFacility = cms.EDProducer( "SiStripRawToClusters",
+hltSiStripRawToClustersFacility = cms.EDProducer( "SiStripClusterizerFromRaw",
     ProductLabel = cms.InputTag( "rawDataCollector" ),
     DoAPVEmulatorCheck = cms.bool( False ),
-    Algorithms = cms.PSet( 
+    Algorithms = cms.PSet(
       SiStripFedZeroSuppressionMode = cms.uint32( 4 ),
       CommonModeNoiseSubtractionMode = cms.string( "Median" ),
       PedestalSubtractionFedMode = cms.bool( True ),
@@ -46,7 +51,7 @@ hltSiStripRawToClustersFacility = cms.EDProducer( "SiStripRawToClusters",
       doAPVRestore = cms.bool( False ),
       useCMMeanMap = cms.bool( False )
     ),
-    Clusterizer = cms.PSet( 
+    Clusterizer = cms.PSet(
       ChannelThreshold = cms.double( 2.0 ),
       MaxSequentialBad = cms.uint32( 1 ),
       MaxSequentialHoles = cms.uint32( 0 ),
@@ -57,14 +62,71 @@ hltSiStripRawToClustersFacility = cms.EDProducer( "SiStripRawToClusters",
       ClusterThreshold = cms.double( 5.0 ),
       setDetId = cms.bool( True ),
       RemoveApvShots = cms.bool( True )
-    )
+    ),
+    onDemand = cms.bool( True )
 )
 
-hltSiStripClusters = cms.EDProducer( "MeasurementTrackerSiStripRefGetterProducer",
-    InputModuleLabel = cms.InputTag( "hltSiStripRawToClustersFacility" ),
-    measurementTrackerName = cms.string( "hltESPMeasurementTracker" )
+hltSiStripClusters = cms.EDProducer( "MeasurementTrackerEventProducer",
+    inactivePixelDetectorLabels = cms.VInputTag(  ),
+    stripClusterProducer = cms.string( "hltSiStripRawToClustersFacility" ),
+    pixelClusterProducer = cms.string( "hltSiPixelClusters" ),
+    switchOffPixelsIfEmpty = cms.bool( True ),
+    inactiveStripDetectorLabels = cms.VInputTag( 'hltSiStripExcludedFEDListProducer' ),
+    skipClusters = cms.InputTag( "" ),
+    measurementTracker = cms.string( "hltESPMeasurementTracker" )
 )
 
-
-HLTDoLocalPixelSequence = cms.Sequence( hltSiPixelDigis + hltSiPixelClusters + hltSiPixelRecHits )
+HLTDoLocalPixelSequence = cms.Sequence( hltSiPixelDigis + hltSiPixelClusters + hltSiPixelClustersCache + hltSiPixelRecHits )
 HLTDoLocalStripSequence = cms.Sequence( hltSiStripExcludedFEDListProducer + hltSiStripRawToClustersFacility + hltSiStripClusters )
+
+
+hltMixedLayerPairs = cms.EDProducer( "SeedingLayersEDProducer",
+    layerList = cms.vstring( 'BPix1+BPix2',
+      'BPix1+BPix3',
+      'BPix2+BPix3',
+      'BPix1+FPix1_pos',
+      'BPix1+FPix1_neg',
+      'BPix1+FPix2_pos',
+      'BPix1+FPix2_neg',
+      'BPix2+FPix1_pos',
+      'BPix2+FPix1_neg',
+      'BPix2+FPix2_pos',
+      'BPix2+FPix2_neg',
+      'FPix1_pos+FPix2_pos',
+      'FPix1_neg+FPix2_neg',
+      'FPix2_pos+TEC1_pos',
+      'FPix2_pos+TEC2_pos',
+      'TEC1_pos+TEC2_pos',
+      'TEC2_pos+TEC3_pos',
+      'FPix2_neg+TEC1_neg',
+      'FPix2_neg+TEC2_neg',
+      'TEC1_neg+TEC2_neg',
+      'TEC2_neg+TEC3_neg' ),
+    MTOB = cms.PSet(  ),
+    TEC = cms.PSet( 
+      useRingSlector = cms.bool( True ),
+      TTRHBuilder = cms.string( "hltESPTTRHBWithTrackAngle" ),
+      minRing = cms.int32( 1 ),
+      maxRing = cms.int32( 1 )
+    ),
+    MTID = cms.PSet(  ),
+    FPix = cms.PSet( 
+      useErrorsFromParam = cms.bool( True ),
+      hitErrorRPhi = cms.double( 0.0051 ),
+      TTRHBuilder = cms.string( "hltESPTTRHBuilderPixelOnly" ),
+      HitProducer = cms.string( "hltSiPixelRecHits" ),
+      hitErrorRZ = cms.double( 0.0036 )
+    ),
+    MTEC = cms.PSet(  ),
+    MTIB = cms.PSet(  ),
+    TID = cms.PSet(  ),
+    TOB = cms.PSet(  ),
+    BPix = cms.PSet( 
+      useErrorsFromParam = cms.bool( True ),
+      hitErrorRPhi = cms.double( 0.0027 ),
+      TTRHBuilder = cms.string( "hltESPTTRHBuilderPixelOnly" ),
+      HitProducer = cms.string( "hltSiPixelRecHits" ),
+      hitErrorRZ = cms.double( 0.006 )
+    ),
+    TIB = cms.PSet(  )
+)
