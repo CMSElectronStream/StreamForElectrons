@@ -10,27 +10,14 @@ def ElectronStreamOutput(process,
                                        offset = cms.uint32( 0 ))
 
  ## select the trigger path to use to fire the output collection
- StremSelectedEvents =  cms.vstring("HLT_Ele25_WP70_v13",
-				    "HLT_Ele25_WP80_v13",
-  			            "HLT_Ele25_WP90_v13",
-				    "HLT_Ele25_WP70_PFMET_MT50_v9",
-				    "HLT_Ele25_WP80_PFMET_MT50_v9",
-				    "HLT_Ele25_WP90_PFMET_MT50_v9",
-				    "HLT_Ele17_Ele8_WP90_v1",
-				    "HLT_Ele17_Ele_12_WP90_v1",
-				    "HLT_DoubleEle17_WP90_v1") 
+ StremSelectedEvents =  cms.vstring("HLT_Ele27_WP80_Gsf_v1",
+				    #"HLT_Ele27_WP80_Gsf_PFMET_MT50_v1"
+ ) 
 				    
- StremSelectedEventsGsf = cms.vstring(#'HLT_GsfEle25_WP70_v13',
- 	 			      #'HLT_GsfEle25_WP80_v13',
-  			              #'HLT_GsfEle25_WP90_v13',
-				      #'HLT_GsfEle25_WP70_PFMET_MT50_v9',
-				      'HLT_GsfEle25_WP80_PFMET_MT50_v9',
-				      #'HLT_GsfEle25_WP90_PFMET_MT50_v9'
-                                      )
-
 
  process.HLTselectedElectronFEDList = cms.EDProducer("selectedElectronFEDListProducerv2",
-	 electronCollections = cms.VInputTag('hltGsfEle25WP80PFMT50PFMTFilter'),
+	 electronCollections = cms.VInputTag('hltEgammaGsfElectrons'),
+         recoEcalCandidateCollections = cms.VInputTag('hltEle27WP80TrackIsoFilter'),
 	 isGsfElectronCollection = cms.vint32(True), 
 	 beamSpot            = cms.InputTag("hltOnlineBeamSpot"),
          HBHERecHitCollection = cms.InputTag("hltHbhereco"),                
@@ -53,8 +40,6 @@ def ElectronStreamOutput(process,
          addThisSelectedFEDs = cms.vint32(812,813),                                     
 	 debug = cms.bool(False))
 
-
-
  process.hltOutputStreamElectron = cms.OutputModule( "PoolOutputModule",
     fileName = cms.untracked.string( "outputHLT.root" ),
     fastCloning = cms.untracked.bool( False ),
@@ -62,8 +47,7 @@ def ElectronStreamOutput(process,
         filterName = cms.untracked.string( "" ),
         dataTier = cms.untracked.string( "RAW" )
     ),
-    SelectEvents = cms.untracked.PSet(  SelectEvents = ( #StremSelectedEvents 
-			                                 StremSelectedEventsGsf)),
+    SelectEvents = cms.untracked.PSet(  SelectEvents = (StremSelectedEvents)),
     outputCommands = cms.untracked.vstring('keep *'))
  
  if not saveAlcaElectronStreamOutput : 
@@ -75,6 +59,7 @@ def ElectronStreamOutput(process,
       'keep FEDRawDataCollection_source_*_*',
       'keep edmTriggerResults_*_*_*',
       'keep triggerTriggerEvent_*_*_*',
+      'drop *_*_*_*HLT*'
   ]
 
 
@@ -86,14 +71,12 @@ def ElectronStreamOutput(process,
                                             'keep *_hltL1GtObjectMap_*_*',
                                             'keep triggerTriggerEvent_*_*_*',
    	   				    'keep *_HLTselectedElectronFEDList_*StremElectronRawFedData*_*',
-                                            'keep *_*hltKT6PFJets_rho_*' ,
-                                            'keep *_*hltGsfEleAnyL1SeededElectronTrackIso*_*_*',
-                                            'keep *_*hltL1SeededGsfTrackVars*_*_*',
-                                            'keep *_*hltL1SeededPhotonEcalIso*_*_*',
-                                            'keep *_*hltL1SeededPhotonHcalIso*_*_*',
-                                            'keep *_*hltL1SeededPhotonHcalForHE*_*_*',
-                                            'keep *_*hltPFMETProducer*_*_*',
-                                            'keep *_*hltFastPVPixelVertices*_*_*'
+                                            'keep *_*hltFixedGridRhoFastjetAllCaloForMuons*_*_*' ,
+                                            'keep *_*hltEgammaEcalPFClusterIso*_*_*',
+                                            'keep *_*hltEgammaEleGsfTrackIso*_*_*',
+                                            'keep *_*hltEgammaHcalPFClusterIso*_*_*',
+                                            'keep *_*hltPixelVertices*_*_*',
+                                            'drop *_*_*_*HLT*'
 					   ]
  
 

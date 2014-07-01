@@ -8,8 +8,8 @@
 #include <fstream>
 #include "TLorentzVector.h"
 #include "TVector3.h"
-#include <boost/scoped_ptr.hpp>
 #include <ostream>
+#include <memory>
 #include <stdint.h>
 
 #include "DataFormats/FEDRawData/interface/FEDRawData.h"
@@ -220,6 +220,7 @@ class selectedElectronFEDListProducerv2 : public edm::EDProducer {
  private:
 
   // input parameter of the producer
+  std::vector<edm::InputTag> recoEcalCandidateCollections_ ;
   std::vector<edm::InputTag> electronCollections_ ;
   std::vector<int> isGsfElectronCollection_ ;
   std::vector<int> addThisSelectedFEDs_ ;
@@ -267,7 +268,7 @@ class selectedElectronFEDListProducerv2 : public edm::EDProducer {
   SiStripRegionCabling::Cabling cabling_ ;
   std::pair<double,double> regionDimension_ ;
 
-  boost::scoped_ptr<SiPixelFedCabling> PixelCabling_;
+  std::unique_ptr<SiPixelFedCablingTree> PixelCabling_;
   std::vector<PixelModule> pixelModuleVector_ ;
 
   const HBHERecHitCollection* hcalRecHitCollection_;
