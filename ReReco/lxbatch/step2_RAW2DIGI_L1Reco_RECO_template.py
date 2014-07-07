@@ -1,8 +1,8 @@
 # Auto generated configuration file
 # using: 
-# Revision: 1.381.2.28 
-# Source: /local/reps/CMSSW/CMSSW/Configuration/PyReleaseValidation/python/ConfigBuilder.py,v 
-# with command line options: step2 -s RAW2DIGI,L1Reco,RECO --data --datatier RECO --eventcontent RECO --conditions GR10_P_V11::All --scenario pp --no_exec --magField AutoFromDBCurrent --process reRECO
+# Revision: 1.19 
+# Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
+# with command line options: step2 -s RAW2DIGI,L1Reco,RECO --data --datatier RECO --eventcontent RECO --conditions GR_R_71_V5::All --scenario pp --no_exec --magField AutoFromDBCurrent --process reRECO
 import FWCore.ParameterSet.Config as cms
 
 process = cms.Process('reRECO')
@@ -21,7 +21,7 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(-1)
+    input = cms.untracked.int32(1)
 )
 
 # Input source
@@ -36,9 +36,9 @@ process.options = cms.untracked.PSet(
 
 # Production Info
 process.configurationMetadata = cms.untracked.PSet(
-    version = cms.untracked.string('$Revision: 1.381.2.28 $'),
+    version = cms.untracked.string('$Revision: 1.19 $'),
     annotation = cms.untracked.string('step2 nevts:1'),
-    name = cms.untracked.string('PyReleaseValidation')
+    name = cms.untracked.string('Applications')
 )
 
 # Output definition
@@ -58,7 +58,7 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
 
 # Other statements
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag.globaltag = 'GR_R_62_V1::All'
+process.GlobalTag = GlobalTag(process.GlobalTag, 'GR_R_71_V4::All', '')
 
 # Path and EndPath definitions
 process.raw2digi_step = cms.Path(process.RawToDigi)
@@ -67,131 +67,11 @@ process.reconstruction_step = cms.Path(process.reconstruction)
 process.endjob_step = cms.EndPath(process.endOfProcess)
 process.RECOoutput_step = cms.EndPath(process.RECOoutput)
 
-### keep some more info from trigger level
-process.RAWRECOEventContent.outputCommands +=  cms.untracked.vstring('keep *_*hltKT6PFJets*_*_*',
-                                                                     'keep *_*hltGsfEleAnyL1SeededElectronTrackIso*_*_*',
-                                                                     'keep *_*hltL1SeededGsfTrackVars*_*_*',
-                                                                     'keep *_*hltL1SeededPhotonEcalIso*_*_*',
-                                                                     'keep *_*hltL1SeededPhotonHcalForHE*_*_*',
-                                                                     'keep *_*hltL1SeededPhotonHcalIso*_*_*',
-                                                                     'keep *_*hltPFMETProducer_*_*',
-                                                                     'keep *_*hltFastPVPixelVertices_*_*',
-                                                                     'drop *_hltTriggerSummaryAOD_*_HLT',
-                                                                     'keep *_elPFIsoValueCharged03_*_*',
-                                                                     'keep *_elPFIsoValueGamma03_*_*',
-                                                                     'keep *_elPFIsoValueNeutral03_*_*',
-                                                                     'keep *_elPFIsoValueChargedAll_*_*',
-                                                                     'keep *_elPFIsoValuePU03_*_*',
-                                                                     'keep *_*_elPFIsoValueCharged03_*',
-                                                                     'keep *_*_elPFIsoValueGamma03_*',
-                                                                     'keep *_*_elPFIsoValueNeutral03_*',
-                                                                     'keep *_*_elPFIsoValueChargedAll_*',
-                                                                     'keep *_*_elPFIsoValuePU03_*')
- 
-process.RECOEventContent.outputCommands += cms.untracked.vstring('keep *_*hltKT6PFJets*_*_*',
-                                                                 'keep *_*hltGsfEleAnyL1SeededElectronTrackIso*_*_*',
-                                                                 'keep *_*hltL1SeededGsfTrackVars*_*_*',
-                                                                 'keep *_*hltL1SeededPhotonEcalIso*_*_*',
-                                                                 'keep *_*hltL1SeededPhotonHcalForHE*_*_*',
-                                                                 'keep *_*hltL1SeededPhotonHcalIso*_*_*',
-                                                                 'keep *_*hltPFMETProducer*_*_*',
-                                                                 'keep *_*hltFastPVPixelVertices*_*_*',
-                                                                 'drop *_hltTriggerSummaryAOD_*_HLT',
-                                                                 'keep *_elPFIsoValueCharged03_*_*',
-                                                                 'keep *_elPFIsoValueGamma03_*_*',
-                                                                 'keep *_elPFIsoValueNeutral03_*_*',
-                                                                 'keep *_elPFIsoValueChargedAll0_*_*',
-                                                                 'keep *_elPFIsoValuePU03_*_*',
-                                                                 'keep *_*_elPFIsoValueCharged03_*',
-                                                                 'keep *_*_elPFIsoValueGamma03_*',
-                                                                 'keep *_*_elPFIsoValueNeutral03_*',
-                                                                 'keep *_*_elPFIsoValueChargedAll_*',
-                                                                 'keep *_*_elPFIsoValuePU03_*')
-
-process.RECOoutput.outputCommands += cms.untracked.vstring('keep *_**hltKT6PFJets*_*_*',
-                                                           'keep *_*hltGsfEleAnyL1SeededElectronTrackIso*_*_*',
-                                                           'keep *_*hltL1SeededGsfTrackVars*_*_*',
-                                                           'keep *_*hltL1SeededPhotonEcalIso*_*_*',
-                                                           'keep *_*hltL1SeededPhotonHcalForHE*_*_*',
-                                                           'keep *_*hltL1SeededPhotonHcalIso*_*_*',
-                                                           'keep *_*hltPFMETProducer*_*_*',
-                                                           'keep *_*hltFastPVPixelVertices*_*_*',
-                                                           'drop *_hltTriggerSummaryAOD_*_HLT',
-                                                           'keep *_elPFIsoValueCharged03_*_*',
-                                                           'keep *_elPFIsoValueGamma03_*_*',
-                                                           'keep *_elPFIsoValueNeutral03_*_*',
-                                                           'keep *_elPFIsoValueChargedAll_*_*',
-                                                           'keep *_elPFIsoValuePU03_*_*',
-                                                           'keep *_*_elPFIsoValueCharged03_*',
-                                                           'keep *_*_elPFIsoValueGamma03_*',
-                                                           'keep *_*_elPFIsoValueNeutral03_*',
-                                                           'keep *_*_elPFIsoValueChargedAll_*',
-                                                           'keep *_*_elPFIsoValuePU03_*')
-
-
-process.RECOSIMEventContent.outputCommands += cms.untracked.vstring('keep *_*hltKT6PFJets*_*_*',
-                                                                    'keep *_*hltGsfEleAnyL1SeededElectronTrackIso*_*_*',
-                                                                    'keep *_*hltL1SeededGsfTrackVars_*_*',
-                                                                    'keep *_*hltL1SeededPhotonEcalIso*_*_*',
-                                                                    'keep *_*hltL1SeededPhotonHcalForHE*_*_*',
-                                                                    'keep *_*hltL1SeededPhotonHcalIso*_*_*',
-                                                                    'keep *_*hltPFMETProducer*_*_*',
-                                                                    'keep *_*hltFastPVPixelVertices*_*_*',
-                                                                    'drop *_hltTriggerSummaryAOD_*_HLT',
-                                                                    'keep *_elPFIsoValueCharged03_*_*',
-                                                                    'keep *_elPFIsoValueGamma03_*_*',
-                                                                    'keep *_elPFIsoValueNeutral03_*_*',
-                                                                    'keep *_elPFIsoValueChargedAll_*_*',
-                                                                    'keep *_elPFIsoValuePU03_*_*',
-                                                                    'keep *_*_elPFIsoValueCharged03_*',
-                                                                    'keep *_*_elPFIsoValueGamma03_*',
-                                                                    'keep *_*_elPFIsoValueNeutral03_*',
-                                                                    'keep *_*_elPFIsoValueChargedAll_*',
-                                                                    'keep *_*_elPFIsoValuePU03_*')
-
-
-process.AODEventContent.outputCommands += cms.untracked.vstring('keep *_*hltKT6PFJets*_*_*',
-                                                                'keep *_*hltGsfEleAnyL1SeededElectronTrackIso*_*_*',
-                                                                'keep *_*hltL1SeededGsfTrackVars*_*_*',
-                                                                'keep *_*hltL1SeededPhotonEcalIso*_*_*',
-                                                                'keep *_*hltL1SeededPhotonHcalForHE*_*_*',
-                                                                'keep *_*hltL1SeededPhotonHcalIso*_*_*',
-                                                                'keep *_*hltPFMETProducer*_*_*',
-                                                                'keep *_*hltFastPVPixelVertices*_*_*',
-                                                                'drop *_hltTriggerSummaryAOD_*_HLT',
-                                                                'keep *_elPFIsoValueCharged03_*_*',
-                                                                'keep *_elPFIsoValueGamma03_*_*',
-                                                                'keep *_elPFIsoValueNeutral03_*_*',
-                                                                'keep *_elPFIsoValueChargedAll_*_*',
-                                                                'keep *_elPFIsoValuePU03_*_*',
-                                                                'keep *_*_elPFIsoValueCharged03_*',
-                                                                'keep *_*_elPFIsoValueGamma03_*',
-                                                                'keep *_*_elPFIsoValueNeutral03_*',
-                                                                'keep *_*_elPFIsoValueChargedAll_*',
-                                                                'keep *_*_elPFIsoValuePU03_*')
-
-
-process.AODSIMEventContent.outputCommands += cms.untracked.vstring('keep *_*hltKT6PFJets*_*_*',
-                                                                   'keep *_*hltGsfEleAnyL1SeededElectronTrackIso_*_*',
-                                                                   'keep *_*hltL1SeededGsfTrackVars*_*_*',
-                                                                   'keep *_*hltL1SeededPhotonEcalIso*_*_*',
-                                                                   'keep *_*hltL1SeededPhotonHcalForHE*_*_*',
-                                                                   'keep *_*hltL1SeededPhotonHcalIso*_*_*',
-                                                                   'keep *_*hltPFMETProducer*_*_*',
-                                                                   'keep *_*hltFastPVPixelVertices*_*_*',
-                                                                   'drop *_hltTriggerSummaryAOD_*_HLT',
-                                                                   'keep *_elPFIsoValueCharged03_*_*',
-                                                                   'keep *_elPFIsoValueGamma03_*_*',
-                                                                   'keep *_elPFIsoValueNeutral03_*_*',
-                                                                   'keep *_elPFIsoValueChargedAll_*_*',
-                                                                   'keep *_elPFIsoValuePU03_*_*',
-                                                                   'keep *_*_elPFIsoValueCharged03_*',
-                                                                   'keep *_*_elPFIsoValueGamma03_*',
-                                                                   'keep *_*_elPFIsoValueNeutral03_*',
-                                                                   'keep *_*_elPFIsoValueChargedAll_*',
-                                                                   'keep *_*_elPFIsoValuePU03_*')
-
-
 # Schedule definition
 process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.endjob_step,process.RECOoutput_step)
 
+############################                                                                                                                                                              
+## Dump the output Python ##                                                                                                                                                              
+############################                                                                                                                                                              
+processDumpFile = open('processDump.py', 'w')
+print >> processDumpFile, process.dumpPython()
