@@ -114,7 +114,7 @@ if __name__ == "__main__":
     command = "cd "+inPath ;
     SAMPLEJOBFILE.write(command+"\n");
 
-    command = "export SCRAM_ARCH=slc5_amd64_gcc472 " ;
+    command = "export SCRAM_ARCH=slc6_amd64_gcc481" ;
     SAMPLEJOBFILE.write(command+"\n");
     
     command = "eval `scramv1 runtime -sh`" ;
