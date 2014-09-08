@@ -889,7 +889,8 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
  if ( ! recHitsEE.isValid() ) {
   std::cerr << "AnalyzerEle::analyze --> recHitsEE not found" << std::endl;
  }
-  
+ 
+ 
  //************* ELECTRONS
  edm::Handle<edm::View<pat::Electron> > electronHandle;
  iEvent.getByLabel(EleTag_,electronHandle);
@@ -900,7 +901,10 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
  iEvent.getByLabel(PVTag_,hVertexProduct);
   
  //************* CLUSTER LAZY TOOLS
- EcalClusterLazyTools lazyTools(iEvent,iSetup,recHitCollection_EB_,recHitCollection_EE_);
+ recHitCollection_EB_token_  = consumes<EcalRecHitCollection>(recHitCollection_EB_);
+ recHitCollection_EE_token_  = consumes<EcalRecHitCollection>(recHitCollection_EE_); 
+ 
+ EcalClusterLazyTools lazyTools(iEvent,iSetup,recHitCollection_EB_token_,recHitCollection_EE_token_);
  EcalClusterPUCleaningTools cleaningTools(iEvent, iSetup, recHitCollection_EB_, recHitCollection_EE_);
 
  // Take the correct ele
