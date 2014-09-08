@@ -86,6 +86,7 @@ MC:
     scp amassiro@cmsneu.cern.ch:/data/amassiro/CMSSWRoot/Spring14/DYToEE_Tune4C_13TeV-pythia8_GEN-SIM-RAW_tsg_PU40bx50_POSTLS162_V2-v1/009A2A53-A16B-E311-8345-003048F0E3B2.root /tmp/amassiro/
     cmsRun StreamForElectrons/HLTStreamModule/test/streamEle_cfg.py  inputFiles=file:/tmp/amassiro/009A2A53-A16B-E311-8345-003048F0E3B2.root   isMC=True
     
+
     
 ============================================================
 ============================================================

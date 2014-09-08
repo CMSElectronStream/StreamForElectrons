@@ -201,6 +201,11 @@ if 'GlobalTag' in process.__dict__:
 if options.isMC :
     process.GlobalTag.globaltag = cms.string('PRE_LS171_V5A::All')
 
+#from:
+#https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideGlobalHLT
+# for 25 ns samples: PRE_LS171_V5A::All
+# for 50 ns samples: PRE_LS171_V6A::All 
+
 
 
 
