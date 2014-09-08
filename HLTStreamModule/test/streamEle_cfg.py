@@ -6,7 +6,8 @@ import sys
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('python')
 
-options.register ('saveAlcaElectronStreamOutput',True,VarParsing.multiplicity.singleton,VarParsing.varType.int,'dump the full raw collection or only the AlcaElectron Stream')
+options.register ('saveAlcaElectronStreamOutput', True,  VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'dump the full raw collection or only the AlcaElectron Stream')
+options.register ('isMC',                         False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'is MC or is Data')
 
 options.parseArguments()
 print options
@@ -26,7 +27,7 @@ process.load("HLTrigger.Configuration.SourceHLT_cff")
 
 ## ES-Producers
 process.load("HLTrigger.Configuration.ESProducerHLT_cff")
-
+ 
 ## Service
 process.load("HLTrigger.Configuration.ServiceHLT_cff")
 
@@ -196,6 +197,12 @@ if 'GlobalTag' in process.__dict__:
     process.GlobalTag.ReconnectEachRun = cms.untracked.bool( True )
     process.GlobalTag.globaltag = cms.string('GR_R_71_V5::All')
  
+ 
+if options.isMC :
+    process.GlobalTag.globaltag = cms.string('PRE_LS171_V5A::All')
+
+
+
 
 if 'MessageLogger' in process.__dict__:
     process.MessageLogger.categories.append('TriggerSummaryProducerAOD')
