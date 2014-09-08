@@ -66,14 +66,21 @@ To install in CMSSW_7_1_X (on SLC6 machine only):
     cp StreamForElectrons/HLTStreamModule/plugins/BuildFile.xml.decomment              HLTrigger/Egamma/BuildFile.xml
     cp StreamForElectrons/HLTStreamModule/test/HcalElectronicsMap_v7.00_offline HLTrigger/Configuration/test
     cp StreamForElectrons/HLTStreamModule/test/ES_lookup_table.dat HLTrigger/Configuration/test
-    rm -r StreamForElectrons/ ;
-    scramv1 b -j 8
+    rm -rf StreamForElectrons/RateAndEfficiencyTriggerStudy 
+    rm StreamForElectrons/AnalyzerEle/src/EleSelectionProducers.cc
+    rm StreamForElectrons/AnalyzerEle/src/SimpleCutBasedElectronIDSelectionFunctor.cc
+    rm StreamForElectrons/AnalyzerEle/src/BuildFile.xml
+    rm -rf StreamForElectrons/AnalyzerEle/src/
+    scramv1 b -j 8 -Werror=unused-variable
 
 test:
 
     cd HLTrigger/Configuration/test ;
-    cmsRun streamEle_cfg.py
-
+    cmsRun streamEle_cfg.py  inputFiles=file:root://xrootd.unl.edu//store/data/Run2012C/SingleElectron/RAW/v1/000/198/022/3859DED3-DDC3-E111-AAF6-001D09F24D67.root
+    
+    scp amassiro@cmsneu.cern.ch:/data/amassiro/CMSSWRoot/Spring14/DYToEE_Tune4C_13TeV-pythia8_GEN-SIM-RAW_tsg_PU40bx50_POSTLS162_V2-v1/009A2A53-A16B-E311-8345-003048F0E3B2.root /tmp/amassiro/
+    cmsRun streamEle_cfg.py  inputFiles=file:/tmp/amassiro/009A2A53-A16B-E311-8345-003048F0E3B2.root
+    
 ============================================================
 ============================================================
 ============================================================
