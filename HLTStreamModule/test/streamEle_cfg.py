@@ -114,7 +114,10 @@ process.ElectronStreamOutputPath = cms.EndPath(process.hltPreOutput +
 process.source = cms.Source( "PoolSource",
     # high pu : https://twiki.cern.ch/twiki/bin/viewauth/CMS/TriggerStudies
     fileNames = cms.untracked.vstring(
-      'file:root://xrootd.unl.edu//store/data/Run2012C/SingleElectron/RAW/v1/000/198/022/3859DED3-DDC3-E111-AAF6-001D09F24D67.root',
+     options.inputFiles
+     
+      #'file:root://xrootd.unl.edu//store/data/Run2012C/SingleElectron/RAW/v1/000/198/022/3859DED3-DDC3-E111-AAF6-001D09F24D67.root',
+      
 #      '/store/group/comm_trigger/TriggerStudiesGroup/Timing/run198609/run198609_lumi0050_part2.root',
 #      '/store/group/comm_trigger/TriggerStudiesGroup/Timing/run198609/run198609_lumi0050_part3.root',
 #      '/store/group/comm_trigger/TriggerStudiesGroup/Timing/run198609/run198609_lumi0050_part4.root',

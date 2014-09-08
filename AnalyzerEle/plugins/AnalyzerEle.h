@@ -184,6 +184,9 @@ class AnalyzerEle : public edm::EDAnalyzer {
   edm::InputTag rhoTag_;
   edm::InputTag recHitCollection_EB_;
   edm::InputTag recHitCollection_EE_;
+  edm::EDGetTokenT<EcalRecHitCollection> recHitCollection_EB_token_;
+  edm::EDGetTokenT<EcalRecHitCollection> recHitCollection_EE_token_;
+  
   edm::InputTag BSTag_;
   edm::InputTag conversionsInputTag_;
   edm::InputTag EleTag_;
