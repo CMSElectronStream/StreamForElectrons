@@ -9,6 +9,7 @@ import FWCore.ParameterSet.Config as cms
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('python')
 # add a list of strings for events to process
+options.register ('isMC',                         False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'is MC or is Data')
 options.parseArguments()
 print options
 
@@ -24,9 +25,16 @@ process.load('FWCore.MessageService.MessageLogger_cfi')
 process.load('Configuration.EventContent.EventContent_cff')
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cff')
-process.load('Configuration.StandardSequences.RawToDigi_Data_cff')
+
+if options.isMC :
+    process.load('SimGeneral.MixingModule.mixNoPU_cfi')
+    process.load('Configuration.StandardSequences.RawToDigi_cff')
+    process.load('Configuration.StandardSequences.Reconstruction_cff')
+else :
+    process.load('Configuration.StandardSequences.RawToDigi_Data_cff')
+    process.load('Configuration.StandardSequences.Reconstruction_Data_cff')
+
 process.load('Configuration.StandardSequences.L1Reco_cff')
-process.load('Configuration.StandardSequences.Reconstruction_Data_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
@@ -72,7 +80,17 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
 
 # Other statements
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag.globaltag = 'GR_R_62_V1::All'
+
+if options.isMC :
+    #process.GlobalTag = GlobalTag(process.GlobalTag, 'POSTLS171_V15::All', '')
+    #process.GlobalTag = GlobalTag(process.GlobalTag, 'POSTLS171_V16::All', '')
+    process.GlobalTag = GlobalTag(process.GlobalTag, 'DESIGN71_V5::All', '')
+    print "MC GT"
+    #process.GlobalTag = GlobalTag(process.GlobalTag, 'PRE_LS171_V5A::All', '')
+    
+else :
+    process.GlobalTag.globaltag = 'GR_R_62_V1::All'
+ 
 
 
 ### some fix for the stream
@@ -228,3 +246,14 @@ process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,proces
 
 processDumpFile = open('processDump.py', 'w')
 print >> processDumpFile, process.dumpPython()
+
+if options.isMC :
+
+    # Automatic addition of the customisation function from SLHCUpgradeSimulations.Configuration.postLS1Customs
+    from SLHCUpgradeSimulations.Configuration.postLS1Customs import customisePostLS1 
+
+    #call to customisation function customisePostLS1 imported from SLHCUpgradeSimulations.Configuration.postLS1Customs
+    process = customisePostLS1(process)
+
+
+
