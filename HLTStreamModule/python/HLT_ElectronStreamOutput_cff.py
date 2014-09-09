@@ -10,7 +10,7 @@ def ElectronStreamOutput(process,
                                        offset = cms.uint32( 0 ))
 
  ## select the trigger path to use to fire the output collection
- StremSelectedEvents =  cms.vstring("HLT_Ele27_WP80_Gsf_v1",
+ StreamSelectedEvents =  cms.vstring("HLT_Ele27_WP80_Gsf_v1",
 				    #"HLT_Ele27_WP80_Gsf_PFMET_MT50_v1"
  ) 
 				    
@@ -28,7 +28,7 @@ def ElectronStreamOutput(process,
 	 dPhiPixelRegion     = cms.double(0.3),
 	 dEtaPixelRegion     = cms.double(0.3),
 	 maxZPixelRegion     = cms.double(24.),
-	 outputLabelModule   = cms.string("StremElectronRawFedData"),
+	 outputLabelModule   = cms.string("StreamElectronRawFedData"),
 	 rawDataLabel        = cms.InputTag("rawDataCollector"),
 	 dumpSelectedEcalFed     = cms.bool(True),
 	 dumpSelectedSiStripFed  = cms.bool(True),
@@ -47,7 +47,7 @@ def ElectronStreamOutput(process,
         filterName = cms.untracked.string( "" ),
         dataTier = cms.untracked.string( "RAW" )
     ),
-    SelectEvents = cms.untracked.PSet(  SelectEvents = (StremSelectedEvents)),
+    SelectEvents = cms.untracked.PSet(  SelectEvents = (StreamSelectedEvents)),
     outputCommands = cms.untracked.vstring('keep *'))
  
  if not saveAlcaElectronStreamOutput : 
@@ -70,13 +70,15 @@ def ElectronStreamOutput(process,
                                             'keep edmTriggerResults_*_*_*',
                                             'keep *_hltL1GtObjectMap_*_*',
                                             'keep triggerTriggerEvent_*_*_*',
-   	   				    'keep *_HLTselectedElectronFEDList_*StremElectronRawFedData*_*',
+   	   				    'keep *_HLTselectedElectronFEDList_*StreamElectronRawFedData*_*',
                                             'keep *_*hltFixedGridRhoFastjetAllCaloForMuons*_*_*' ,
                                             'keep *_*hltEgammaEcalPFClusterIso*_*_*',
                                             'keep *_*hltEgammaEleGsfTrackIso*_*_*',
                                             'keep *_*hltEgammaHcalPFClusterIso*_*_*',
                                             'keep *_*hltPixelVertices*_*_*',
-                                            'drop *_*_*_*HLT*'
+                                            'drop *_*_*_*HLT*',
+                                            'keep *_simMuonCSCDigis_*_*',
+                                            'keep *_simMuonRPCDigis_*_*'
 					   ]
  
 
