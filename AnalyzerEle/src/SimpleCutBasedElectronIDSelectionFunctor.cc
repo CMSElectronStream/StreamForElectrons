@@ -1,4 +1,4 @@
-#include "EgammaAnalysis/ElectronTools/interface/SimpleCutBasedElectronIDSelectionFunctor.h"
+#include "StreamForElectrons/AnalyzerEle/interface/SimpleCutBasedElectronIDSelectionFunctor.h"
 
 
 SimpleCutBasedElectronIDSelectionFunctor::SimpleCutBasedElectronIDSelectionFunctor(edm::ParameterSet const & parameters):

@@ -1,4 +1,4 @@
-#include "EgammaAnalysis/ElectronTools/interface/EleSelectionProducers.h"
+#include "StreamForElectrons/AnalyzerEle/interface/EleSelectionProducers.h"
 
 EleSelectionProducers::EleSelectionProducers(const edm::ParameterSet& iConfig):
   electronsTAG(iConfig.getParameter<edm::InputTag>("electronCollection")),

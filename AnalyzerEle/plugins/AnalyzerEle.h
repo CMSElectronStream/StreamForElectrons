@@ -85,6 +85,7 @@
 #include "DataFormats/HLTReco/interface/TriggerEvent.h"
 #include "DataFormats/Common/interface/TriggerResults.h"
 
+#include "FWCore/Framework/interface/EDConsumerBase.h"
 
 #include "RecoEgamma/EgammaTools/interface/EcalClusterLocal.h"
 #include "Geometry/TrackerGeometryBuilder/interface/TrackerGeometry.h"
