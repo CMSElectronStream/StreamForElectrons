@@ -21,14 +21,14 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(-1)
+    input = cms.untracked.int32(2)
 )
 
 # Input source
 process.source = cms.Source("PoolSource",
     secondaryFileNames = cms.untracked.vstring(),
     fileNames = cms.untracked.vstring(
-       'MYINPUTFILE'
+       '/store/group/alca_ecalcalib/ecalMIBI/rgerosa/ElectronStreamStudy/TriggerLevel/SingleElectron_8TeV_Run2012C_71X/AlcaElectronStream/streamElectronRAW_alcastream_1_1_h9l.root'
    )
 )
 
