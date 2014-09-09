@@ -177,65 +177,63 @@ process.REPACKRAWEventContent.outputCommands     += cms.untracked.vstring('keep 
 process.REPACKRAWSIMEventContent.outputCommands  += cms.untracked.vstring('keep FEDRawDataCollection_HLTselectedElectronFEDList:StreamElectronRawFedData_*_*')
 
 ### keep some more info from trigger level
-process.RAWRECOEventContent.outputCommands +=  cms.untracked.vstring('keep *_*hltKT6PFJets*_*_*',
-                                                      'keep *_*hltGsfEleAnyL1SeededElectronTrackIso*_*_*',
-                                                      'keep *_*hltL1SeededGsfTrackVars*_*_*',
-                                                      'keep *_*hltL1SeededPhotonEcalIso*_*_*',
-                                                      'keep *_*hltL1SeededPhotonHcalForHE*_*_*',
-                                                      'keep *_*hltL1SeededPhotonHcalIso*_*_*',
-                                                      'keep *_*hltPFMETProducer_*_*',
-                                                      'keep *_*hltFastPVPixelVertices_*_*')
 
-process.RECOEventContent.outputCommands += cms.untracked.vstring('keep *_*hltKT6PFJets*_*_*',
-                                                       'keep *_*hltGsfEleAnyL1SeededElectronTrackIso*_*_*',
-                                                       'keep *_*hltL1SeededGsfTrackVars*_*_*',
-                                                       'keep *_*hltL1SeededPhotonEcalIso*_*_*',
-                                                       'keep *_*hltL1SeededPhotonHcalForHE*_*_*',
-                                                       'keep *_*hltL1SeededPhotonHcalIso*_*_*',
-                                                       'keep *_*hltPFMETProducer*_*_*',
-                                                       'keep *_*hltFastPVPixelVertices*_*_*')
-
-process.RECOoutput.outputCommands += cms.untracked.vstring('keep *_**hltKT6PFJets*_*_*',
-                                                       'keep *_*hltGsfEleAnyL1SeededElectronTrackIso*_*_*',
-                                                       'keep *_*hltL1SeededGsfTrackVars*_*_*',
-                                                       'keep *_*hltL1SeededPhotonEcalIso*_*_*',
-                                                       'keep *_*hltL1SeededPhotonHcalForHE*_*_*',
-                                                       'keep *_*hltL1SeededPhotonHcalIso*_*_*',
-                                                       'keep *_*hltPFMETProducer*_*_*',
-                                                       'keep *_*hltFastPVPixelVertices*_*_*')
+process.RAWRECOEventContent.outputCommands +=  cms.untracked.vstring('keep *_*hltFixedGridRho*_*_*',
+                                                                     'keep *_*hltEgammaEcalPFClusterIso_*_*',
+                                                                     'keep *_*hltEgammaEleGsfTrackIso_*_*',
+                                                                     'keep *_*hltEgammaHcalPFClusterIso_*_*',
+                                                                     'keep *_*TriggerResults*_*_*',
+                                                                     'keep *_*hltTriggerSummaryAOD*_*_*',
+                                                                     'keep *_*hltPixelVertices*_*_*',
+                                                                     'keep *_*hltPFMETProducer*_*_*')
 
 
 
-process.RECOSIMEventContent.outputCommands += cms.untracked.vstring('keep *_*hltKT6PFJets*_*_*',
-                                                    'keep *_*hltGsfEleAnyL1SeededElectronTrackIso*_*_*',
-                                                    'keep *_*hltL1SeededGsfTrackVars_*_*',
-                                                    'keep *_*hltL1SeededPhotonEcalIso*_*_*',
-                                                    'keep *_*hltL1SeededPhotonHcalForHE*_*_*',
-                                                    'keep *_*hltL1SeededPhotonHcalIso*_*_*',
-                                                    'keep *_*hltPFMETProducer*_*_*',
-                                                    'keep *_*hltFastPVPixelVertices*_*_*')
+process.RECOEventContent.outputCommands += cms.untracked.vstring('keep *_*hltFixedGridRho*_*_*',
+                                                                 'keep *_*hltEgammaEcalPFClusterIso_*_*',
+                                                                 'keep *_*hltEgammaEleGsfTrackIso_*_*',
+                                                                 'keep *_*hltEgammaHcalPFClusterIso_*_*',
+                                                                 'keep *_*TriggerResults*_*_*',
+                                                                 'keep *_*hltTriggerSummaryAOD*_*_*',
+                                                                 'keep *_*hltPixelVertices*_*_*',
+                                                                 'keep *_*hltPFMETProducer*_*_*')
+
+process.RECOoutput.outputCommands += cms.untracked.vstring('keep *_*hltFixedGridRho*_*_*',
+                                                           'keep *_*hltEgammaEcalPFClusterIso_*_*',
+                                                           'keep *_*hltEgammaEleGsfTrackIso_*_*',
+                                                           'keep *_*hltEgammaHcalPFClusterIso_*_*',
+                                                           'keep *_*TriggerResults*_*_*',
+                                                           'keep *_*hltTriggerSummaryAOD*_*_*',
+                                                           'keep *_*hltPixelVertices*_*_*',
+                                                           'keep *_*hltPFMETProducer*_*_*')
 
 
-process.AODEventContent.outputCommands += cms.untracked.vstring('keep *_*hltKT6PFJets*_*_*',
-                                             'keep *_*hltGsfEleAnyL1SeededElectronTrackIso*_*_*',
-                                             'keep *_*hltL1SeededGsfTrackVars*_*_*',
-                                             'keep *_*hltL1SeededPhotonEcalIso*_*_*',
-                                             'keep *_*hltL1SeededPhotonHcalForHE*_*_*',
-                                             'keep *_*hltL1SeededPhotonHcalIso*_*_*',
-                                             'keep *_*hltPFMETProducer*_*_*',
-                                             'keep *_*hltFastPVPixelVertices*_*_*')
+process.RECOSIMEventContent.outputCommands += cms.untracked.vstring('keep *_*hltFixedGridRho*_*_*',
+                                                           'keep *_*hltEgammaEcalPFClusterIso_*_*',
+                                                           'keep *_*hltEgammaEleGsfTrackIso_*_*',
+                                                           'keep *_*hltEgammaHcalPFClusterIso_*_*',
+                                                           'keep *_*TriggerResults*_*_*',
+                                                           'keep *_*hltTriggerSummaryAOD*_*_*',
+                                                           'keep *_*hltPixelVertices*_*_*',
+                                                           'keep *_*hltPFMETProducer*_*_*')
 
+process.AODEventContent.outputCommands += cms.untracked.vstring('keep *_*hltFixedGridRho*_*_*',
+                                                           'keep *_*hltEgammaEcalPFClusterIso_*_*',
+                                                           'keep *_*hltEgammaEleGsfTrackIso_*_*',
+                                                           'keep *_*hltEgammaHcalPFClusterIso_*_*',
+                                                           'keep *_*TriggerResults*_*_*',
+                                                           'keep *_*hltTriggerSummaryAOD*_*_*',
+                                                           'keep *_*hltPixelVertices*_*_*',
+                                                           'keep *_*hltPFMETProducer*_*_*')
 
-process.AODSIMEventContent.outputCommands += cms.untracked.vstring('keep *_*hltKT6PFJets*_*_*',
-                                                'keep *_*hltGsfEleAnyL1SeededElectronTrackIso_*_*',
-                                                'keep *_*hltL1SeededGsfTrackVars*_*_*',
-                                                'keep *_*hltL1SeededPhotonEcalIso*_*_*',
-                                                'keep *_*hltL1SeededPhotonHcalForHE*_*_*',
-                                                'keep *_*hltL1SeededPhotonHcalIso*_*_*',
-                                                'keep *_*hltPFMETProducer*_*_*',
-                                                'keep *_*hltFastPVPixelVertices*_*_*')
-
-
+process.AODSIMEventContent.outputCommands += cms.untracked.vstring('keep *_*hltFixedGridRho*_*_*',
+                                                           'keep *_*hltEgammaEcalPFClusterIso_*_*',
+                                                           'keep *_*hltEgammaEleGsfTrackIso_*_*',
+                                                           'keep *_*hltEgammaHcalPFClusterIso_*_*',
+                                                           'keep *_*TriggerResults*_*_*',
+                                                           'keep *_*hltTriggerSummaryAOD*_*_*',
+                                                           'keep *_*hltPixelVertices*_*_*',
+                                                           'keep *_*hltPFMETProducer*_*_*')
 
 
 # Schedule definition
