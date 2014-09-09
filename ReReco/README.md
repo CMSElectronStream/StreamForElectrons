@@ -29,7 +29,7 @@ to run on raw:
 
     cmsRun step2_RAW2DIGI_L1Reco_RECO_onRaw.py  \
         inputFiles=file:/tmp/amassiro/009A2A53-A16B-E311-8345-003048F0E3B2.root  \
-        outputFile=reco_raw_data.root \
+        outputFile=reco_raw_mc.root \
         isMC=True
 
         
