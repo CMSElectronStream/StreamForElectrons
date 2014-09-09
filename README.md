@@ -3,13 +3,13 @@ StreamForElectrons
 
 The stream definition:
 
-    HLTStreamModule
+    HLTStreamModule --> run on RAW events the HLT config + the stream output module
 
 Reconstruction path to run on the stream and simple raw data
 
-    ReReco
+    ReReco 
 
 Simple analyzer:
 
-    AnalyzerEle
+    AnalyzerEle -> making a comparison between stream and full reconstruction
 
