@@ -901,15 +901,11 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
  iEvent.getByLabel(PVTag_,hVertexProduct);
   
  //************* CLUSTER LAZY TOOLS
-<<<<<<< Updated upstream
  recHitCollection_EB_token_  = consumes<EcalRecHitCollection>(recHitCollection_EB_);
  recHitCollection_EE_token_  = consumes<EcalRecHitCollection>(recHitCollection_EE_); 
  
  EcalClusterLazyTools lazyTools(iEvent,iSetup,recHitCollection_EB_token_,recHitCollection_EE_token_);
  EcalClusterPUCleaningTools cleaningTools(iEvent, iSetup, recHitCollection_EB_, recHitCollection_EE_);
-=======
- EcalClusterLazyTools lazyTools(iEvent,iSetup,  consumes <EcalRecHitCollection>(recHitCollection_EB_),  consumes <EcalRecHitCollection>(recHitCollection_EE_));
->>>>>>> Stashed changes
 
  // Take the correct ele
  bool printOut = false;
