@@ -9,7 +9,7 @@ import FWCore.ParameterSet.Config as cms
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('python')
 # add a list of strings for events to process
-options.register ('isMC',                         False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'is MC or is Data')
+options.register ('isMC', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'is MC or is Data')
 options.parseArguments()
 print options
 

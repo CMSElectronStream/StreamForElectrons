@@ -106,6 +106,11 @@ if __name__ == "__main__":
     command = "touch "+tempBjob ;
     os.system(command) ;
 
+    tempBjob2 = jobDir+"/bjob_"+str(jobId)+".log" ;
+    command = "touch "+tempBjob2 ;
+    os.system(command) ;
+
+
     command = "chmod 777 "+tempBjob ;
     os.system (command) ;
         
@@ -166,7 +171,7 @@ if __name__ == "__main__":
     ############
     # submit job
     ############
-    command = "bsub -cwd "+inPath+"/"+jobDir+" -q "+options.queque+" "+inPath+"/"+tempBjob;
+    command = "bsub -cwd "+inPath+"/"+jobDir+" -o "+inPath+"/"+tempBjob2+" -q "+options.queque+" "+inPath+"/"+tempBjob;
     SAMPLEJOBLISTFILE.write(command+"\n");
     
  os.system("rm List_*.txt") ;
