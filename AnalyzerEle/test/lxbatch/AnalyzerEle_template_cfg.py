@@ -47,11 +47,11 @@ process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 ####### define output file
 if not options.skipAnalyzerAndDumpOutput :
  process.TFileService = cms.Service("TFileService", 
-                       fileName = cms.string('MYOUTPUTFILE'),
+                       fileName = cms.string("MYOUTPUTFILE"),
                        closeFileFast = cms.untracked.bool(True));
 else:
  process.output = cms.OutputModule("PoolOutputModule",
-                                    fileName = cms.untracked.string('MYOUTPUTFILE'),
+                                    fileName = cms.untracked.string("MYOUTPUTFILE"),
                                     outputCommands = cms.untracked.vstring('keep *'),
                                     dropMetaData   = cms.untracked.string('ALL'))
 
@@ -76,7 +76,8 @@ process.IsolationSequence = cms.Sequence(process.pfParticleSelectionSequence*
 process.load('StreamForElectrons.AnalyzerEle.patElectronSequence_cff')
 
 if options.isAlcaStreamOutput != 0 :
-    process.patElectrons.pvSrc = cms.InputTag("offlinePrimaryVerticesWithBS");
+    process.patElectrons.pvSrc = cms.InputTag("hltPixelVerticesElectrons");
+    process.eleSelectionProducers.rhoFastJet =  cms.InputTag("hltFixedGridRhoFastjetAllCaloForMuons");    
 else:
     process.eleSelectionProducers.rhoFastJet =  cms.InputTag("fixedGridRhoAll");    
     process.eleSelectionProducers.vertexCollection = cms.InputTag("offlinePrimaryVerticesWithBS");
@@ -89,10 +90,10 @@ process.Analyzer.hltPaths = cms.vstring(options.hltPath)
 if options.isAlcaStreamOutput != 0 :
  if options.usePatElectronsTriggerMatch :
      process.Analyzer.EleTag = cms.InputTag("PatElectronsTriggerMatch")
- process.Analyzer.PVTag    = cms.InputTag("offlinePrimaryVerticesWithBS");
+ process.Analyzer.PVTag    = cms.InputTag("hltPixelVerticesElectrons");
  process.Analyzer.PVTag_alternative   = cms.InputTag("offlinePrimaryVerticesWithBS");
  process.Analyzer.PFMetTag = cms.InputTag("pfMet");
- process.Analyzer.rhoTag   = cms.InputTag("fixedGridRhoAll");
+ process.Analyzer.rhoTag   = cms.InputTag("hltFixedGridRhoFastjetAllCaloForMuons");
  process.Analyzer.triggerResultsCollection = cms.InputTag('TriggerResults::TEST');
  if options.applyWZSelections:
     process.Analyzer.doWZSelection = cms.untracked.bool(True);
@@ -136,3 +137,10 @@ else:
 
  process.schedule = cms.Schedule(process.path,process.EndPath)
      
+
+############################
+## Dump the output Python ##
+############################
+
+processDumpFile = open('processDump.py', 'w')
+print >> processDumpFile, process.dumpPython()

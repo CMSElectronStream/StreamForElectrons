@@ -59,6 +59,8 @@ def ElectronStreamOutput(process,
       'keep edmTriggerResults_*_*_*',
       'drop *_*_*_*HLT*',
       'keep FEDRawDataCollection*_*_*_*',
+      'keep *_simMuonCSCDigis_*_*',
+      'keep *_simMuonRPCDigis_*_*'
   ]
 
 
