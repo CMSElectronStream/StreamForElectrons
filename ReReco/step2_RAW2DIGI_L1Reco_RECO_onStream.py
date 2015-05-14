@@ -75,20 +75,26 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
 # Additional output definition
 
 # Other statements
-from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
+#from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag as customiseGlobalTag
+#process.GlobalTag = customiseGlobalTag(process.GlobalTag, globaltag = 'DESIGN71_V5',conditions='TrackerAlignmentExtendedError_2011Realistic_v1_mc,TrackerAlignmentErrorExtendedRcd,frontier://FrontierProd/CMS_CONDITIONS+MuonDTAPEObjectsExtended_v0_mc,DTAlignmentErrorExtendedRcd,frontier://FrontierProd/CMS_CONDITIONS+MuonCSCAPEObjectsExtended_v0_mc,CSCAlignmentErrorExtendedRcd,frontier://FrontierProd/CMS_CONDITIONS+EcalSamplesCorrelation_mc,EcalSamplesCorrelationRcd,frontier://FrontierProd/CMS_CONDITIONS+EcalPulseShapes_mc,EcalPulseShapesRcd,frontier://FrontierProd/CMS_CONDITIONS+EcalPulseCovariances_mc,EcalPulseCovariancesRcd,frontier://FrontierProd/CMS_CONDITIONS')
+#process.GlobalTag = customiseGlobalTag(process.GlobalTag, globaltag = 'DESIGN71_V5',conditions='TrackerAlignmentExtendedError_2011Realistic_v1_mc,TrackerAlignmentErrorExtendedRcd,frontier://FrontierProd/CMS_CONDITIONS+MuonDTAPEObjectsExtended_v0_mc,DTAlignmentErrorExtendedRcd,frontier://FrontierProd/CMS_CONDITIONS+MuonCSCAPEObjectsExtended_v0_mc,CSCAlignmentErrorExtendedRcd,frontier://FrontierProd/CMS_CONDITIONS+EcalSamplesCorrelation_mc,EcalSamplesCorrelationRcd,frontier://FrontierProd/CMS_CONDITIONS+EcalPulseShapes_mc,EcalPulseShapesRcd,frontier://FrontierProd/CMS_CONDITIONS+EcalPulseCovariances_mc,EcalPulseCovariancesRcd,frontier://FrontierProd/CMS_CONDITIONS')
 # fix 74X
 # see https://hypernews.cern.ch/HyperNews/CMS/get/hlt/3749/1/1/1/1/1/1/1/1/2/1/1/2/1/1/1/1/1/1/1/1/1.html
-#from Configuration.AlCa.GlobalTag import GlobalTag
+# before it was:
+from Configuration.AlCa.GlobalTag import GlobalTag
 
 if options.isMC :
     #process.GlobalTag = GlobalTag(process.GlobalTag, 'POSTLS171_V15::All', '')
     #process.GlobalTag = GlobalTag(process.GlobalTag, 'POSTLS171_V16::All', '')
-    process.GlobalTag = GlobalTag(process.GlobalTag, 'DESIGN71_V5::All', '')
+    #process.GlobalTag = GlobalTag(process.GlobalTag, 'DESIGN71_V5::All', '')
+    #process.GlobalTag = GlobalTag(process.GlobalTag, 'DESIGN72_V1::All', '')
+    process.GlobalTag = GlobalTag(process.GlobalTag, 'MCRUN2_74_V9::All', '')
     #process.GlobalTag = GlobalTag(process.GlobalTag, 'PRE_LS171_V5A::All', '')
     
 else :
     process.GlobalTag.globaltag = 'GR_R_71_V4::All'
  
+
 
 
 ### some fix for the stream
@@ -253,7 +259,7 @@ if options.isMC :
     process = customisePostLS1(process)
 
     # fix for stream & csc MC
-    process.csc2DRecHits.wireDigiTag = cms.InputTag("muonCSCDigis","MuonCSCWireDigi")
-    process.csc2DRecHits.stripDigiTag = cms.InputTag("muonCSCDigis","MuonCSCStripDigi")
+    #process.csc2DRecHits.wireDigiTag = cms.InputTag("muonCSCDigis","MuonCSCWireDigi")
+    #process.csc2DRecHits.stripDigiTag = cms.InputTag("muonCSCDigis","MuonCSCStripDigi")
 
 
