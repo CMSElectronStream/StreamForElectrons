@@ -55,8 +55,7 @@ to run on stream:
         outputFile=reco_stream_data.root \
         isMC=False
 
-
-Draw
+  Draw
 =======
 
    cmsShow raw2reco.root
