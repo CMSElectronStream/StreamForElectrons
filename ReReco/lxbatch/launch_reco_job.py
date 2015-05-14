@@ -1,5 +1,5 @@
-#!/usr/bin/python 
 
+#!/usr/bin/python 
 import os
 import glob
 import math
@@ -24,6 +24,7 @@ parser.add_option('-f', '--outputfilename', action="store", type="string", dest=
 parser.add_option('-j', '--jobmodulo',    action="store", type=int,      dest="jobmodulo",        default=1, help='how many input files have to be processed in one job')
 parser.add_option('-r', '--isalcastream',  action="store", type=int,      dest="isalcastream",     default=1, help='run on the alca stream output')
 parser.add_option('-q', '--queque',       action="store", type="string", dest="queque",           default="cmscaf1nd", help='queque of the batch system at cern')
+parser.add_option('-i', '--isMC',         action="store", type=int,      dest="isMC",             default=0, help='run the analysis on MC')
 
 
 (options, args) = parser.parse_args()
@@ -79,6 +80,10 @@ if __name__ == "__main__":
     command = "touch "+tempBjob ;
     os.system(command) ;
 
+    tempBjob2 = jobDir+"/bjob_"+str(jobId)+".log" ;
+    command = "touch "+tempBjob2 ;
+    os.system(command) ;
+
     command = "chmod 777 "+tempBjob ;
     os.system (command) ;
         
@@ -129,7 +134,7 @@ if __name__ == "__main__":
     command = "cmsMkdir "+options.outputpath+"/"+name[1];
     SAMPLEJOBFILE.write(command+"\n");
 
-    command = "cmsRun "+options.jobtemplate.replace("_template","") ;
+    command = "cmsRun "+options.jobtemplate.replace("_template","")+" isMC="+str(options.isMC) ;
     SAMPLEJOBFILE.write(command+"\n");
 
     command = "cmsStage "+options.outputfilename+"_"+str(jobId)+".root "+options.outputpath+"/"+name[1];
@@ -140,7 +145,7 @@ if __name__ == "__main__":
     # submit job
     ############
 
-    command = "bsub -cwd "+inPath+"/"+jobDir+" -q "+options.queque+" "+inPath+"/"+tempBjob;
+    command = "bsub -cwd "+inPath+"/"+jobDir+" -q "+options.queque+" -o "+inPath+"/"+tempBjob2+" "+inPath+"/"+tempBjob;
     SAMPLEJOBLISTFILE.write(command+"\n");
     
  

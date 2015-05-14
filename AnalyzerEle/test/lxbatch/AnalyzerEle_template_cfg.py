@@ -6,7 +6,7 @@ import sys
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('python');
 
-options.register ('hltPath','HLT_GsfEle25_WP80_PFMET_MT50_v9',VarParsing.multiplicity.singleton,VarParsing.varType.string,
+options.register ('hltPath','HLT_Ele27_WP80_Gsf_v1',VarParsing.multiplicity.singleton,VarParsing.varType.string,
                   'in order to match trigger electrons with pat ones');
 options.register ('isAlcaStreamOutput',0,VarParsing.multiplicity.singleton,VarParsing.varType.int,
                   'to set properly the input collection for the analyzer');
@@ -15,12 +15,13 @@ options.register ('skipAnalyzerAndDumpOutput', False, VarParsing.multiplicity.si
 options.register ('usePatElectronsTriggerMatch',False,VarParsing.multiplicity.singleton, VarParsing.varType.int,
                   "true if you want to match trigger electron with the pat one and use this collection as input in the analyzer") 
 options.register ('applyWZSelections',False,VarParsing.multiplicity.singleton, VarParsing.varType.int,
-                  "options in order to apply WZ selection topology") 
+                  "options in order to apply WZ selection topology")
 options.register ('applyElectronID',False,VarParsing.multiplicity.singleton, VarParsing.varType.int,
                   "options in order to apply electron ID WP80 on the whole electron collection")
+options.register ('isMC',False,VarParsing.multiplicity.singleton, VarParsing.varType.int,
+                  "option in order to run the analyzer on the MC")
 options.parseArguments();
 print options;
-
 
 ####### define process
 process = cms.Process("SimpleAnalyzer");
@@ -35,36 +36,42 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
-process.source = cms.Source ("PoolSource",fileNames = cms.untracked.vstring(MYINPUTFILE));
+### load input file, options, global tag
+process.source = cms.Source ("PoolSource",fileNames = cms.untracked.vstring (MYINPUTFILE));
 
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(options.maxEvents));
 
+if options.isMC == 0:
+ process.GlobalTag.globaltag = 'GR_R_71_V4::All';
+else :
+ process.GlobalTag.globaltag = 'DESIGN71_V5::All';
 
-process.GlobalTag.globaltag = 'GR_R_62_V1::All';
+
+process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 
 ####### define output file
 if not options.skipAnalyzerAndDumpOutput :
  process.TFileService = cms.Service("TFileService", 
-                       fileName = cms.string('MYOUTPUTFILE'),
+                       fileName = cms.string("MYOUTPUTFILE"),
                        closeFileFast = cms.untracked.bool(True));
 else:
  process.output = cms.OutputModule("PoolOutputModule",
-                                    fileName = cms.untracked.string('MYOUTPUTFILE'),
+                                    fileName = cms.untracked.string("MYOUTPUTFILE"),
                                     outputCommands = cms.untracked.vstring('keep *'),
                                     dropMetaData   = cms.untracked.string('ALL'))
 
 ####### sequence for doing the pfIsolation --> fix for 6_2_2
 process.load('CommonTools.ParticleFlow.pfParticleSelection_cff')
-process.pfPileUpIso.PFCandidates = cms.InputTag("particleFlow")
+process.pfPileUpIso.PFCandidates = cms.InputTag("particleFlowPtrs")
 process.pfNoPileUpIso.bottomCollection = cms.InputTag("particleFlowPtrs")
 process.pfParticleSelectionSequence.remove(process.pfNoPileUpSequence)
 
 process.load('CommonTools.ParticleFlow.Isolation.pfElectronIsolation_cff')
-process.elPFIsoDepositCharged.src    = cms.InputTag("gsfElectrons")
-process.elPFIsoDepositChargedAll.src = cms.InputTag("gsfElectrons")
-process.elPFIsoDepositGamma.src      = cms.InputTag("gsfElectrons")
-process.elPFIsoDepositNeutral.src    = cms.InputTag("gsfElectrons")
-process.elPFIsoDepositPU.src         = cms.InputTag("gsfElectrons")   
+process.elPFIsoDepositCharged.src    = cms.InputTag("gedGsfElectrons")
+process.elPFIsoDepositChargedAll.src = cms.InputTag("gedGsfElectrons")
+process.elPFIsoDepositGamma.src      = cms.InputTag("gedGsfElectrons")
+process.elPFIsoDepositNeutral.src    = cms.InputTag("gedGsfElectrons")
+process.elPFIsoDepositPU.src         = cms.InputTag("gedGsfElectrons")   
 
 process.IsolationSequence = cms.Sequence(process.pfParticleSelectionSequence*
                                          process.pfElectronIsolationSequence)
@@ -74,48 +81,65 @@ process.IsolationSequence = cms.Sequence(process.pfParticleSelectionSequence*
 process.load('StreamForElectrons.AnalyzerEle.patElectronSequence_cff')
 
 if options.isAlcaStreamOutput != 0 :
-    process.patElectrons.pvSrc = cms.InputTag("hltFastPVPixelVertices");
+    process.patElectrons.pvSrc = cms.InputTag("hltPixelVerticesElectrons");
+    process.eleSelectionProducers.rhoFastJet =  cms.InputTag("hltFixedGridRhoFastjetAllCaloForMuons");    
 else:
-    process.eleSelectionProducers.rhoFastJet =  cms.InputTag("kt6PFJets","rho");    
+    process.eleSelectionProducers.rhoFastJet =  cms.InputTag("fixedGridRhoAll");    
     process.eleSelectionProducers.vertexCollection = cms.InputTag("offlinePrimaryVerticesWithBS");
     
 process.PatElectronTriggerMatchHLTEle.matchedCuts = cms.string('path("'+options.hltPath+'")');
+
 ####### call the final analyzer
 process.load('StreamForElectrons.AnalyzerEle.ntupleAnalyzer_cfi')
+process.Analyzer.hltPaths = cms.vstring(options.hltPath)
+
 if options.isAlcaStreamOutput != 0 :
- if options.usePatElectronsTriggerMatch :
-     process.Analyzer.EleTag = cms.InputTag("PatElectronsTriggerMatch");
- process.Analyzer.PVTag    = cms.InputTag("hltFastPVPixelVertices");
+ process.Analyzer.PVTag    = cms.InputTag("hltPixelVerticesElectrons");
  process.Analyzer.PVTag_alternative   = cms.InputTag("offlinePrimaryVerticesWithBS");
- process.Analyzer.PFMetTag = cms.InputTag("hltPFMETProducer");
- process.Analyzer.rhoTag   = cms.InputTag("hltKT6PFJets","rho");
- process.Analyzer.triggerResultsCollection = cms.InputTag('TriggerResults::HLT');
+ process.Analyzer.PFMetTag = cms.InputTag("pfMet");
+ process.Analyzer.rhoTag   = cms.InputTag("hltFixedGridRhoFastjetAllCaloForMuons");
+ process.Analyzer.triggerResultsCollection = cms.InputTag('TriggerResults::TEST');
+
+ if options.usePatElectronsTriggerMatch :
+     process.Analyzer.EleTag = cms.InputTag("PatElectronsTriggerMatch")
+
  if options.applyWZSelections:
     process.Analyzer.doWZSelection = cms.untracked.bool(True);
  else:
     process.Analyzer.doWZSelection = cms.untracked.bool(False);
+
  if options.applyElectronID:
     process.Analyzer.applyElectronID = cms.untracked.bool(True);
  else:
-    process.Analyzer.applyElectronID = cms.untracked.bool(False);                 
- process.Analyzer.saveMCInfo    = cms.untracked.bool(False);
+    process.Analyzer.applyElectronID = cms.untracked.bool(False);
+
 else:
- if options.usePatElectronsTriggerMatch :
-     process.Analyzer.EleTag = cms.InputTag("PatElectronsTriggerMatch");
  process.Analyzer.PVTag    = cms.InputTag("offlinePrimaryVerticesWithBS");
  process.Analyzer.PVTag_alternative   = cms.InputTag("offlinePrimaryVerticesWithBS");
  process.Analyzer.PFMetTag = cms.InputTag("pfMet");
- process.Analyzer.rhoTag   = cms.InputTag("kt6PFJets","rho");   
- process.Analyzer.triggerResultsCollection = cms.InputTag('TriggerResults::HLT');
+ process.Analyzer.rhoTag   = cms.InputTag("fixedGridRhoAll");   
+ process.Analyzer.triggerResultsCollection = cms.InputTag('TriggerResults::TEST')
+
+ if options.usePatElectronsTriggerMatch :
+     process.Analyzer.EleTag = cms.InputTag("PatElectronsTriggerMatch")
+
  if options.applyWZSelections:
-     process.Analyzer.doWZSelection = cms.untracked.bool(True);
+    process.Analyzer.doWZSelection = cms.untracked.bool(True);
  else:
-     process.Analyzer.doWZSelection = cms.untracked.bool(False);
+    process.Analyzer.doWZSelection = cms.untracked.bool(False);
+
  if options.applyElectronID:
     process.Analyzer.applyElectronID = cms.untracked.bool(True);
  else:
-    process.Analyzer.applyElectronID = cms.untracked.bool(False);                 
+    process.Analyzer.applyElectronID = cms.untracked.bool(False);
+
+
+if options.isMC == 0 :     
  process.Analyzer.saveMCInfo    = cms.untracked.bool(False);
+ process.Analyzer.dataFlag      = cms.untracked.bool(False);
+else:
+ process.Analyzer.saveMCInfo    = cms.untracked.bool(False);
+ process.Analyzer.dataFlag      = cms.untracked.bool(False);
 
 ### final path
 if not options.skipAnalyzerAndDumpOutput: 
@@ -128,5 +152,12 @@ else:
                          process.patElectronSequence)
 
  process.EndPath = cms.EndPath(process.output)
-
  process.schedule = cms.Schedule(process.path,process.EndPath)
+     
+
+############################
+## Dump the output Python ##
+############################
+
+processDumpFile = open('processDump.py', 'w')
+print >> processDumpFile, process.dumpPython()

@@ -1,1 +1,1 @@
-/store/group/alca_ecalcalib/ecalMIBI/rgerosa/ElectronStreamStudy/RecoLevel/Reco streamA
+/store/group/alca_ecalcalib/ecalMIBI/rgerosa/ElectronStreamStudy/RecoLevel/Reco_71X StreamA

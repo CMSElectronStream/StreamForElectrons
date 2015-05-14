@@ -55,11 +55,12 @@ def ElectronStreamOutput(process,
   process.hltOutputStreamElectron.outputCommands = [
       'drop *',
       'keep *_hltL1GtObjectMap_*_*',
-      'keep FEDRawDataCollection_rawDataCollector_*_*',
-      'keep FEDRawDataCollection_source_*_*',
-      'keep edmTriggerResults_*_*_*',
       'keep triggerTriggerEvent_*_*_*',
-      'drop *_*_*_*HLT*'
+      'keep edmTriggerResults_*_*_*',
+      'drop *_*_*_*HLT*',
+      'keep FEDRawDataCollection*_*_*_*',
+      'keep *_simMuonCSCDigis_*_*',
+      'keep *_simMuonRPCDigis_*_*'
   ]
 
 
@@ -70,13 +71,13 @@ def ElectronStreamOutput(process,
                                             'keep edmTriggerResults_*_*_*',
                                             'keep *_hltL1GtObjectMap_*_*',
                                             'keep triggerTriggerEvent_*_*_*',
+                                            'drop *_*_*_*HLT*',
    	   				    'keep *_HLTselectedElectronFEDList_*StreamElectronRawFedData*_*',
-                                            'keep *_*hltFixedGridRhoFastjetAllCaloForMuons*_*_*' ,
+                                            'keep *_*hltFixedGridRho*_*_*' ,
                                             'keep *_*hltEgammaEcalPFClusterIso*_*_*',
                                             'keep *_*hltEgammaEleGsfTrackIso*_*_*',
                                             'keep *_*hltEgammaHcalPFClusterIso*_*_*',
                                             'keep *_*hltPixelVertices*_*_*',
-                                            'drop *_*_*_*HLT*',
                                             'keep *_simMuonCSCDigis_*_*',
                                             'keep *_simMuonRPCDigis_*_*'
 					   ]

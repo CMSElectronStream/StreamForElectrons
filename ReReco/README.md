@@ -58,10 +58,11 @@ to run on stream:
   Draw
 =======
 
-   cmsShow raw2reco.root
-   cmsShow stream2reco.root
+    cmsShow raw2reco.root
+    cmsShow stream2reco.root
 
-
+    cmsShow reco_raw.root
+    cmsShow reco_stream.root
 
 
 Working examples

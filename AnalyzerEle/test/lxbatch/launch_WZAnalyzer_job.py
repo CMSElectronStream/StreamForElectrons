@@ -30,6 +30,7 @@ parser.add_option('-l','--hltPath',        action="store", type="string",  dest=
 parser.add_option('-d','--applyWZSelections',action="store", type=int,    dest="applyWZSelections", default=0, help='in order to apply WZ selections')
 parser.add_option('-e','--applyElectronID',  action="store", type=int,    dest="applyElectronID",   default=0, help='in order to apply WP80 electron ID')
 parser.add_option('-m','--triggerMatch',     action="store", type=int,    dest="triggerMatch",      default=0, help='do the matching with trigger electrons')
+parser.add_option('-w','--isMC',             action="store", type=int,    dest="isMC",      default=0, help='run on MC samples or data')
 
 (options, args) = parser.parse_args()
 
@@ -41,10 +42,17 @@ if __name__ == "__main__":
  
  jobDirsuffix = ""; 
  if options.applyWZSelections == 0: jobDirsuffix = "_noSelections" ; 
- if options.triggerMatch ==1: jobDirsuffix += "_match" ; 
  if options.applyElectronID ==1: jobDirsuffix = "_electronID";
- 
+ if options.triggerMatch ==1: jobDirsuffix += "_match" ; 
+ if options.isMC == 1: jobDirsuffix += "_MC";
+ else: jobDirsuffix += "_data"; 
+
  sampleJobListFile = "lancia";
+
+ if options.isMC == 1:
+     sampleJobListFile = sampleJobListFile+"_MC";
+ else:
+     sampleJobListFile = sampleJobListFile+"_data";
 
  if options.isalcastream == 1:
      sampleJobListFile = sampleJobListFile+"_alcastream";
@@ -106,6 +114,11 @@ if __name__ == "__main__":
     command = "touch "+tempBjob ;
     os.system(command) ;
 
+    tempBjob2 = jobDir+"/bjob_"+str(jobId)+".log" ;
+    command = "touch "+tempBjob2 ;
+    os.system(command) ;
+
+
     command = "chmod 777 "+tempBjob ;
     os.system (command) ;
         
@@ -156,7 +169,7 @@ if __name__ == "__main__":
     command = "cmsMkdir "+options.outputpath+"/"+name[1]+jobDirsuffix;
     SAMPLEJOBFILE.write(command+"\n");
 
-    command = "cmsRun "+options.jobtemplate.replace("_template","")+" isAlcaStreamOutput="+str(options.isalcastream)+" hltPath="+options.hltPath+" usePatElectronsTriggerMatch="+str(options.triggerMatch)+" applyWZSelections="+str(options.applyWZSelections)+" applyElectronID="+str(options.applyElectronID);
+    command = "cmsRun "+options.jobtemplate.replace("_template","")+" isAlcaStreamOutput="+str(options.isalcastream)+" hltPath="+options.hltPath+" usePatElectronsTriggerMatch="+str(options.triggerMatch)+" applyWZSelections="+str(options.applyWZSelections)+" applyElectronID="+str(options.applyElectronID)+" isMC="+str(options.isMC);
         
     SAMPLEJOBFILE.write(command+"\n");
 
@@ -166,7 +179,7 @@ if __name__ == "__main__":
     ############
     # submit job
     ############
-    command = "bsub -cwd "+inPath+"/"+jobDir+" -q "+options.queque+" "+inPath+"/"+tempBjob;
+    command = "bsub -cwd "+inPath+"/"+jobDir+" -o "+inPath+"/"+tempBjob2+" -q "+options.queque+" "+inPath+"/"+tempBjob;
     SAMPLEJOBLISTFILE.write(command+"\n");
     
  os.system("rm List_*.txt") ;

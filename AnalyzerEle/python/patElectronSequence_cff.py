@@ -5,11 +5,11 @@ from StreamForElectrons.AnalyzerEle.electronSelection_cfi import *
 
 from PhysicsTools.PatAlgos.producersLayer1.electronProducer_cfi import *
 
-patElectrons.electronSource  = cms.InputTag("gsfElectrons")
+patElectrons.electronSource  = cms.InputTag("gedGsfElectrons")
 patElectrons.embedHighLevelSelection = cms.bool(False)
 patElectrons.useParticleFlow = cms.bool(False)
 patElectrons.addElectronID   = cms.bool(True)
-patElectrons.addGenMatch     = cms.bool(True)
+patElectrons.addGenMatch     = cms.bool(False)
 patElectrons.pvSrc           = cms.InputTag("offlinePrimaryVertices")
 patElectrons.reducedBarrelRecHitCollection = cms.InputTag("reducedEcalRecHitsEB")
 patElectrons.reducedEndcapRecHitCollection = cms.InputTag("reducedEcalRecHitsEE")
@@ -26,13 +26,13 @@ patElectrons.isolationValues = cms.PSet(
 patElectrons.electronIDSources = cms.PSet(
 # configure many IDs as InputTag <someName> = <someTag> you
 # can comment out those you don't want to save some disk space
-#  fiducial = cms.InputTag("eleSelectionProducers", "fiducial"),
-#  relIso90 = cms.InputTag("eleSelectionProducers", "relIso90"),
+  fiducial = cms.InputTag("eleSelectionProducers", "fiducial"),
+  relIso90 = cms.InputTag("eleSelectionProducers", "relIso90"),
   relIso80 = cms.InputTag("eleSelectionProducers", "relIso80"),
-#  relIso70 = cms.InputTag("eleSelectionProducers", "relIso70"),
-#  cIso90   = cms.InputTag("eleSelectionProducers", "cIso90"),
+  relIso70 = cms.InputTag("eleSelectionProducers", "relIso70"),
+  cIso90   = cms.InputTag("eleSelectionProducers", "cIso90"),
   cIso80   = cms.InputTag("eleSelectionProducers", "cIso80"),
-#  cIso70   = cms.InputTag("eleSelectionProducers", "cIso70")
+  cIso70   = cms.InputTag("eleSelectionProducers", "cIso70")
 )
 
 
@@ -40,7 +40,7 @@ patElectrons.electronIDSources = cms.PSet(
 ##------------------------------ trigger information producer
 from PhysicsTools.PatAlgos.triggerLayer1.triggerProducer_cfi import *
 
-patTrigger.processName  = cms.string("HLT8E33v2")
+patTrigger.processName  = cms.string("TEST")
 
 PatElectronTriggerMatchHLTEle = cms.EDProducer("PATTriggerMatcherDRDPtLessByR", # match by DeltaR only, best match by DeltaR
             src = cms.InputTag("patElectrons"),
@@ -60,7 +60,7 @@ PatElectronsTriggerMatch = cms.EDProducer("PATTriggerMatchElectronEmbedder",
 ##------------------------------ trigger event producerD
 from PhysicsTools.PatAlgos.triggerLayer1.triggerEventProducer_cfi import *
 patTriggerEvent.patTriggerMatches = cms.VInputTag( 'PatElectronsTriggerMatch' )
-patTriggerEvent.processName  = cms.string("HLT8E33v2")
+patTriggerEvent.processName  = cms.string("TEST")
 
 
 ############### Final Sequence

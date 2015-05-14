@@ -34,6 +34,9 @@ AnalyzerEle::AnalyzerEle(const edm::ParameterSet& iConfig){
  EcalClusterCrackCorrection     = EcalClusterFunctionFactory::get()->create("EcalClusterCrackCorrection", iConfig);
  EcalClusterLocalContCorrection = EcalClusterFunctionFactory::get()->create("EcalClusterLocalContCorrection", iConfig);
 
+ recHitCollection_EB_token_  = consumes<EcalRecHitCollection>(recHitCollection_EB_);
+ recHitCollection_EE_token_  = consumes<EcalRecHitCollection>(recHitCollection_EE_); 
+
 }
 
 // --------------------------------------------------------------------
@@ -837,7 +840,7 @@ void AnalyzerEle::fillGeneratorInfo(const edm::Event & iEvent, const edm::EventS
 void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup & iSetup, const int iEle, const std::string eleName) {
 
  if(verbosity_) std::cout << ">>> AnalyzerEle::fillEleInfo start <<<" << std::endl;
-  
+
  //*********** TRACKER GEOMETRY
  edm::ESHandle<TrackerGeometry> pDD ;
  iSetup.get<TrackerDigiGeometryRecord> ().get(pDD);
@@ -845,7 +848,7 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
  //*********** MAGNETIC FIELD
  edm::ESHandle<MagneticField> theMagField ;
  iSetup.get<IdealMagneticFieldRecord>().get(theMagField);
-  
+
  //*********** CALO TOPOLOGY
  edm::ESHandle<CaloTopology> pTopology;
  iSetup.get<CaloTopologyRecord>().get(pTopology);
@@ -873,23 +876,24 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
  //*********** LASER CORRECTION
  edm::ESHandle<EcalLaserDbService> theLaser;
  iSetup.get<EcalLaserDbRecord>().get(theLaser);
-  
+
  //*********** EB REC HITS
  edm::Handle<EcalRecHitCollection> recHitsEB;
  iEvent.getByLabel( recHitCollection_EB_, recHitsEB );
- const EcalRecHitCollection* theBarrelEcalRecHits = recHitsEB.product () ;
  if ( ! recHitsEB.isValid() ) {
   std::cerr << "AnalyzerEle::analyze --> recHitsEB not found" << std::endl;
  }
-  
+ const EBRecHitCollection* theBarrelEcalRecHits = 0;
+ theBarrelEcalRecHits = recHitsEB.product () ;
+
  //*********** EE REC HITS
  edm::Handle<EcalRecHitCollection> recHitsEE;
  iEvent.getByLabel( recHitCollection_EE_, recHitsEE );
- const EcalRecHitCollection* theEndcapEcalRecHits = recHitsEE.product () ;
  if ( ! recHitsEE.isValid() ) {
   std::cerr << "AnalyzerEle::analyze --> recHitsEE not found" << std::endl;
  }
- 
+ const EERecHitCollection* theEndcapEcalRecHits = 0;
+ theEndcapEcalRecHits = recHitsEE.product () ;
  
  //************* ELECTRONS
  edm::Handle<edm::View<pat::Electron> > electronHandle;
@@ -899,11 +903,7 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
  //************* VERTEX COLLECTION
  edm::Handle<reco::VertexCollection> hVertexProduct;
  iEvent.getByLabel(PVTag_,hVertexProduct);
-  
- //************* CLUSTER LAZY TOOLS
- recHitCollection_EB_token_  = consumes<EcalRecHitCollection>(recHitCollection_EB_);
- recHitCollection_EE_token_  = consumes<EcalRecHitCollection>(recHitCollection_EE_); 
- 
+   
  EcalClusterLazyTools lazyTools(iEvent,iSetup,recHitCollection_EB_token_,recHitCollection_EE_token_);
  EcalClusterPUCleaningTools cleaningTools(iEvent, iSetup, recHitCollection_EB_, recHitCollection_EE_);
 
@@ -1726,11 +1726,9 @@ void AnalyzerEle::fillEleInfo(const edm::Event & iEvent, const edm::EventSetup &
   ele2_numberOfLostHits = eleTrack->trackerExpectedHitsInner().numberOfLostHits();
   ele2_nAmbiguousGsfTrack = electron.ambiguousGsfTracksSize();
 
-
  }
-    
- if( verbosity_ ) std::cout << ">>> AnalyzerEle::fillEleInfo end <<<" << std::endl;
 
+ if( verbosity_ ) std::cout << ">>> AnalyzerEle::fillEleInfo end <<<" << std::endl;
 }
 
 // -----------------------------------------------------------------------------------------
@@ -2169,7 +2167,6 @@ void AnalyzerEle::initialize(){
  // di-electron variables
  ele1ele2_m=-99.;
  ele1ele2_scM=-99.;
-
 
 }
 
