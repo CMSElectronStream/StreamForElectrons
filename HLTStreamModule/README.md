@@ -263,4 +263,45 @@ To run the stream:
 
 
 
+==================
+Test HLT 
+==================
 
+Instructions:
+
+    https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideGlobalHLT
+
+to do:
+
+    hltGetConfiguration /users/amassiro/amassiro/V6 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_2.py
+    hltGetConfiguration /users/amassiro/amassiro/V7 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_3.py
+
+    cmsRun hlt_EleStream_3.py
+    
+
+test ReReco:
+          
+    cd /afs/cern.ch/user/a/amassiro/work/ECALHLT/CMSSW_7_1_0/src/StreamForElectrons/ReReco
+    
+    cmsRun step2_RAW2DIGI_L1Reco_RECO_onStream.py  \
+        inputFiles=file:/afs/cern.ch/user/a/amassiro/work/ECALHLT/CMSSW_7_4_2/src/HLTrigger/Configuration/test/outputElectronStream.root  \
+        outputFile=reco_stream_test_HLT.root \
+        isMC=True
+        
+
+    cmsShow reco_stream_test_HLT  --no-version-check
+        
+        
+        
+Integration test:
+
+    hltIntegrationTests /users/amassiro/amassiro/V7 -s /dev/CMSSW_7_4_0/HLT -i   root://xrootd.unl.edu//store/mc/Phys14DR/DYToEE_M-50_Tune4C_13TeV-pythia8/GEN-SIM-RAW/PU40bx25_tsg_castor_PHYS14_25_V1-v2/00000/06911F9F-9899-E411-B576-001E67396ACC.root  --mc -x "--globaltag auto:run2_mc_GRun"     -x "--l1-emulator stage1,gt" -x "--l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml"
+
+    
+    
+    
+
+    
+    
+    
+    

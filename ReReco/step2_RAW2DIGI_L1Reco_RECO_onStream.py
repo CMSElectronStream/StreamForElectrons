@@ -75,7 +75,10 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
 # Additional output definition
 
 # Other statements
-from Configuration.AlCa.GlobalTag import GlobalTag
+from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
+# fix 74X
+# see https://hypernews.cern.ch/HyperNews/CMS/get/hlt/3749/1/1/1/1/1/1/1/1/2/1/1/2/1/1/1/1/1/1/1/1/1.html
+#from Configuration.AlCa.GlobalTag import GlobalTag
 
 if options.isMC :
     #process.GlobalTag = GlobalTag(process.GlobalTag, 'POSTLS171_V15::All', '')
@@ -250,7 +253,7 @@ if options.isMC :
     process = customisePostLS1(process)
 
     # fix for stream & csc MC
-    #process.csc2DRecHits.wireDigiTag = cms.InputTag("muonCSCDigis","MuonCSCWireDigi")
-    #process.csc2DRecHits.stripDigiTag = cms.InputTag("muonCSCDigis","MuonCSCStripDigi")
+    process.csc2DRecHits.wireDigiTag = cms.InputTag("muonCSCDigis","MuonCSCWireDigi")
+    process.csc2DRecHits.stripDigiTag = cms.InputTag("muonCSCDigis","MuonCSCStripDigi")
 
 
