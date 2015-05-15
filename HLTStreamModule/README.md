@@ -12,20 +12,53 @@ Test sample:
 
 ========================
 
+To install in CMSSW_6_2_X :
+
+    cmsrel CMSSW_6_2_2
+    cd CMSSW_6_2_2/src/
+    cmsenv
+    git cms-addpkg HLTrigger
+    git cms-addpkg DataFormats/HLTReco
+    git cms-addpkg RecoEgamma/EgammaHLTProducers 
+    git clone git@github.com:CMSElectronStream/StreamForElectrons.git 
+    cd StreamForElectrons/ 
+    git checkout -b STREAM_CMSSW_6_2_X 
+    cd - ;
+    cp StreamForElectrons/HLTStreamModule/python/* HLTrigger/Configuration/python 
+    cp StreamForElectrons/HLTStreamModule/test/streamEle_cfg.py HLTrigger/Configuration/test
+    cp StreamForElectrons/HLTStreamModule/test/ES_lookup_table.dat HLTrigger/Configuration/test
+    cp StreamForElectrons/HLTStreamModule/plugins/HLTElectronOneOEMinusOneOPFilterRegional.h HLTrigger/Egamma/interface/
+    cp StreamForElectrons/HLTStreamModule/plugins/HLTElectronOneOEMinusOneOPFilterRegional.cc HLTrigger/Egamma/src/
+    cp StreamForElectrons/HLTStreamModule/plugins/EgammaHLTGsfTrackVarProducer.h RecoEgamma/EgammaHLTProducers/interface/
+    cp StreamForElectrons/HLTStreamModule/plugins/EgammaHLTGsfTrackVarProducer.cc RecoEgamma/EgammaHLTProducers/src/
+    cp StreamForElectrons/HLTStreamModule/plugins/selectedElectronFEDListProducer.h  HLTrigger/Egamma/interface/
+    cp StreamForElectrons/HLTStreamModule/plugins/selectedElectronFEDListProducer.cc HLTrigger/Egamma/src/
+    cp StreamForElectrons/HLTStreamModule/plugins/selectedElectronFEDListProducerv2.h  HLTrigger/Egamma/interface/
+    cp StreamForElectrons/HLTStreamModule/plugins/selectedElectronFEDListProducerv2.cc HLTrigger/Egamma/src/
+    cp StreamForElectrons/HLTStreamModule/plugins/BuildFile.xml.decomment HLTrigger/Egamma/BuildFile.xml
+    cp StreamForElectrons/HLTStreamModule/test/ES_lookup_table.dat             HLTrigger/Configuration/test  
+    cp StreamForElectrons/HLTStreamModule/test/HcalElectronicsMap_v7.00_offline HLTrigger/Configuration/test
+    scramv1 b -j 8
+
+test:
+
+    cd HLTrigger/Configuration/test ;
+    cmsRun streamEle_cfg.py
+
+========================
+
 To install in CMSSW_7_1_X (on SLC6 machine only):
 
     cmsrel CMSSW_7_1_0
     cd CMSSW_7_1_0/src/
     cmsenv
-    git cms-addpkg HLTrigger/Configuration
-    git cms-addpkg HLTrigger/Egamma
+    git cms-addpkg HLTrigger
+    git cms-addpkg DataFormats/HLTReco
     git cms-addpkg RecoEgamma/EgammaHLTProducers 
-
     git clone git@github.com:CMSElectronStream/StreamForElectrons.git 
     cd StreamForElectrons/ 
-    git checkout -b master
+    git checkout -b STREAM_CMSSW_7_1_X 
     cd - ;
-
     cp StreamForElectrons/HLTStreamModule/python/* HLTrigger/Configuration/python 
     cp StreamForElectrons/HLTStreamModule/test/streamEle_cfg.py HLTrigger/Configuration/test
     cp StreamForElectrons/HLTStreamModule/plugins/selectedElectronFEDListProducerv2.h  HLTrigger/Egamma/interface/
@@ -33,27 +66,25 @@ To install in CMSSW_7_1_X (on SLC6 machine only):
     cp StreamForElectrons/HLTStreamModule/plugins/BuildFile.xml.decomment              HLTrigger/Egamma/BuildFile.xml
     cp StreamForElectrons/HLTStreamModule/test/HcalElectronicsMap_v7.00_offline HLTrigger/Configuration/test
     cp StreamForElectrons/HLTStreamModule/test/ES_lookup_table.dat HLTrigger/Configuration/test
-
-    git-cms-addpkg EgammaAnalysis/ElectronTools
-    cd EgammaAnalysis/ElectronTools/data/ 
-    cat download.url | grep '.root' | xargs wget 
-    cd - 
-    git-cms-addpkg RecoEcal/EgammaCoreTools
-
+    rm -rf StreamForElectrons/RateAndEfficiencyTriggerStudy 
+    rm StreamForElectrons/AnalyzerEle/src/EleSelectionProducers.cc
+    rm StreamForElectrons/AnalyzerEle/src/SimpleCutBasedElectronIDSelectionFunctor.cc
+    rm StreamForElectrons/AnalyzerEle/src/BuildFile.xml
+    rm -rf StreamForElectrons/AnalyzerEle/src/
     scramv1 b -j 8 -Werror=unused-variable
 
 test:
 
-   Data:
+Data:
 
     cd HLTrigger/Configuration/test ;
     cmsRun streamEle_cfg.py  inputFiles=file:root://xrootd.unl.edu//store/data/Run2012C/SingleElectron/RAW/v1/000/198/022/3859DED3-DDC3-E111-AAF6-001D09F24D67.root
 
-   MC:
+MC:
 
-     cd StreamForElectrons/HLTStreamModule/test/
-     scp amassiro@cmsneu.cern.ch:/data/amassiro/CMSSWRoot/Spring14/DYToEE_Tune4C_13TeV-pythia8_GEN-SIM-RAW_tsg_PU40bx50_POSTLS162_V2-v1/009A2A53-A16B-E311-8345-003048F0E3B2.root /tmp/amassiro/
-     cmsRun StreamForElectrons/HLTStreamModule/test/streamEle_cfg.py  inputFiles=file:/tmp/amassiro/009A2A53-A16B-E311-8345-003048F0E3B2.root   isMC=True
+    cd StreamForElectrons/HLTStreamModule/test/
+    scp amassiro@cmsneu.cern.ch:/data/amassiro/CMSSWRoot/Spring14/DYToEE_Tune4C_13TeV-pythia8_GEN-SIM-RAW_tsg_PU40bx50_POSTLS162_V2-v1/009A2A53-A16B-E311-8345-003048F0E3B2.root /tmp/amassiro/
+    cmsRun StreamForElectrons/HLTStreamModule/test/streamEle_cfg.py  inputFiles=file:/tmp/amassiro/009A2A53-A16B-E311-8345-003048F0E3B2.root   isMC=True
     
 
     
@@ -242,11 +273,23 @@ Instructions:
 
 to do:
 
+    cd /afs/cern.ch/user/a/amassiro/work/ECALHLT/CMSSW_7_4_2/src/HLTrigger/Configuration/test/
+
     hltGetConfiguration /users/amassiro/amassiro/V6 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_2.py
     hltGetConfiguration /users/amassiro/amassiro/V7 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_3.py
     hltGetConfiguration /users/amassiro/amassiro/V8 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_3.py
+    hltGetConfiguration /users/amassiro/amassiro/V10 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_MC.py
+    hltGetConfiguration /users/amassiro/amassiro/V12 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_MC.py
 
+    
     cmsRun hlt_EleStream_3.py
+    cmsRun hlt_EleStream_MC.py
+
+        
+    hltGetConfiguration /users/amassiro/amassiro/V8 --full --offline --data --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_4.py
+    file:root://xrootd.unl.edu//store/data/Run2012C/SingleElectron/RAW/v1/000/198/022/3859DED3-DDC3-E111-AAF6-001D09F24D67.root
+    
+    cmsRun hlt_EleStream_4.py
     
 
 test ReReco:
@@ -254,18 +297,29 @@ test ReReco:
     cd /afs/cern.ch/user/a/amassiro/work/ECALHLT/CMSSW_7_1_0/src/StreamForElectrons/ReReco
     
     cmsRun step2_RAW2DIGI_L1Reco_RECO_onStream.py  \
-        inputFiles=file:/afs/cern.ch/user/a/amassiro/work/ECALHLT/CMSSW_7_4_2/src/HLTrigger/Configuration/test/outputElectronStream.root  \
+        inputFiles=file:/afs/cern.ch/user/a/amassiro/work/ECALHLT/CMSSW_7_4_2/src/HLTrigger/Configuration/test/outputElectronStream_mc.root  \
         outputFile=reco_stream_test_HLT.root \
         isMC=True
         
-
-    cmsShow reco_stream_test_HLT  --no-version-check
+    cmsRun step2_RAW2DIGI_L1Reco_RECO_onStream.py  \
+        inputFiles=file:/afs/cern.ch/user/a/amassiro/work/ECALHLT/CMSSW_7_4_2/src/HLTrigger/Configuration/test/outputElectronStream_data.root  \
+        outputFile=reco_stream_test_HLT.root \
+        isMC=False
         
+    cmsShow reco_stream_test_HLT.root  --no-version-check
+        
+    cmsRun step2_RAW2DIGI_L1Reco_RECO_onStream.py  \
+        inputFiles=/store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root  \
+        outputFile=reco_raw_test_HLT.root \
+        isMC=True
+
         
         
 Integration test:
 
-    hltIntegrationTests /users/amassiro/amassiro/V8 -s /dev/CMSSW_7_4_0/HLT -i   root://xrootd.unl.edu//store/mc/Phys14DR/DYToEE_M-50_Tune4C_13TeV-pythia8/GEN-SIM-RAW/PU40bx25_tsg_castor_PHYS14_25_V1-v2/00000/06911F9F-9899-E411-B576-001E67396ACC.root  --mc -x "--globaltag auto:run2_mc_GRun"     -x "--l1-emulator stage1,gt" -x "--l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml"
+    hltIntegrationTests /users/amassiro/amassiro/V8  -s /dev/CMSSW_7_4_0/HLT -i   root://xrootd.unl.edu//store/mc/Phys14DR/DYToEE_M-50_Tune4C_13TeV-pythia8/GEN-SIM-RAW/PU40bx25_tsg_castor_PHYS14_25_V1-v2/00000/06911F9F-9899-E411-B576-001E67396ACC.root  --mc -x "--globaltag auto:run2_mc_GRun"     -x "--l1-emulator stage1,gt" -x "--l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml"
+
+    hltIntegrationTests /users/amassiro/amassiro/V12 -s /dev/CMSSW_7_4_0/HLT -i   root://xrootd.unl.edu//store/mc/Phys14DR/DYToEE_M-50_Tune4C_13TeV-pythia8/GEN-SIM-RAW/PU40bx25_tsg_castor_PHYS14_25_V1-v2/00000/06911F9F-9899-E411-B576-001E67396ACC.root  --mc -x "--globaltag auto:run2_mc_GRun"     -x "--l1-emulator stage1,gt" -x "--l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml"
 
     
     
