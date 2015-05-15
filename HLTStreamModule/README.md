@@ -308,12 +308,18 @@ test ReReco:
         
     cmsShow reco_stream_test_HLT.root  --no-version-check
         
-    cmsRun step2_RAW2DIGI_L1Reco_RECO_onStream.py  \
+    cmsRun step2_RAW2DIGI_L1Reco_RECO_onRaw.py  \
         inputFiles=/store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root  \
         outputFile=reco_raw_test_HLT.root \
         isMC=True
 
         
+     cd /afs/cern.ch/user/a/amassiro/work/ECALHLT/CMSSW_7_4_2/src/HLTrigger/Configuration
+     cmsenv
+     cd -
+     cmsShow reco_raw_test_HLT.root  --no-version-check
+
+                
         
 Integration test:
 
@@ -321,6 +327,8 @@ Integration test:
 
     hltIntegrationTests /users/amassiro/amassiro/V12 -s /dev/CMSSW_7_4_0/HLT -i   root://xrootd.unl.edu//store/mc/Phys14DR/DYToEE_M-50_Tune4C_13TeV-pythia8/GEN-SIM-RAW/PU40bx25_tsg_castor_PHYS14_25_V1-v2/00000/06911F9F-9899-E411-B576-001E67396ACC.root  --mc -x "--globaltag auto:run2_mc_GRun"     -x "--l1-emulator stage1,gt" -x "--l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml"
 
+    hltIntegrationTests /users/amassiro/amassiro/V13 -s /dev/CMSSW_7_4_0/HLT -i   root://xrootd.unl.edu//store/mc/Phys14DR/DYToEE_M-50_Tune4C_13TeV-pythia8/GEN-SIM-RAW/PU40bx25_tsg_castor_PHYS14_25_V1-v2/00000/06911F9F-9899-E411-B576-001E67396ACC.root  --mc -x "--globaltag auto:run2_mc_GRun"     -x "--l1-emulator stage1,gt" -x "--l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml"
+    
     
     
     
