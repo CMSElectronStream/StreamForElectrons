@@ -283,6 +283,7 @@ to do:
     hltGetConfiguration /users/amassiro/amassiro/V16 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_MC.py
     hltGetConfiguration /users/amassiro/amassiro/V18 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_MC.py
     hltGetConfiguration /users/amassiro/amassiro/V19 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_MC.py
+    hltGetConfiguration /users/amassiro/amassiro/V20 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_MC.py
 
     
     cmsRun hlt_EleStream_3.py
@@ -338,6 +339,7 @@ Integration test:
     hltIntegrationTests /users/amassiro/amassiro/V19 -s /dev/CMSSW_7_4_0/HLT -i   root://xrootd.unl.edu//store/mc/Phys14DR/DYToEE_M-50_Tune4C_13TeV-pythia8/GEN-SIM-RAW/PU40bx25_tsg_castor_PHYS14_25_V1-v2/00000/06911F9F-9899-E411-B576-001E67396ACC.root  --mc -x "--globaltag auto:run2_mc_GRun"     -x "--l1-emulator stage1,gt" -x "--l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml"
     hltIntegrationTests /users/amassiro/amassiro/V19 -s /dev/CMSSW_7_4_0/HLT -i   /store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root  --mc -x "--globaltag auto:run2_mc_GRun"     
  
+    hltIntegrationTests /users/amassiro/amassiro/V20 -s /dev/CMSSW_7_4_0/HLT -i   /store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root  --mc -x "--globaltag auto:run2_mc_GRun"     
  
     
 
