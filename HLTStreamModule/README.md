@@ -378,15 +378,19 @@ Rate estimate:
     cmsRun EleStream_qcd_3050.py  &> log.qcd3050.txt    
     efficiency ~ 2. / 2474 = 8.1e-04
     
+    efficiency ~ 4. / 7962 = 5.0e-04
+    
     xsec < 185900000. * 0.06071 pb ~ 1.128599e+07 pb
     (the numbers are 30-80 GeV)
     
     events ~  2. / 2474 * 185900000. * 0.06071 pb ~ 9.123677e+03 pb ~ 9124 pb
+    events ~  4. / 7962 * 185900000. * 0.06071 pb ~ 5.669927e+03 pb ~ 5670 pb
     30BX 50ns
     
     5e33 -> 5 Hz/nb
-    -> 45 Hz
-    
+    -> 45 Hz    
+    -> 28 +/- 10 Hz
+
     1.4e34 -> 14 Hz/nb
     -> 128 Hz
     
@@ -404,7 +408,7 @@ Rate estimate:
     30BX 50ns
     
     5e33 -> 5 Hz/nb    
-    -> 3.4 Hz
+    -> 3.4 +/- 0.6 Hz
     
     1.4e34 -> 14 Hz/nb
     -> 9.5 Hz
