@@ -374,6 +374,8 @@ Rate estimate:
     xrdcp root://xrootd.unl.edu//store/mc/RunIISpring15Digi74/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8/GEN-SIM-RAW/AVE_30_BX_50ns_tsg_MCRUN2_74_V6-v1/00000/0AA9908F-52F3-E411-BF43-D067E5F91CAA.root  /tmp/amassiro/
     
     
+    scp amassiro@lxplus0062.cern.ch:/tmp/amassiro/04C31EAF-A0F2-E411-B61E-20CF305B0509.root /data/user/amassiro/
+    
     
     cmsRun EleStream_qcd_3050.py  &> log.qcd3050.txt    
     efficiency ~ 2. / 2474 = 8.1e-04
@@ -413,4 +415,44 @@ Rate estimate:
     1.4e34 -> 14 Hz/nb
     -> 9.5 Hz
 
+    
+Time estimate:
+
+    https://twiki.cern.ch/twiki/bin/viewauth/CMS/TriggerStudiesTiming
+    
+    ssh lxplus
+    ssh vocms003
+    
+    ls /data/samples/NeutrinoGun_PU40bx25_L1_2015v2_CollisionsMenu_v2_Skim/ 
+    
+    
+    cmsrel CMSSW_7_4_0  ---> no, because stream not yet there
+    cd CMSSW_7_4_0/src
+    cmsenv
+    git cms-addpkg HLTrigger/Configuration
+    scram build -j 4
+    scramv1 b -j 8    
+    cd HLTrigger/Configuration/test
+    
+    hltGetConfiguration /users/amassiro/amassiro/V24 --full --offline --mc --unprescale --process TEST --no-output --globaltag PHY1474_STV4 --l1-emulator 'gct,gt' --l1Xml L1Menu_Collisions2015_50nsGct_v1_L1T_Scales_20141121_Imp0_0x1030.xml \
+        > EleStream_qcd_2030.py
+ 
+    ls  /data/samples/NeutrinoGun_PU40bx25_L1_2015v2_CollisionsMenu_v2_Skim/  | awk '{print "@file:/data/samples/NeutrinoGun_PU40bx25_L1_2015v2_CollisionsMenu_v2_Skim/"$1"@,"}' | tr "@" "'"
+
+    cmsRun cmsRun EleStream_qcd_2030.py
+    
+    
+    cd /afs/cern.ch/user/a/amassiro/work/ECALHLT/CMSSW_7_4_2/src/HLTrigger/Configuration/test
+    cmsenv
+    cmsRun EleStream_timing.py
+    
+    
+    timing results:
+    -> 38 ms for the new path
+    see 
+        r99t DQM_V0001_R000000001__HLT__FastTimerService__All.root
+    
+    
+    
+    
     
