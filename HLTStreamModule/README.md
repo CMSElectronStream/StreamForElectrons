@@ -347,8 +347,66 @@ Integration test:
     hltIntegrationTests /users/amassiro/amassiro/V21 -s /dev/CMSSW_7_4_0/HLT -i   /store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root  --mc -x "--globaltag auto:run2_mc_GRun"     
  
     
+Rate estimate:
 
+    https://twiki.cern.ch/twiki/bin/viewauth/CMS/TmdRecipes
+    
+    hltGetConfiguration /users/amassiro/amassiro/V24 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_MC.py
+
+    /QCD_Pt-20to30_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15Digi74-AVE_30_BX_50ns_tsg_MCRUN2_74_V6-v1/GEN-SIM-RAW
+    hltGetConfiguration /users/amassiro/amassiro/V24 --full --offline --mc --unprescale --process TEST --no-output --globaltag PHY1474_STV4 --l1-emulator 'gct,gt' --l1Xml L1Menu_Collisions2015_50nsGct_v1_L1T_Scales_20141121_Imp0_0x1030.xml \
+        --input file:/tmp/amassiro/02150BCE-A4F2-E411-91CB-00259073E474.root \
+        > EleStream_qcd_2030.py
+    xrdcp root://xrootd.unl.edu//store/mc/RunIISpring15Digi74/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8/GEN-SIM-RAW/AVE_30_BX_50ns_tsg_MCRUN2_74_V6-v1/00000/02150BCE-A4F2-E411-91CB-00259073E474.root /tmp/amassiro/
+    cmsRun EleStream_qcd_2030.py  &> log.qcd2030.txt
+    -> 0 rate
+        
+    /QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8/RunIISpring15Digi74-AVE_30_BX_50ns_tsg_MCRUN2_74_V6-v1/GEN-SIM-RAW
+    hltGetConfiguration /users/amassiro/amassiro/V24 --full --offline --mc --unprescale --process TEST --no-output --globaltag PHY1474_STV4 --l1-emulator 'gct,gt' --l1Xml L1Menu_Collisions2015_50nsGct_v1_L1T_Scales_20141121_Imp0_0x1030.xml \
+        --input file:/tmp/amassiro/04C31EAF-A0F2-E411-B61E-20CF305B0509.root \
+        > EleStream_qcd_3050.py
+    xrdcp root://xrootd.unl.edu//store/mc/RunIISpring15Digi74/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8/GEN-SIM-RAW/AVE_30_BX_50ns_tsg_MCRUN2_74_V6-v1/00000/04C31EAF-A0F2-E411-B61E-20CF305B0509.root  /tmp/amassiro/
+
+    xrdcp root://xrootd.unl.edu//store/mc/RunIISpring15Digi74/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8/GEN-SIM-RAW/AVE_30_BX_50ns_tsg_MCRUN2_74_V6-v1/00000/02150BCE-A4F2-E411-91CB-00259073E474.root  /tmp/amassiro/
+    
+    xrdcp root://xrootd.unl.edu//store/mc/RunIISpring15Digi74/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8/GEN-SIM-RAW/AVE_30_BX_50ns_tsg_MCRUN2_74_V6-v1/00000/04F1DC38-52F3-E411-8E61-842B2B185470.root  /tmp/amassiro/
+    xrdcp root://xrootd.unl.edu//store/mc/RunIISpring15Digi74/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8/GEN-SIM-RAW/AVE_30_BX_50ns_tsg_MCRUN2_74_V6-v1/00000/063007AF-43F3-E411-92D6-001E67397035.root  /tmp/amassiro/ 
+    xrdcp root://xrootd.unl.edu//store/mc/RunIISpring15Digi74/QCD_Pt-30to50_EMEnriched_TuneCUETP8M1_13TeV_pythia8/GEN-SIM-RAW/AVE_30_BX_50ns_tsg_MCRUN2_74_V6-v1/00000/0AA9908F-52F3-E411-BF43-D067E5F91CAA.root  /tmp/amassiro/
     
     
     
+    cmsRun EleStream_qcd_3050.py  &> log.qcd3050.txt    
+    efficiency ~ 2. / 2474 = 8.1e-04
+    
+    xsec < 185900000. * 0.06071 pb ~ 1.128599e+07 pb
+    (the numbers are 30-80 GeV)
+    
+    events ~  2. / 2474 * 185900000. * 0.06071 pb ~ 9.123677e+03 pb ~ 9124 pb
+    30BX 50ns
+    
+    5e33 -> 5 Hz/nb
+    -> 45 Hz
+    
+    1.4e34 -> 14 Hz/nb
+    -> 128 Hz
+    
+    
+    /WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15Digi74-AVE_30_BX_50ns_tsg_MCRUN2_74_V6-v1/GEN-SIM-RAW
+    hltGetConfiguration /users/amassiro/amassiro/V24 --full --offline --mc --unprescale --process TEST --no-output --globaltag PHY1474_STV4 --l1-emulator 'gct,gt' --l1Xml L1Menu_Collisions2015_50nsGct_v1_L1T_Scales_20141121_Imp0_0x1030.xml \
+        --input file:/tmp/amassiro/04D2B5B1-3AF1-E411-BC4D-842B2B2B0EC5.root  \
+        > EleStream_Wev.py
+    xrdcp root://xrootd.unl.edu//store/mc/RunIISpring15Digi74/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/GEN-SIM-RAW/AVE_30_BX_50ns_tsg_MCRUN2_74_V6-v1/00000/04D2B5B1-3AF1-E411-BC4D-842B2B2B0EC5.root  /tmp/amassiro/
+    cmsRun EleStream_Wev.py  &> log.Wev.txt    
+    efficiency ~ 43. / 3085  (W>leptons) [AVE_30_BX_50ns]
+    efficiency ~ 34. / 2395  (W>leptons) [AVE20BX25ns]
+
+    events ~  34. / 2395  * 16000 * 3 pb ~ 681 pb
+    30BX 50ns
+    
+    5e33 -> 5 Hz/nb    
+    -> 3.4 Hz
+    
+    1.4e34 -> 14 Hz/nb
+    -> 9.5 Hz
+
     
