@@ -323,6 +323,14 @@ to do:
     hltGetConfiguration /users/amassiro/amassiro/V26 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_5_0_pre5/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU50ns_MCRUN2_75_V4-v1/00000/D0D29E17-E60B-E511-BEC5-0025905A6092.root > hlt_EleStream_MC.py
     cmsRun hlt_EleStream_MC.py &> tmp.txt
     
+    http://cmslxr.fnal.gov/lxr/source/Calibration/EcalAlCaRecoProducers/
+    
+    cmsrel CMSSW_7_4_3
+    git cms-merge-topic 9256  ---> cp -r from a 75Xnigtbuilt release
+    hltGetConfiguration /users/amassiro/amassiro/V26 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root > hlt_EleStream_MC.py
+    cmsRun hlt_EleStream_MC.py &> tmp.txt
+    
+    git cms-addpkg Calibration/EcalAlCaRecoProducers
     
     
     in CMSSW_7_4_2 it works
