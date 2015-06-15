@@ -307,10 +307,32 @@ to do:
     git cms-addpkg HLTrigger/Configuration
     scram build
     cd HLTrigger/Configuration/test
-    hltGetConfiguration /users/amassiro/amassiro/V24 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml  --input   /store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root > hlt_EleStream_MC.py
-    hltGetConfiguration /users/amassiro/amassiro/V24 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun   --input   /store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root > hlt_EleStream_MC.py
+    
+    hltGetConfiguration /users/amassiro/amassiro/V24 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml  --input /store/relval/CMSSW_7_5_0_pre5/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU50ns_MCRUN2_75_V4-v1/00000/D0D29E17-E60B-E511-BEC5-0025905A6092.root > hlt_EleStream_MC.py
+    hltGetConfiguration /users/amassiro/amassiro/V24 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_5_0_pre5/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU50ns_MCRUN2_75_V4-v1/00000/D0D29E17-E60B-E511-BEC5-0025905A6092.root > hlt_EleStream_MC.py
     cmsRun hlt_EleStream_MC.py &> tmp.txt
     
+    in CMSSW_7_5_X_2015-06-11-2300
+    hltGetConfiguration /users/amassiro/amassiro/V24 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_5_0_pre5/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU50ns_MCRUN2_75_V4-v1/00000/D0D29E17-E60B-E511-BEC5-0025905A6092.root > hlt_EleStream_MC_v24.py
+    hltGetConfiguration /users/amassiro/amassiro/V26 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_5_0_pre5/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU50ns_MCRUN2_75_V4-v1/00000/D0D29E17-E60B-E511-BEC5-0025905A6092.root > hlt_EleStream_MC.py
+    hltGetConfiguration /users/amassiro/amassiro/V26 --full --offline --mc --unprescale --process TEST --globaltag MCRUN2_75_V4       --input /store/relval/CMSSW_7_5_0_pre5/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU50ns_MCRUN2_75_V4-v1/00000/D0D29E17-E60B-E511-BEC5-0025905A6092.root > hlt_EleStream_MC.py
+    cmsRun hlt_EleStream_MC.py &> tmp.txt
+    
+    
+    cmsrel CMSSW_7_5_X_2015-06-12-2300
+    hltGetConfiguration /users/amassiro/amassiro/V26 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_5_0_pre5/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU50ns_MCRUN2_75_V4-v1/00000/D0D29E17-E60B-E511-BEC5-0025905A6092.root > hlt_EleStream_MC.py
+    cmsRun hlt_EleStream_MC.py &> tmp.txt
+    
+    
+    
+    in CMSSW_7_4_2 it works
+    hltGetConfiguration /users/amassiro/amassiro/V26 --full --offline --mc --unprescale --process TEST --globaltag MCRUN2_74_V9A      --input /store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root > hlt_EleStream_MC.py
+    hltGetConfiguration /users/amassiro/amassiro/V26 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root > hlt_EleStream_MC.py
+    cmsRun hlt_EleStream_MC.py &> tmp.txt
+    
+    hltGetConfiguration /users/amassiro/amassiro/V26 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root  --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_MC_v26.py
+    cmsRun hlt_EleStream_MC_v26.py &> tmp_v26.txt
+    it does not work!
     
 
 test ReReco:
