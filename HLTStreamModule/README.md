@@ -496,6 +496,67 @@ Time estimate:
         r99t DQM_V0001_R000000001__HLT__FastTimerService__All.root
     
     
+
+    
+Commit to cmssw:
+
+    instructions: http://cms-sw.github.io/faq.html
+
+    cmsrel CMSSW_X_X_X
+    cd  CMSSW_X_X_X/src
+    cmsenv
+    git cms-init
+    git cms-addpkg Calibration/EcalAlCaRecoProducers
+    
+    git remote show  ::: show which are the remote of your repository. origin (offcial-cmssw) and my fork (my-cmssw)
+    
+    modify code
+    
+    git fetch --all   
+    git push my-cmssw remotes/official-cmssw/CMSSW_7_5_X:refs/heads/CMSSW_7_5_X   
+       ---> push on my-cmssw what is in the official
+    
+    ----> create my new branch
+    git checkout -b elestream_75X
+
+        git status
+        # On branch elestream_75X
+
+
+    git fetch official-cmssw
+    git merge official-cmssw/CMSSW_7_5_X
+    
+    ---> commit on my branch
+    git commit -m "adding edm::stream::EDProducer friend for multithread" Calibration/EcalAlCaRecoProducers/plugins/SelectedElectronFEDListProducer.h
+    
+    ----> push on my branch
+         push   origin      branch
+    git push my-cmssw elestream_75X
+    
+    ---> pull request
+    on
+    https://github.com/amassiro/cmssw/tree/elestream_75X
+    click on "pull requests"
+    "new pull request"
+    
+ 
+    
+    
+    
+    
+    
+    
+    
+    git cms-addpkg Calibration/EcalAlCaRecoProducers
+    git checkout elestream_75X
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
