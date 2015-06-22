@@ -323,6 +323,46 @@ to do:
     hltGetConfiguration /users/amassiro/amassiro/V26 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_5_0_pre5/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU50ns_MCRUN2_75_V4-v1/00000/D0D29E17-E60B-E511-BEC5-0025905A6092.root > hlt_EleStream_MC.py
     cmsRun hlt_EleStream_MC.py &> tmp.txt
     
+    fix from tracker:
+    
+    
+        /afs/cern.ch/user/r/rovere/public/forMassironi/fix_crash.patch 
+        diff --git a/CalibTracker/Records/interface/SiStripDependentRecords.h b/CalibTracker/Records/interface/SiStripDependentRecords.h
+        index 6151db7..335a3dc 100644
+        --- a/CalibTracker/Records/interface/SiStripDependentRecords.h
+        +++ b/CalibTracker/Records/interface/SiStripDependentRecords.h
+        @@ -17,7 +17,7 @@ class SiStripDetCablingRcd : public edm::eventsetup::DependentRecordImplementati
+           boost::mpl::vector<SiStripFedCablingRcd,TrackerTopologyRcd,IdealGeometryRecord> > {};
+         
+         class SiStripRegionCablingRcd : public edm::eventsetup::DependentRecordImplementation<SiStripRegionCablingRcd,
+        -  boost::mpl::vector<SiStripDetCablingRcd,TrackerDigiGeometryRecord,IdealGeometryRecord> > {};
+        +  boost::mpl::vector<SiStripDetCablingRcd,TrackerDigiGeometryRecord,TrackerTopologyRcd> > {};
+         
+         // class SiStripGainRcd : public edm::eventsetup::DependentRecordImplementation<SiStripGainRcd, boost::mpl::vector<SiStripApvGainRcd> > {};
+         class SiStripGainRcd : public edm::eventsetup::DependentRecordImplementation<SiStripGainRcd, boost::mpl::vector<SiStripApvGainRcd, SiStripApvGain2Rcd, SiStripApvGain3Rcd> > {};
+        diff --git a/CalibTracker/SiStripESProducers/plugins/geom/SiStripRegionConnectivity.cc b/CalibTracker/SiStripESProducers/plugins/geom/SiStripRegionConnectivity.cc
+        index a70bbc7..a9f5d25 100644
+        --- a/CalibTracker/SiStripESProducers/plugins/geom/SiStripRegionConnectivity.cc
+        +++ b/CalibTracker/SiStripESProducers/plugins/geom/SiStripRegionConnectivity.cc
+        @@ -6,6 +6,7 @@
+         #include "CalibTracker/Records/interface/SiStripDetCablingRcd.h"
+         #include "CalibFormats/SiStripObjects/interface/SiStripDetCabling.h"
+         #include "DataFormats/SiStripCommon/interface/SiStripConstants.h"
+        +#include "Geometry/Records/interface/TrackerTopologyRcd.h"
+                 
+         using namespace sistrip;
+         
+        @@ -30,7 +31,7 @@ std::auto_ptr<SiStripRegionCabling> SiStripRegionConnectivity::produceRegionCabl
+           iRecord.getRecord<TrackerDigiGeometryRecord>().get( tkgeom );
+           
+           edm::ESHandle<TrackerTopology> tTopoHandle;
+        -  iRecord.getRecord<IdealGeometryRecord>().get(tTopoHandle);
+                +  iRecord.getRecord<TrackerTopologyRcd>().get(tTopoHandle);
+           const TrackerTopology* const tTopo = tTopoHandle.product();
+         
+ 
+    
+    
     http://cmslxr.fnal.gov/lxr/source/Calibration/EcalAlCaRecoProducers/
     
     cmsrel CMSSW_7_4_3
