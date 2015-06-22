@@ -593,10 +593,22 @@ Commit to cmssw:
     
     
     
+    ---- porting in 74X
+    
+    git cherry-pick 7c1834f17707b8b54742c346d4d57944b005aff5  ----> no
     
     
+    git fetch --all   
     
+    git push my-cmssw remotes/official-cmssw/CMSSW_7_4_X:refs/heads/CMSSW_7_4_X   
     
+    git checkout -b elestream_74X
     
+    git fetch official-cmssw
+    git merge official-cmssw/CMSSW_7_4_X
+
+    git commit -m "adding edm::stream::EDProducer friend for multithread" plugins/SelectedElectronFEDListProducer.cc plugins/SelectedElectronFEDListProducer.h 
+
+    git push my-cmssw elestream_74X
     
-    
+    https://github.com/amassiro/cmssw/tree/elestream_74X
