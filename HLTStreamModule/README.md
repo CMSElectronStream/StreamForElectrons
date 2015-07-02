@@ -316,12 +316,19 @@ to do:
     hltGetConfiguration /users/amassiro/amassiro/V24 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_5_0_pre5/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU50ns_MCRUN2_75_V4-v1/00000/D0D29E17-E60B-E511-BEC5-0025905A6092.root > hlt_EleStream_MC_v24.py
     hltGetConfiguration /users/amassiro/amassiro/V26 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_5_0_pre5/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU50ns_MCRUN2_75_V4-v1/00000/D0D29E17-E60B-E511-BEC5-0025905A6092.root > hlt_EleStream_MC.py
     hltGetConfiguration /users/amassiro/amassiro/V26 --full --offline --mc --unprescale --process TEST --globaltag MCRUN2_75_V4       --input /store/relval/CMSSW_7_5_0_pre5/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU50ns_MCRUN2_75_V4-v1/00000/D0D29E17-E60B-E511-BEC5-0025905A6092.root > hlt_EleStream_MC.py
+    hltGetConfiguration /users/amassiro/amassiro/V30 --full --offline --mc --unprescale --process TEST --globaltag MCRUN2_75_V4       --input /store/relval/CMSSW_7_5_0_pre5/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU50ns_MCRUN2_75_V4-v1/00000/D0D29E17-E60B-E511-BEC5-0025905A6092.root > hlt_EleStream_MC.py
     cmsRun hlt_EleStream_MC.py &> tmp.txt
     
     
     cmsrel CMSSW_7_5_X_2015-06-12-2300
     hltGetConfiguration /users/amassiro/amassiro/V26 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_5_0_pre5/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU50ns_MCRUN2_75_V4-v1/00000/D0D29E17-E60B-E511-BEC5-0025905A6092.root > hlt_EleStream_MC.py
     cmsRun hlt_EleStream_MC.py &> tmp.txt
+    
+    hltGetConfiguration /users/amassiro/amassiro/V27 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_5_0_pre5/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU50ns_MCRUN2_75_V4-v1/00000/D0D29E17-E60B-E511-BEC5-0025905A6092.root > hlt_EleStream_MC.py
+    hltGetConfiguration /users/amassiro/amassiro/V28 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_5_0_pre5/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU50ns_MCRUN2_75_V4-v1/00000/D0D29E17-E60B-E511-BEC5-0025905A6092.root > hlt_EleStream_MC.py
+    hltGetConfiguration /users/amassiro/amassiro/V29 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_5_0_pre5/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU50ns_MCRUN2_75_V4-v1/00000/D0D29E17-E60B-E511-BEC5-0025905A6092.root > hlt_EleStream_MC.py
+    cmsRun hlt_EleStream_MC.py &> tmp.txt
+    
     
     fix from tracker:
     
@@ -376,13 +383,26 @@ to do:
     in CMSSW_7_4_2 it works
     hltGetConfiguration /users/amassiro/amassiro/V26 --full --offline --mc --unprescale --process TEST --globaltag MCRUN2_74_V9A      --input /store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root > hlt_EleStream_MC.py
     hltGetConfiguration /users/amassiro/amassiro/V26 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root > hlt_EleStream_MC.py
+    hltGetConfiguration /users/amassiro/amassiro/V30 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root > hlt_EleStream_MC.py
+    hltGetConfiguration /users/amassiro/amassiro/V31 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root > hlt_EleStream_MC.py
     cmsRun hlt_EleStream_MC.py &> tmp.txt
     
     hltGetConfiguration /users/amassiro/amassiro/V26 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root  --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_MC_v26.py
     cmsRun hlt_EleStream_MC_v26.py &> tmp_v26.txt
     it does not work!
     
+    
+    CMSSW_7_4_X_2015-06-30-2300
+    hltGetConfiguration /users/amassiro/amassiro/V31 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root  --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_MC_v31.py
+    cmsRun hlt_EleStream_MC_v31.py &> tmp_v31.txt
+    
 
+    CMSSW_7_4_6_patch3
+    hltGetConfiguration /users/amassiro/amassiro/V31 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root  --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_MC_v31.py
+    cmsRun hlt_EleStream_MC_v31.py &> tmp_v31.txt
+    
+    
+    
 test ReReco:
           
     cd /afs/cern.ch/user/a/amassiro/work/ECALHLT/CMSSW_7_1_0/src/StreamForElectrons/ReReco
@@ -612,3 +632,42 @@ Commit to cmssw:
     git push my-cmssw elestream_74X
     
     https://github.com/amassiro/cmssw/tree/elestream_74X
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    75X
+    
+    /afs/cern.ch/work/a/amassiro/ECALHLT/CMSSW_7_5_X_2015-06-24-2300/src
+    
+    git cms-merge-topic  9717
+    
+    git checkout CMSSW_7_5_X
+    
+    git branch -vv
+
+    git rebase -i official-cmssw/CMSSW_7_5_X
+     
+    git log 
+    
+    git log -p
+    
+    
+    
+    
+    74X
+    git cms-merge-topic  9720
+     
+     
+     
+     
