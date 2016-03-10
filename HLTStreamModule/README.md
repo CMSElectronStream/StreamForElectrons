@@ -94,31 +94,31 @@ MC:
 
 1. python to be executed via cmsRun is streamEle_cfg.py (cmsRun streamEle_cfg.py saveAlcaElectronStreamOutput=1 outputFile=streamElectronRAW.root maxEvents=1000):
 
-   #### The following part are loaded:
-   process.source = cms.Source( "PoolSource",
+     #### The following part are loaded:
+     process.source = cms.Source( "PoolSource",
       fileNames = cms.untracked.vstring('file:/media/DATA/CMSSWRoot/DATA2012/SingleElectron_Run2012B_RAW/B865DABE-BDA2-E111-854F-BCAEC53296F7.root'),
       secondaryFileNames = cms.untracked.vstring(),
       inputCommands = cms.untracked.vstring('keep *'))
 
-   process.MessageLogger.cerr.FwkReport.reportEvery = 1 
+     process.MessageLogger.cerr.FwkReport.reportEvery = 1 
 
-   #enable the TrigReport and TimeReport
-   process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool( True ))
-
-   process.load("HLTrigger.Configuration.SourceHLT_cff") -> add to the process the HLT ESSource
-   process.load("HLTrigger.Configuration.ESProducerHLT_cff") -> add to the process the HLT ESProdcer (geometry, track reco etc ..)
-   process.load("HLTrigger.Configuration.ServiceHLT_cff") -> add some service tool, like PrescaleService -> define the prescale, for the moment I have put there just the path that I have developed
-
-   process.load("HLTrigger.Configuration.HLTBeginSequence_cff") -> first unpacker stage in common for all the trigger paths
-   process.hltL1sL1SingleEG20ORL1SingleEG22 ; process.hltL1sL1DoubleEG137 -> L1 seeds for single Electron and double ele paths
-
-   process.HLTriggerFirstPath = cms.Path( process.hltGetConditions + process.hltGetRaw + process.hltBoolFalse ) -> basic path run in HLT FULL
-
-   ##### final path in common with all the HLT paths in the HLT Full code
-   process.HLT_LogMonitor_v4 = cms.Path(process.hltGtDigis+process.hltLogMonitorFilter+process.hltPreLogMonitor+process.HLTEndSequence )
-
-   ##### final HLT trigger path
-   process.HLTriggerFinalPath = cms.Path( process.hltGtDigis +
+     #enable the TrigReport and TimeReport
+     process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool( True ))
+    
+     process.load("HLTrigger.Configuration.SourceHLT_cff") -> add to the process the HLT ESSource
+     process.load("HLTrigger.Configuration.ESProducerHLT_cff") -> add to the process the HLT ESProdcer (geometry, track reco etc ..)
+     process.load("HLTrigger.Configuration.ServiceHLT_cff") -> add some service tool, like PrescaleService -> define the prescale, for the moment I have put there just the path that I have developed
+    
+     process.load("HLTrigger.Configuration.HLTBeginSequence_cff") -> first unpacker stage in common for all the trigger paths
+     process.hltL1sL1SingleEG20ORL1SingleEG22 ; process.hltL1sL1DoubleEG137 -> L1 seeds for single Electron and double ele paths
+    
+     process.HLTriggerFirstPath = cms.Path( process.hltGetConditions + process.hltGetRaw + process.hltBoolFalse ) -> basic path run in HLT FULL
+    
+     ##### final path in common with all the HLT paths in the HLT Full code
+     process.HLT_LogMonitor_v4 = cms.Path(process.hltGtDigis+process.hltLogMonitorFilter+process.hltPreLogMonitor+process.HLTEndSequence )
+    
+     ##### final HLT trigger path
+     process.HLTriggerFinalPath = cms.Path( process.hltGtDigis +
 	                                  process.hltScalersRawToDigi +
 	              	   		  process.hltFEDSelector +
 		                          process.hltTriggerSummaryAOD +
@@ -288,6 +288,8 @@ to do:
     hltGetConfiguration /users/amassiro/amassiro/V22 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_MC.py
     hltGetConfiguration /users/amassiro/amassiro/V23 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_MC.py
 
+    hltGetConfiguration /users/amassiro/myHLTAlCaEle/V2 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_MC.py
+
     
     cmsRun hlt_EleStream_3.py
     cmsRun hlt_EleStream_MC.py
@@ -400,6 +402,13 @@ to do:
     CMSSW_7_4_6_patch3
     hltGetConfiguration /users/amassiro/amassiro/V31 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root  --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_MC_v31.py
     cmsRun hlt_EleStream_MC_v31.py &> tmp_v31.txt
+    
+    CMSSW_7_4_X_2015-07-02-2300
+    hltGetConfiguration /users/amassiro/amassiro/V31 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root  --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_MC_v31.py
+    cmsRun hlt_EleStream_MC_v31.py &> tmp_v31.txt
+    hltGetConfiguration /users/amassiro/amassiro/V36 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  --input /store/relval/CMSSW_7_4_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/MCRUN2_74_V9_gensim71X-v1/00000/12C843BC-B6EC-E411-9C9E-0025905A60BC.root  --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_MC_v36.py
+    cmsRun hlt_EleStream_MC_v36.py &> tmp_v36.txt
+    
     
     
     
