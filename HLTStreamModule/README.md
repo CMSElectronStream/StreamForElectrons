@@ -12,6 +12,14 @@ Test sample:
 
 ========================
 
+To install in CMSSW_8_0_1 :
+
+    cmsrel CMSSW_8_0_1
+    cd CMSSW_8_0_1/src/
+    cmsenv
+
+    
+
 To install in CMSSW_6_2_X :
 
     cmsrel CMSSW_6_2_2
@@ -288,8 +296,11 @@ to do:
     hltGetConfiguration /users/amassiro/amassiro/V22 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_MC.py
     hltGetConfiguration /users/amassiro/amassiro/V23 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_MC.py
 
-    hltGetConfiguration /users/amassiro/myHLTAlCaEle/V2 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_MC.py
+    hltGetConfiguration /users/amassiro/myHLTAlCaEle/V3 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun \
+         --input  /store/relval/CMSSW_8_0_1/RelValWE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/80X_mcRun2_asymptotic_v6-v1/10000/BA9CD940-4FE4-E511-83FD-0CC47A4D761A.root   > hlt_EleStream_MC.py
 
+    cmsRun hlt_EleStream_MC.py
+     
     
     cmsRun hlt_EleStream_3.py
     cmsRun hlt_EleStream_MC.py
