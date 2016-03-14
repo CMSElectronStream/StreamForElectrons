@@ -299,7 +299,58 @@ to do:
     hltGetConfiguration /users/amassiro/myHLTAlCaEle/V3 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun \
          --input  /store/relval/CMSSW_8_0_1/RelValWE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/80X_mcRun2_asymptotic_v6-v1/10000/BA9CD940-4FE4-E511-83FD-0CC47A4D761A.root   > hlt_EleStream_MC.py
 
-    cmsRun hlt_EleStream_MC.py
+    hltGetConfiguration /dev/CMSSW_8_0_0/GRun --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun \
+         --input  /store/relval/CMSSW_8_0_1/RelValWE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/80X_mcRun2_asymptotic_v6-v1/10000/BA9CD940-4FE4-E511-83FD-0CC47A4D761A.root   > hlt_EleStream_MC.py
+
+    hltGetConfiguration /dev/CMSSW_8_0_0/GRun --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun  \
+         --input  /store/relval/CMSSW_8_0_1/RelValWE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/80X_mcRun2_asymptotic_v6-v1/10000/BA9CD940-4FE4-E511-83FD-0CC47A4D761A.root   > hlt_EleStream_MC.py 
+      
+    hltGetConfiguration /users/amassiro/myHLTAlCaEle/V4 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun \
+         --input /store/relval/CMSSW_8_0_1/RelValWE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/80X_mcRun2_asymptotic_v6-v1/10000/BA9CD940-4FE4-E511-83FD-0CC47A4D761A.root > hlt_EleStream_MC.py 
+    
+    
+    cmsDriver.py RelVal         \
+      --step=DIGI,L1,DIGI2RAW          \
+      --conditions=auto:run2_mc_GRun \
+      --filein=/store/relval/CMSSW_8_0_1/RelValWE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/80X_mcRun2_asymptotic_v6-v1/10000/BA9CD940-4FE4-E511-83FD-0CC47A4D761A.root       \
+      --fileout=/tmp/amassiro/mytest.root  \
+      --no_exec --datatier 'GEN-SIM-DIGI-RAW'      --eventcontent=RAWSIM   \
+      --era=Run2_2016 --scenario=pp   \
+       --python_filename=mytest.py
+       
+       
+    cmsDriver.py RelVal         \
+      --step=DIGI,L1,DIGI2RAW          \
+      --conditions=auto:run2_mc_GRun \
+      --filein=/store/relval/CMSSW_8_0_1/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/PU25ns_80X_mcRun2_asymptotic_v6-v1/10000/B21A2EA2-4BE4-E511-93F9-0CC47A4D7646.root       \
+      --fileout=/tmp/amassiro/mytestZee.root  \
+      --no_exec --datatier 'GEN-SIM-DIGI-RAW'      --eventcontent=RAWSIM   \
+      --era=Run2_2016 --scenario=pp   \
+      --number 1000  \
+       --python_filename=mytestZee.py
+    
+    
+    
+    
+    
+    hltGetConfiguration /users/amassiro/myHLTAlCaEle/V13 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun \
+         --input file:/tmp/amassiro/mytest.root > hlt_EleStream_MC.py 
+    
+    hltGetConfiguration /users/amassiro/myHLTAlCaEle/V13 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun \
+         --input file:/tmp/amassiro/mytestZee.root > hlt_EleStream_Zee_MC.py 
+    
+    
+    hltGetConfiguration /dev/CMSSW_8_0_0/GRun   --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun \
+         --input file:/tmp/amassiro/mytest.root > hlt_EleStream_MC_general.py 
+       
+       
+    
+    cmsRun mytest.py
+    cmsRun mytestZee.py
+    
+    cmsRun hlt_EleStream_MC.py   &> tmp.txt
+    cmsRun hlt_EleStream_Zee_MC.py   &> tmp.txt
+    
      
     
     cmsRun hlt_EleStream_3.py
