@@ -15,8 +15,10 @@ print options
 
 
 
+from Configuration.StandardSequences.Eras import eras
 
-process = cms.Process('reRECO')
+#process = cms.Process('reRECO')
+process = cms.Process('reRECO',eras.Run2_2016)
 
 # import of standard configurations
 process.load('Configuration.StandardSequences.Services_cff')
@@ -88,7 +90,11 @@ if options.isMC :
     #process.GlobalTag = GlobalTag(process.GlobalTag, 'POSTLS171_V16::All', '')
     #process.GlobalTag = GlobalTag(process.GlobalTag, 'DESIGN71_V5::All', '')
     #process.GlobalTag = GlobalTag(process.GlobalTag, 'DESIGN72_V1::All', '')
-    process.GlobalTag = GlobalTag(process.GlobalTag, 'MCRUN2_74_V9::All', '')
+    #process.GlobalTag = GlobalTag(process.GlobalTag, 'MCRUN2_74_V9::All', '')
+    #process.GlobalTag = GlobalTag(process.GlobalTag, 'MCRUN2_74_V9::All', '')
+    process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc_GRun', '')
+    
+    
     #process.GlobalTag = GlobalTag(process.GlobalTag, 'PRE_LS171_V5A::All', '')
        
     #process.ecalMultiFitUncalibRecHit.algoPSet = cms.PSet(
@@ -111,38 +117,47 @@ else :
     
  
 
+#Exception Message:
+#Principal::getByToken: Found zero products matching all criteria
+#Looking for type: FEDRawDataCollection
+#Looking for module label: hltSelectedElectronFEDListProducerGsf
+#Looking for productInstanceName: StreamElectronRawFed
+
+
+#FEDRawDataCollection               "hltSelectedElectronFEDListProducerGsf"   "StreamElectronRawFed"   "TEST"       
+
 
 
 ### some fix for the stream
-process.csctfDigis.producer       = cms.InputTag("SelectedElectronFEDListProducerGsf:StreamElectronRawFed")
+#process.csctfDigis.producer       = cms.InputTag("hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed")
 
-process.dttfDigis.DTTF_FED_Source = cms.InputTag("SelectedElectronFEDListProducerGsf:StreamElectronRawFed")
+process.dttfDigis.DTTF_FED_Source = cms.InputTag("hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed")
 
-process.ecalDigis.InputLabel      = cms.InputTag("SelectedElectronFEDListProducerGsf:StreamElectronRawFed")
+process.ecalDigis.InputLabel      = cms.InputTag("hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed")
 
-process.ecalPreshowerDigis.sourceTag = cms.InputTag("SelectedElectronFEDListProducerGsf:StreamElectronRawFed")
+process.ecalPreshowerDigis.sourceTag = cms.InputTag("hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed")
 
-process.castorDigis.InputLabel    = cms.InputTag("SelectedElectronFEDListProducerGsf:StreamElectronRawFed")
+process.castorDigis.InputLabel    = cms.InputTag("hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed")
 
-process.gctDigis.inputLabel       = cms.InputTag("SelectedElectronFEDListProducerGsf:StreamElectronRawFed")
+process.gctDigis.inputLabel       = cms.InputTag("hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed")
 
-process.gtDigis.DaqGtInputTag     = cms.InputTag("SelectedElectronFEDListProducerGsf:StreamElectronRawFed")
+process.gtDigis.DaqGtInputTag     = cms.InputTag("hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed")
 
-process.gtEvmDigis.EvmGtInputTag  = cms.InputTag("SelectedElectronFEDListProducerGsf:StreamElectronRawFed")
+#process.gtEvmDigis.EvmGtInputTag  = cms.InputTag("hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed")
 
-process.hcalDigis.InputLabel      = cms.InputTag("SelectedElectronFEDListProducerGsf:StreamElectronRawFed")
+process.hcalDigis.InputLabel      = cms.InputTag("hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed")
 
-process.muonCSCDigis.InputObjects = cms.InputTag("SelectedElectronFEDListProducerGsf:StreamElectronRawFed")
+process.muonCSCDigis.InputObjects = cms.InputTag("hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed")
 
-process.muonDTDigis.inputLabel    = cms.InputTag("SelectedElectronFEDListProducerGsf:StreamElectronRawFed")
+process.muonDTDigis.inputLabel    = cms.InputTag("hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed")
 
-process.muonRPCDigis.InputLabel   = cms.InputTag("SelectedElectronFEDListProducerGsf:StreamElectronRawFed")
+process.muonRPCDigis.InputLabel   = cms.InputTag("hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed")
 
-process.scalersRawToDigi.scalersInputTag = cms.InputTag("SelectedElectronFEDListProducerGsf:StreamElectronRawFed")
+process.scalersRawToDigi.scalersInputTag = cms.InputTag("hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed")
 
-process.siPixelDigis.InputLabel   = cms.InputTag("SelectedElectronFEDListProducerGsf:StreamElectronRawFed")
+process.siPixelDigis.InputLabel   = cms.InputTag("hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed")
 
-process.siStripDigis.ProductLabel = cms.InputTag("SelectedElectronFEDListProducerGsf:StreamElectronRawFed")
+process.siStripDigis.ProductLabel = cms.InputTag("hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed")
 
 
 # Path and EndPath definitions
@@ -154,47 +169,47 @@ process.RECOoutput_step = cms.EndPath(process.RECOoutput)
 
 ##### change in the output
 process.DigiToRawFEVT.outputCommands          += cms.untracked.vstring('keep FEDRawDataCollection_source_*_*',
-                                                                       'keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*')
+                                                                       'keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*')
 
-process.FEVTDEBUGEventContent.outputCommands  += cms.untracked.vstring('keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*')
+process.FEVTDEBUGEventContent.outputCommands  += cms.untracked.vstring('keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*')
 
-process.FEVTEventContent.outputCommands       += cms.untracked.vstring('keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
+process.FEVTEventContent.outputCommands       += cms.untracked.vstring('keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
 
-process.FEVTHLTALLEventContent.outputCommands += cms.untracked.vstring('keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
+process.FEVTHLTALLEventContent.outputCommands += cms.untracked.vstring('keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
 
-process.FEVTSIMEventContent.outputCommands    += cms.untracked.vstring('keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
+process.FEVTSIMEventContent.outputCommands    += cms.untracked.vstring('keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
 
-process.GENRAWEventContent.outputCommands     += cms.untracked.vstring('keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
+process.GENRAWEventContent.outputCommands     += cms.untracked.vstring('keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
 
-process.HLTDEBUGEventContent.outputCommands   += cms.untracked.vstring('keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
+process.HLTDEBUGEventContent.outputCommands   += cms.untracked.vstring('keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
 
-process.HLTDebugFEVT.outputCommands           += cms.untracked.vstring('keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
+process.HLTDebugFEVT.outputCommands           += cms.untracked.vstring('keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
 
-process.HLTDebugRAW.outputCommands            += cms.untracked.vstring('keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
+process.HLTDebugRAW.outputCommands            += cms.untracked.vstring('keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
 
-process.HLTriggerRAW.outputCommands           += cms.untracked.vstring('keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
+process.HLTriggerRAW.outputCommands           += cms.untracked.vstring('keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
 
-process.L1TriggerRAW.outputCommands           += cms.untracked.vstring('keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
+process.L1TriggerRAW.outputCommands           += cms.untracked.vstring('keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
 
-process.L1TriggerRAWDEBUG.outputCommands      += cms.untracked.vstring('keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
+process.L1TriggerRAWDEBUG.outputCommands      += cms.untracked.vstring('keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
 
-process.RAWDEBUGEventContent.outputCommands   += cms.untracked.vstring('keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
+process.RAWDEBUGEventContent.outputCommands   += cms.untracked.vstring('keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
 
-process.RAWDEBUGHLTEventContent.outputCommands += cms.untracked.vstring('keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
+process.RAWDEBUGHLTEventContent.outputCommands += cms.untracked.vstring('keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
 
-process.RAWEventContent.outputCommands         += cms.untracked.vstring('keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
+process.RAWEventContent.outputCommands         += cms.untracked.vstring('keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*') 
 
-process.RAWRECODEBUGHLTEventContent.outputCommands += cms.untracked.vstring('keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*')
+process.RAWRECODEBUGHLTEventContent.outputCommands += cms.untracked.vstring('keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*')
 
-process.RAWRECOSIMHLTEventContent.outputCommands += cms.untracked.vstring('keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*')
+process.RAWRECOSIMHLTEventContent.outputCommands += cms.untracked.vstring('keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*')
 
-process.RAWSIMEventContent.outputCommands        += cms.untracked.vstring('keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*')
+process.RAWSIMEventContent.outputCommands        += cms.untracked.vstring('keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*')
 
-process.RAWSIMHLTEventContent.outputCommands     += cms.untracked.vstring('keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*')
+process.RAWSIMHLTEventContent.outputCommands     += cms.untracked.vstring('keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*')
 
-process.REPACKRAWEventContent.outputCommands     += cms.untracked.vstring('keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*')
+process.REPACKRAWEventContent.outputCommands     += cms.untracked.vstring('keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*')
 
-process.REPACKRAWSIMEventContent.outputCommands  += cms.untracked.vstring('keep FEDRawDataCollection_SelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*')
+process.REPACKRAWSIMEventContent.outputCommands  += cms.untracked.vstring('keep FEDRawDataCollection_hltSelectedElectronFEDListProducerGsf:StreamElectronRawFed_*_*')
 
 ### keep some more info from trigger level
 

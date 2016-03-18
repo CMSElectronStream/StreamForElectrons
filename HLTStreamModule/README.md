@@ -333,11 +333,17 @@ to do:
     
     
     
-    hltGetConfiguration /users/amassiro/myHLTAlCaEle/V13 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun \
+    hltGetConfiguration /users/amassiro/myHLTAlCaEle/V20 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun \
          --input file:/tmp/amassiro/mytest.root > hlt_EleStream_MC.py 
     
-    hltGetConfiguration /users/amassiro/myHLTAlCaEle/V13 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun \
+    hltGetConfiguration /users/amassiro/myHLTAlCaEle/V20 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun \
          --input file:/tmp/amassiro/mytestZee.root > hlt_EleStream_Zee_MC.py 
+    
+    
+    hltGetConfiguration /users/rgerosa/rgerosa/V21 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun \
+         --input file:/tmp/amassiro/mytestZee.root > hlt_EleStream_Zee_MC_TestOld.py 
+    
+    
     
     
     hltGetConfiguration /dev/CMSSW_8_0_0/GRun   --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun \
@@ -352,6 +358,33 @@ to do:
     cmsRun hlt_EleStream_Zee_MC.py   &> tmp.txt
     
      
+    cmsRun step2_RAW2DIGI_L1Reco_RECO_onStream.py  \
+        inputFiles=file:/afs/cern.ch/work/a/amassiro/ECALHLT/2016/Test/CMSSW_8_0_2/src/outputALCAELECTRON.root  \
+        outputFile=reco_raw_mc.root \
+        isMC=True
+        
+        
+    
+    cmsDriver.py reco -s RAW2DIGI,RECO -n 100 --filein=file:outputALCAELECTRON.root --mc --conditions=auto:run2_mc_GRun --era=Run2_2016 --scenario=pp  --nThreads=4 --dirout=./
+    
+    cmsRun reco_RAW2DIGI_RECO.py  &> tmpreco.txt
+    
+    
+    
+    cmsDriver.py RelVal --step=L1REPACK:Full --conditions=auto:run2_hlt_GRun \
+        --filein=/store/relval/CMSSW_8_0_1/SingleElectron/FEVTDEBUGHLT/80X_dataRun2_HLT_relval_v3_RelVal_sigEl2015D-v1/10000/F6BDA09C-15E4-E511-8CC2-002618B27F8A.root \
+        --fileout=mytest_data.root --datatier 'DIGI-RAW' --eventcontent=RAW --era=Run2_2016 --scenario=pp   --python_filename=mytest_data.py --number=300
+    cmsRun mytest_data.py
+    
+    
+    
+    hltGetConfiguration /users/amassiro/myHLTAlCaEle/V21 --full --offline --data --unprescale --process TEST --globaltag auto:run2_hlt_GRun  --input file:mytest_data.root > hlt_EleStream_data.py
+    cmsRun hlt_EleStream_data.py   &> tmp.data.txt
+     
+    cmsDriver.py reco -s RAW2DIGI,RECO -n 300 --filein=file:outputALCAELECTRON.root --data --conditions=auto:run2_data_GRun --era=Run2_2016 --scenario=pp  --nThreads=4 --dirout=./
+    cmsRun reco_RAW2DIGI_RECO.py  &> tmpreco.txt
+    
+    
     
     cmsRun hlt_EleStream_3.py
     cmsRun hlt_EleStream_MC.py
