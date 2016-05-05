@@ -281,6 +281,23 @@ Instructions:
 
 to do:
 
+
+    /afs/cern.ch/user/a/amassiro/work/ECALHLT/2016/CMSSW_8_0_7/src
+    
+    hltGetConfiguration /dev/CMSSW_8_0_0/GRun --full --offline  --data --unprescale --process TEST --globaltag auto:run2_hlt_GRun  \
+         --input  /store/relval/CMSSW_8_0_5/SingleElectron/FEVTDEBUGHLT/80X_dataRun2_HLT_relval_v8_RelVal_sigEl2015D-v1/00000/051FC9C-7A08-E611-ADBD-0025905A60B4.root \
+         --max-events=300   --l1-emulator 'Full'   > hlt_EleStream_DATA.py 
+
+           
+    hltGetConfiguration /dev/CMSSW_8_0_0/GRun --full --offline  --data --unprescale --process TEST --globaltag auto:run2_hlt_GRun  \
+         --input  /store/data/Run2016B/HLTPhysics0/RAW/v1/000/272/022/00000/BC77E58C-CD0D-E611-AA23-02163E0135FA.root \
+         --max-events=300   --l1-emulator 'Full'   > hlt_EleStream_DATA.py 
+       
+           
+           
+           
+         
+         
     cd /afs/cern.ch/user/a/amassiro/work/ECALHLT/CMSSW_7_4_2/src/HLTrigger/Configuration/test/
 
     hltGetConfiguration /users/amassiro/amassiro/V6 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun --l1-emulator 'stage1,gt' --l1Xml L1Menu_Collisions2015_25ns_v2_L1T_Scales_20141121_Imp0_0x1030.xml   > hlt_EleStream_2.py
@@ -330,7 +347,18 @@ to do:
        --python_filename=mytestZee.py
     
     
-    
+    cmsDriver.py RelVal         \
+      --step=DIGI,L1,DIGI2RAW          \
+      --conditions=auto:run2_mc_GRun \
+      --filein=/store/relval/CMSSW_8_0_3/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/80X_mcRun2_asymptotic_2016_v3_gs7120p2NewGTv3-v1/00000/626AD45E-D8EF-E511-9BC8-0025905A6126.root       \
+      --fileout=/tmp/amassiro/mytestZee.root  \
+      --no_exec --datatier 'GEN-SIM-DIGI-RAW'      --eventcontent=RAWSIM   \
+      --era=Run2_2016 --scenario=pp   \
+      --number 300  \
+       --python_filename=mytestZee.py
+
+       
+    cmsRun mytestZee.py
     
     
     hltGetConfiguration /users/amassiro/myHLTAlCaEle/V20 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun \
@@ -338,6 +366,52 @@ to do:
     
     hltGetConfiguration /users/amassiro/myHLTAlCaEle/V20 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun \
          --input file:/tmp/amassiro/mytestZee.root > hlt_EleStream_Zee_MC.py 
+    
+    hltGetConfiguration /users/amassiro/myHLTAlCaEle/V22 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun \
+         --input file:/tmp/amassiro/mytestZee.root > hlt_EleStream_Zee_MC.py 
+    cmsRun hlt_EleStream_Zee_MC.py   &> tmp.ZeeMC.txt
+    
+    
+    hltGetConfiguration /users/skalafut/tracklessHLT/V9 --full --offline --mc --unprescale --process TEST
+          --globaltag 80X_mcRun2_asymptotic_ForTSGStudies_v2 --l1-emulator 'Full' --l1Xml L1Menu_Collisions2016_dev_v3.xml > hlt.py
+    
+    hltGetConfiguration /users/amassiro/myHLTAlCaEle/V22 --full --offline --mc --unprescale --process TEST --globaltag 80X_mcRun2_asymptotic_ForTSGStudies_v2 \
+         --l1-emulator 'Full' --l1Xml L1Menu_Collisions2016_dev_v3.xml \
+         --input file:/tmp/amassiro/mytestZee.root > hlt_EleStream_Zee_MC.py 
+
+    
+    /store/mc/RunIIFall15DR76/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/GEN-SIM-RAW/25nsFlat10to50ZsecalNzshcalRaw_76X_mcRun2_asymptotic_2016EcalTune_30fb_v1-v1/40000/007D4546-A1D7-E511-A253-20CF305B050B.root
+    
+    
+    
+    hltConfigFromDB --cff --configName /dev/CMSSW_8_0_0/GRun --nopaths --services -PrescaleService,-EvFDaqDirector,-FastMonitoringService > setup_cff.py
+    hltGetConfiguration /users/amassiro/myHLTAlCaEle/V22 --full --offline --mc --unprescale --process TEST --globaltag 80X_mcRun2_asymptotic_ForTSGStudies_v3 \
+         --input /store/relval/CMSSW_8_0_3/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/80X_mcRun2_asymptotic_2016_v3_gs7120p2NewGTv3-v1/00000/626AD45E-D8EF-E511-9BC8-0025905A6126.root  \
+         > hlt_EleStream_Zee_MC.py 
+
+                  --l1-emulator 'Full' --l1Xml 'L1Menu_Collisions2016_dev_v3.xml' \
+
+    cmsRun hlt_EleStream_Zee_MC.py   &> tmp.ZeeMC.txt
+    
+    
+    hltGetConfiguration /users/lbrianza/AlCaEle/V4 --full --offline --mc --unprescale --process TEST --globaltag 80X_mcRun2_asymptotic_ForTSGStudies_v3 \
+         --input /store/relval/CMSSW_8_0_3/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/80X_mcRun2_asymptotic_2016_v3_gs7120p2NewGTv3-v1/00000/626AD45E-D8EF-E511-9BC8-0025905A6126.root  \
+         > hlt_EleStream_Zee_MC.py 
+
+
+    hltGetConfiguration /users/lbrianza/AlCaEle/V16 --full --offline --data --unprescale --process TEST --globaltag auto:run2_hlt_GRun \
+           --input /store/relval/CMSSW_8_0_1/SingleElectron/FEVTDEBUGHLT/80X_dataRun2_HLT_relval_v3_RelVal_sigEl2015D-v1/10000/F6BDA09C-15E4-E511-8CC2-002618B27F8A.root \
+           --max-events=300 --l1-emulator 'Full' > hlt_EleStream_data.py
+    cmsRun hlt_EleStream_data.py   &> tmp.data.txt
+     
+         
+    
+    hltGetConfiguration /dev/CMSSW_8_0_0/GRun --full --offline --mc --unprescale --process TEST --globaltag 80X_mcRun2_asymptotic_ForTSGStudies_v3 \
+         --input /store/relval/CMSSW_8_0_3/RelValZEE_13/GEN-SIM-DIGI-RAW-HLTDEBUG/80X_mcRun2_asymptotic_2016_v3_gs7120p2NewGTv3-v1/00000/626AD45E-D8EF-E511-9BC8-0025905A6126.root  \
+         > hlt_MC.py
+     
+    
+    cmsRun hlt_MC.py &> run.all.txt
     
     
     hltGetConfiguration /users/rgerosa/rgerosa/V21 --full --offline --mc --unprescale --process TEST --globaltag auto:run2_mc_GRun \
@@ -380,7 +454,20 @@ to do:
     
     hltGetConfiguration /users/amassiro/myHLTAlCaEle/V21 --full --offline --data --unprescale --process TEST --globaltag auto:run2_hlt_GRun  --input file:mytest_data.root > hlt_EleStream_data.py
     cmsRun hlt_EleStream_data.py   &> tmp.data.txt
-     
+    
+    hltGetConfiguration /users/amassiro/myHLTAlCaEle/V22 --full --offline --data --unprescale --process TEST --globaltag auto:run2_hlt_GRun  --input file:mytest_data.root > hlt_EleStream_data.py
+    cmsRun hlt_EleStream_data.py   &> tmp.data.txt
+    
+    
+    
+    hltGetConfiguration /users/lbrianza/AlCaEle/V3 --full --offline --data --unprescale --process TEST --globaltag auto:run2_hlt_GRun  --input file:mytest_data.root > hlt_EleStream_data.py
+    hltGetConfiguration /users/lbrianza/AlCaEle/V3 --full --offline --data --unprescale --process TEST --globaltag auto:run2_hlt_GRun \
+        --input /store/relval/CMSSW_8_0_1/SingleElectron/FEVTDEBUGHLT/80X_dataRun2_HLT_relval_v3_RelVal_sigEl2015D-v1/10000/F6BDA09C-15E4-E511-8CC2-002618B27F8A.root \
+        > hlt_EleStream_data.py
+    
+    hltGetConfiguration /dev/CMSSW_8_0_0/GRun --full --offline --data --unprescale --process TEST --globaltag auto:run2_hlt_GRun > hlt.py
+    cmsRun hlt.py &> tmp.data..official.txt
+    
     cmsDriver.py reco -s RAW2DIGI,RECO -n 300 --filein=file:outputALCAELECTRON.root --data --conditions=auto:run2_data_GRun --era=Run2_2016 --scenario=pp  --nThreads=4 --dirout=./
     cmsRun reco_RAW2DIGI_RECO.py  &> tmpreco.txt
     
